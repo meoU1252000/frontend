@@ -1,9 +1,8 @@
 <template>
   <div class="main-layout">
-    <div class="header">
-      <HeaderCpn />
-    </div>
+    <HeaderCpn />
     <router-view />
+    <div class="footer"></div>
   </div>
 </template>
 
@@ -12,11 +11,15 @@ import { defineComponent } from "vue";
 import HeaderCpn from "@/components/HeaderCpn.vue";
 
 export default defineComponent({
+  components: { HeaderCpn },
   setup() {
     return {};
   },
-  components: { HeaderCpn },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.main-layout {
+  min-height: 100vh;
+}
+</style>

@@ -1,0 +1,20 @@
+{
+    "name": "bla bla",
+    "price": "2000000",
+    "category_id": "2",
+    "image": [
+        "link 1",
+        "link 2",
+        "link 3"
+    ],
+    "sizes": [
+        {
+            "size_id": "1",
+            "size_quantity": "100"
+        },
+        {
+            "size_id": "2",
+            "size_quantity": "90"
+        }
+    ]
+}
