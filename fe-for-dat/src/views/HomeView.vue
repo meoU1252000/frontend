@@ -4,6 +4,9 @@
     <div class="product">
       <ListProductCpn />
     </div>
+    <div class="product">
+      <ListProductCpn />
+    </div>
   </div>
 </template>
 
