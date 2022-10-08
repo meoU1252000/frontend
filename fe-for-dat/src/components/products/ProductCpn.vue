@@ -1,20 +1,17 @@
 <template>
   <router-link to="/" class="product no-underline">
     <div class="image">
-      <img
-        src="https://lh3.googleusercontent.com/_SApryKFms-BYshoOG9JRUG14-JLrnShoUSZ7_4_JqcYW5YaL2eRJ0cw4AXNjOmHDi1q-f-dVFH3BwyiCMxg-7-mAsKPGA-LcA=rw-w230"
-        alt=""
-      />
+      <img :src="product.main_image_src" alt="" />
     </div>
     <div class="wrap">
       <div class="name">
-        <span>Laptop Acer Nitro 5 AN515-55-70AX asdmkam afmakfmk</span>
+        <span>{{ product.product_name }}</span>
       </div>
-      <div class="quantity">Còn 2 sản phẩm</div>
-      <div class="footer">
+      <div class="quantity">Còn {{product.product_quantity_stock}} sản phẩm</div>
+      <div class="product_footer_wrap">
         <div class="price">
-          <span>2.000.000đ</span>
-          <span class="price-second">2.200.000đ</span>
+          <span>{{formatter.format(product.product_price)}}</span>
+          <span class="price-second"></span>
         </div>
         <div class="icon">
           <img src="@/assets/images/icon-orthers/delivery-truck.png" alt="" />
@@ -28,8 +25,18 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
+  props: {
+    product: { type: Object },
+  },
   setup() {
-    return {};
+    const formatter = new Intl.NumberFormat("vi-VI", {
+      style: "currency",
+      currency: "VND",
+      minimumFractionDigits: 0,
+    });
+    return {
+      formatter
+    };
   },
 });
 </script>
@@ -37,13 +44,18 @@ export default defineComponent({
 <style lang="scss" scoped>
 .product {
   width: 20%;
-  height: 22rem;
+  height: 27rem;
   color: var(--black-color);
   border: 1px solid #ccc;
 
-  .image img {
-    width: 100%;
-    object-fit: contain;
+  .image {
+    display: flex;
+    justify-content: center;
+    img {
+      width: 15rem;
+      height: 20rem;
+      object-fit: contain;
+    }
   }
 
   .wrap {
@@ -71,7 +83,7 @@ export default defineComponent({
       margin: 0.2rem 0;
     }
 
-    .footer {
+    .product_footer_wrap {
       display: flex;
       align-items: center;
 

@@ -1,14 +1,15 @@
 <template>
   <div class="navbar">
     <div class="category" @mouseleave="handleLeave">
+      <!-- {{listItem}} -->
       <div
         class="item"
-        v-for="(item, i) in listItem"
+        v-for="(item, i) in listRootItem"
         :key="i"
-        @mouseover="handleHover(item.name)"
+        @mouseover="handleHover(item.category_name)"
       >
         <img class="item-img" src="@/assets/images/icons-nav/unnamed.webp" />
-        <span>{{ item.name }}</span>
+        <span>{{ item.category_name }}</span>
       </div>
       <div class="modal" :style="{ display: display }">
         {{ item }}
@@ -18,30 +19,16 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, } from "vue";
 
 export default defineComponent({
+  props: {
+    listRootItem: {type: Object}
+  },
   setup() {
     const display = ref("none");
     const item = ref(0);
-    const listItem = ref([
-      {
-        icon: "",
-        name: "Laptop",
-      },
-      {
-        icon: "",
-        name: "Sản phẩm apple",
-      },
-      {
-        icon: "",
-        name: "PC-Máy tính bộ",
-      },
-      {
-        icon: "",
-        name: "Pc-Màn hình máy tính",
-      },
-    ]);
+   
     const handleHover = (key) => {
       display.value = "block";
       item.value = key;
@@ -53,7 +40,6 @@ export default defineComponent({
     return {
       display,
       item,
-      listItem,
       handleHover,
       handleLeave,
     };
@@ -80,7 +66,7 @@ export default defineComponent({
       width: calc(100vw - 33rem);
       height: 28.5rem;
       background-color: #fff;
-      right: -500%;
+      left: 96%;
       top: 0;
       display: flex;
       justify-content: center;

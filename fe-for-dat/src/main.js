@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import VueGoogleMaps from '@fawmi/vue-google-maps'
 import App from "./App.vue";
 // import "./registerServiceWorker";
 import router from "./router";
@@ -10,6 +11,7 @@ import DataView from "primevue/dataview";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
+import Password from 'primevue/password';
 
 import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -28,5 +30,12 @@ app.component("my-dropdown", Dropdown);
 app.component("my-button", Button);
 app.component("my-dialog", Dialog);
 app.component("my-inputText", InputText);
-
+app.component("my-password", Password);
+app.use(VueGoogleMaps, {
+    load: {
+        key: 'AIzaSyD-ssz8mLgCIWlm_EcxZ935oXoVrWYPsCE',
+    },
+})
 app.mount("#app");
+
+

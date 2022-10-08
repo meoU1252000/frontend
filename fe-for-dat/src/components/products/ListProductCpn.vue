@@ -2,12 +2,12 @@
   <div class="list-product">
     <div class="list">
       <div class="head">
-        <h3 class="title">Laptop</h3>
+        <h3 class="title">{{category.category_name}}</h3>
         <span>Xem tất cả ></span>
       </div>
       <div class="main-product">
         <ProductCpn
-          v-for="(product, i) in listProduct"
+          v-for="(product, i) in category.products"
           :key="i"
           :product="product"
         />
@@ -17,59 +17,19 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 import ProductCpn from "./ProductCpn.vue";
-
 export default defineComponent({
+  props: {
+    listProduct: {type: Object},
+    category: {type: Object}
+  },
   components: { ProductCpn },
   setup() {
-    const listProduct = ref([
-      {
-        name: "Laptop Acer Nitro 5 AN515-55-70AX",
-        img: "https://lh3.googleusercontent.com/FPVLsfy8AOkj2wb3s6Qeb4OhfsFbHX4IkZ516gFugr48FzCi1KPPweWdcvw8z5uAmpDPrM7TaHyuZFPDh8iz=w500-rw",
-        price: "28.490.000 ₫",
-        quantity: "3",
-      },
-      {
-        name: "Laptop Acer Nitro 5 AN515-55-70AX",
-        img: "https://lh3.googleusercontent.com/FPVLsfy8AOkj2wb3s6Qeb4OhfsFbHX4IkZ516gFugr48FzCi1KPPweWdcvw8z5uAmpDPrM7TaHyuZFPDh8iz=w500-rw",
-        price: "28.490.000 ₫",
-        quantity: "3",
-      },
-      {
-        name: "Laptop Acer Nitro 5 AN515-55-70AX",
-        img: "https://lh3.googleusercontent.com/FPVLsfy8AOkj2wb3s6Qeb4OhfsFbHX4IkZ516gFugr48FzCi1KPPweWdcvw8z5uAmpDPrM7TaHyuZFPDh8iz=w500-rw",
-        price: "28.490.000 ₫",
-        quantity: "3",
-      },
-      {
-        name: "Laptop Acer Nitro 5 AN515-55-70AX",
-        img: "https://lh3.googleusercontent.com/FPVLsfy8AOkj2wb3s6Qeb4OhfsFbHX4IkZ516gFugr48FzCi1KPPweWdcvw8z5uAmpDPrM7TaHyuZFPDh8iz=w500-rw",
-        price: "28.490.000 ₫",
-        quantity: "3",
-      },
-      {
-        name: "Laptop Acer Nitro 5 AN515-55-70AX",
-        img: "https://lh3.googleusercontent.com/FPVLsfy8AOkj2wb3s6Qeb4OhfsFbHX4IkZ516gFugr48FzCi1KPPweWdcvw8z5uAmpDPrM7TaHyuZFPDh8iz=w500-rw",
-        price: "28.490.000 ₫",
-        quantity: "3",
-      },
-      {
-        name: "Laptop Acer Nitro 5 AN515-55-70AX",
-        img: "https://lh3.googleusercontent.com/FPVLsfy8AOkj2wb3s6Qeb4OhfsFbHX4IkZ516gFugr48FzCi1KPPweWdcvw8z5uAmpDPrM7TaHyuZFPDh8iz=w500-rw",
-        price: "28.490.000 ₫",
-        quantity: "3",
-      },
-      {
-        name: "Laptop Acer Nitro 5 AN515-55-70AX",
-        img: "https://lh3.googleusercontent.com/FPVLsfy8AOkj2wb3s6Qeb4OhfsFbHX4IkZ516gFugr48FzCi1KPPweWdcvw8z5uAmpDPrM7TaHyuZFPDh8iz=w500-rw",
-        price: "28.490.000 ₫",
-        quantity: "3",
-      },
-    ]);
     return {
-      listProduct,
+    
     };
+    // ])
   },
 });
 </script>

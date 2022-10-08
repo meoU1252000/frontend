@@ -13,7 +13,7 @@
         />
       </span>
     </div>
-    <div class="login">
+    <div class="login"  @click="openModalLogin">
       <i class="pi pi-user" style="font-size: 1.6rem"></i>
       <div class="text">
         <span>Đăng Nhập</span>
@@ -29,19 +29,60 @@
     </div>
     <div class="cart">
       <i class="pi pi-shopping-cart" style="font-size: 1.8rem"></i>
-      <span>Giở hàng của bạn (0) sản phẩm</span>
+      <span>Giỏ hàng của bạn (0) sản phẩm</span>
     </div>
   </div>
+  <LoginView
+    :display-modal="showLoginModal"
+    @close-modal-login="closeModalLogin"
+    @open-modal-register="openRegisterModal"
+  />
+  <RegisterView
+    :display-modal="showRegisterModal"
+    @open-modal-login="openLoginModal"
+    @close-modal-register="closeModalRegister"
+  />
 </template>
 
 <script>
 import { defineComponent, ref } from "vue";
+import LoginView from "@/components/LoginCpn.vue";
+import RegisterView from "@/components/RegisterCpn.vue";
 
 export default defineComponent({
+  components: { LoginView,RegisterView },
   setup() {
     const search = ref();
+    const showLoginModal = ref(false);
+    const showRegisterModal = ref(false);
+
+    const openModalLogin = () => {
+      showLoginModal.value = true;
+    };
+    const closeModalLogin = () => {
+      showLoginModal.value = false;
+    };
+    const openRegisterModal = () =>{
+      showRegisterModal.value = true;
+      showLoginModal.value = false;
+    }
+    const openLoginModal = () =>{
+      showRegisterModal.value = false;
+      showLoginModal.value = true;
+    }
+
+    const closeModalRegister = () => {
+      showRegisterModal.value = false;
+    };
     return {
       search,
+      showLoginModal,
+      openModalLogin,
+      closeModalLogin,
+      openRegisterModal,
+      showRegisterModal,
+      openLoginModal,
+      closeModalRegister
     };
   },
 });
