@@ -50,7 +50,7 @@ export default defineComponent({
       justify-content: space-between;
       align-items: center;
       padding: 0 1rem;
-      border-bottom: 2px solid #ccc;
+      border-bottom: 2px solid #cccccc36;
 
       span {
         cursor: pointer;

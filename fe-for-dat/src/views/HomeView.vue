@@ -1,10 +1,16 @@
 <template>
   <div class="home-view">
-    <SliderCpn :listRootItem="listRootItem" />
+    <SliderCpn :listRootItem="listRootItem" :listBrand="listBrand" />
     <div class="product">
-      <ListProductCpn
-        v-for="(category, i) in listCategoryHaveProduct"
+      <ListProductBrandCpn
+        v-for="(brand, i) in listBrandHaveProduct"
         :key="i"
+        :listBrand="listBrand"
+        :brand="brand"
+      />
+      <ListProductCpn
+        v-for="(category, j) in listCategoryHaveProduct"
+        :key="j"
         :listProduct="listProduct"
         :category="category"
       />
@@ -19,16 +25,18 @@
 import { defineComponent, onMounted, computed } from "vue";
 import SliderCpn from "@/components/SliderCpn.vue";
 import ListProductCpn from "@/components/products/ListProductCpn.vue";
+import ListProductBrandCpn from "@/components/products/ListProductBrandCpn.vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
-  components: { SliderCpn, ListProductCpn },
+  components: { SliderCpn, ListProductCpn,ListProductBrandCpn },
   setup() {
     const store = useStore();
 
     onMounted(async () => {
       await store.dispatch("product/getListProducts");
       await store.dispatch("category/getListCategories");
+      await store.dispatch("brand/getListBrands");
       // console.log("--------",store);
     });
     // const store = useStore();
@@ -37,14 +45,21 @@ export default defineComponent({
     });
     const listRootItem = computed(() => {
       return listItem.value.filter((item) => item.category_parent === 0 && item.category_status === 1);
-      
     });
     const listProduct = computed(() => {
       return store.getters["product/getListProduct"];
     });
 
+    const listBrand = computed(() => {
+      return store.getters["brand/getListBrand"] || [];
+    });
+
     const listCategoryHaveProduct = computed(() => {
       return listItem.value.filter((item) => item.products.length > 0);
+    });
+
+    const listBrandHaveProduct = computed(() => {
+      return listBrand.value.filter((item) => item.products.length > 0);
     });
     // console.log(listCategoryHaveProduct)
 
@@ -53,6 +68,8 @@ export default defineComponent({
       listRootItem,
       listProduct,
       listCategoryHaveProduct,
+      listBrand,
+      listBrandHaveProduct,
     };
   },
 });

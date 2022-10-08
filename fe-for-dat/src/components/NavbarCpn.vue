@@ -4,42 +4,79 @@
       <!-- {{listItem}} -->
       <div
         class="item"
-        v-for="(item, i) in listRootItem"
+        v-for="(category, i) in listRootItem"
         :key="i"
-        @mouseover="handleHover(item.category_name)"
+        @mouseover="handleHover(category.children)"
       >
         <img class="item-img" src="@/assets/images/icons-nav/unnamed.webp" />
-        <span>{{ item.category_name }}</span>
+        <span>{{ category.category_name }}</span>
       </div>
       <div class="modal" :style="{ display: display }">
-        {{ item }}
+        <div
+          class="flex flex-wrap card-container blue-container column-gap-4 row-gap-6 category-modal"
+        >
+          <div class="category_item">
+            <h4>Thương Hiệu</h4>
+            <div v-for="(brand, k) in listBrand" :key="k" class="brand">
+              <router-link
+                v-if="brand.products.length > 0 && brand.brand_status === 1"
+                to="/"
+                class="brand_link"
+                >{{ brand.brand_name }}</router-link
+              >
+            </div>
+          </div>
+          <div v-for="(item, j) in items" :key="j">
+            <div v-if="item.children !== null" class="category_item">
+              <!-- {{item.products.length > 0}} -->
+              <router-link
+                v-if="item.products.length > 0"
+                to="/"
+                class="category_link"
+                >{{ item.category_name }}</router-link
+              >
+              <h4 v-else>{{ item.category_name }}</h4>
+              <div>
+                <NavbarChildrenCpn
+                  :listChildrenItem="item.children"
+                />
+              </div>
+            </div>
+            <div v-else class="category_item">
+              <span>{{ item.category_name }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref, } from "vue";
+import { defineComponent, ref } from "vue";
+import NavbarChildrenCpn from "@/components/NavbarChildrenCpn.vue";
 
 export default defineComponent({
+  components: { NavbarChildrenCpn },
   props: {
-    listRootItem: {type: Object}
+    listRootItem: { type: Object },
+    listBrand: { type: Object },
   },
   setup() {
     const display = ref("none");
-    const item = ref(0);
-   
+    const items = ref(0);
+
     const handleHover = (key) => {
       display.value = "block";
-      item.value = key;
+      items.value = key;
     };
     const handleLeave = () => {
-      item.value = 0;
+      items.value = 0;
       display.value = "none";
     };
     return {
       display,
-      item,
+      items,
       handleHover,
       handleLeave,
     };
@@ -60,17 +97,32 @@ export default defineComponent({
 
   .category {
     position: relative;
-
     .modal {
       position: absolute;
       width: calc(100vw - 33rem);
-      height: 28.5rem;
+      height: 28rem;
       background-color: #fff;
       left: 96%;
       top: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    }
+    .category-modal {
+      padding-top: 1rem;
+    }
+    .category_item {
+      margin-right: 2rem;
+      display: block;
+    }
+    .category_link {
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+  }
+
+  .brand{
+    .brand_link{
+      text-decoration: none;
+      color: black;
     }
   }
 
@@ -81,7 +133,7 @@ export default defineComponent({
     cursor: pointer;
     &:hover {
       background-color: rgb(243, 245, 252);
-      color: rgb(20, 53, 195);
+      color: rgb(207, 15, 15, 1);
       border-radius: 10px;
     }
 

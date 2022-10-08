@@ -20,7 +20,7 @@
         <img :src="image.link" />
       </swiper-slide>
     </swiper>
-    <NavbarCpn :listRootItem="listRootItem"/>
+    <NavbarCpn :listRootItem="listRootItem" :listBrand="listBrand"/>
   </div>
 </template>
 
@@ -40,7 +40,8 @@ import NavbarCpn from "./NavbarCpn.vue";
 
 export default defineComponent({
   props: {
-    listRootItem: {type: Object}
+    listRootItem: {type: Object},
+    listBrand:  {type: Object}
   },
   components: {
     Swiper,

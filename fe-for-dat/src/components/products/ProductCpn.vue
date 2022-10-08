@@ -46,7 +46,7 @@ export default defineComponent({
   width: 20%;
   height: 27rem;
   color: var(--black-color);
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc36;
 
   .image {
     display: flex;
@@ -104,7 +104,7 @@ export default defineComponent({
       display: flex;
       flex-direction: column;
       justify-content: center;
-      color: #1435c3;
+      color: rgb(207, 15, 15,1);
       font-weight: 700;
 
       .price-second {

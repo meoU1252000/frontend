@@ -1,7 +1,8 @@
 <template>
   <div class="header">
     <router-link to="/" class="logo">
-      <img class="logo-link" src="@/assets/images/logo-full.svg" alt="" />
+      <img class="logo-link" src="@/assets/images/logo-sm.png" alt="" />
+      <span>ĐẠT LÊ</span>
     </router-link>
     <div class="search">
       <span class="p-input-icon-left">
@@ -13,7 +14,7 @@
         />
       </span>
     </div>
-    <div class="login"  @click="openModalLogin">
+    <div class="login" @click="openModalLogin">
       <i class="pi pi-user" style="font-size: 1.6rem"></i>
       <div class="text">
         <span>Đăng Nhập</span>
@@ -50,7 +51,7 @@ import LoginView from "@/components/LoginCpn.vue";
 import RegisterView from "@/components/RegisterCpn.vue";
 
 export default defineComponent({
-  components: { LoginView,RegisterView },
+  components: { LoginView, RegisterView },
   setup() {
     const search = ref();
     const showLoginModal = ref(false);
@@ -62,14 +63,14 @@ export default defineComponent({
     const closeModalLogin = () => {
       showLoginModal.value = false;
     };
-    const openRegisterModal = () =>{
+    const openRegisterModal = () => {
       showRegisterModal.value = true;
       showLoginModal.value = false;
-    }
-    const openLoginModal = () =>{
+    };
+    const openLoginModal = () => {
       showRegisterModal.value = false;
       showLoginModal.value = true;
-    }
+    };
 
     const closeModalRegister = () => {
       showRegisterModal.value = false;
@@ -82,7 +83,7 @@ export default defineComponent({
       openRegisterModal,
       showRegisterModal,
       openLoginModal,
-      closeModalRegister
+      closeModalRegister,
     };
   },
 });
@@ -95,6 +96,7 @@ export default defineComponent({
   height: var(--height-header);
   width: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
   padding: 0 10rem;
   border-bottom: 1px solid #ccc;
@@ -104,6 +106,13 @@ export default defineComponent({
   .logo {
     text-decoration: none;
     color: #000;
+    display: flex;
+    align-items: center;
+    span {
+      padding-left: 0.5rem;
+      font-size: 2rem;
+      font-family: serif;
+    }
   }
 
   .logo-link {
@@ -119,7 +128,6 @@ export default defineComponent({
     height: 2.5rem;
     background-color: rgb(248, 248, 252);
   }
-
   .login {
     display: flex;
     align-items: center;
@@ -136,7 +144,7 @@ export default defineComponent({
     }
 
     &:hover {
-      color: rgb(20, 53, 195) !important;
+      color: rgb(207, 15, 15,1) !important;
     }
   }
 
@@ -144,7 +152,10 @@ export default defineComponent({
     margin-left: 1rem;
     cursor: pointer;
     &:hover {
-      color: rgb(20, 53, 195) !important;
+      color: rgb(207, 15, 15,1) !important;
+    }
+    :deep(.p-badge){
+      background-color: rgb(207, 15, 15,1);
     }
   }
 
@@ -159,7 +170,7 @@ export default defineComponent({
       margin-left: 1rem;
     }
     &:hover {
-      color: rgb(20, 53, 195) !important;
+      color: rgb(207, 15, 15,1) !important;
     }
   }
 }
