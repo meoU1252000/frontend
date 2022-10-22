@@ -72,10 +72,9 @@
     </div>
     <div class="sidebar w-3 ml-3">
       <EventCpn />
-      <CartCheckOutCpn :totalPrice="totalPrice"/>
+      <CartCheckOutCpn :totalPrice="totalPrice" />
     </div>
   </div>
-
 </template>
 
 <script>
@@ -87,13 +86,13 @@ import {
   removeProductFromCart,
   setStateCart,
 } from "@/function/handleLocalStorage";
-import EventCpn from './EventCpn.vue';
-import CartCheckOutCpn from './CartCheckOutCpn.vue';
+import EventCpn from "./EventCpn.vue";
+import CartCheckOutCpn from "./CartCheckOutCpn.vue";
 
 export default defineComponent({
-  components :{
+  components: {
     EventCpn,
-    CartCheckOutCpn
+    CartCheckOutCpn,
   },
   setup() {
     const store = useStore();
@@ -133,19 +132,19 @@ export default defineComponent({
             "Đã xóa thành công sản phẩm ra giỏ hàng.",
             "success"
           );
-          setStateCart(store);
           removeProductFromCart(id);
+          setStateCart(store);
         }
       });
     };
- 
+
     return {
       value19,
       cartList,
       formatter,
       listProduct,
       handleRemoveProduct,
-      totalPrice
+      totalPrice,
     };
   },
 });
