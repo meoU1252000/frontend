@@ -20,7 +20,7 @@
         <img :src="image.link" />
       </swiper-slide>
     </swiper>
-    <NavbarCpn />
+    <NavbarCpn :listRootItem="listRootItem" :listBrand="listBrand"/>
   </div>
 </template>
 
@@ -39,6 +39,10 @@ import { Autoplay, EffectFade, Pagination } from "swiper";
 import NavbarCpn from "./NavbarCpn.vue";
 
 export default defineComponent({
+  props: {
+    listRootItem: {type: Object},
+    listBrand:  {type: Object}
+  },
   components: {
     Swiper,
     SwiperSlide,
@@ -74,7 +78,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .slider {
   margin-top: var(--height-header);
-  height: calc(100vh - var(--height-header));
+  // height: calc(100vh - var(--height-header));
   position: relative;
   z-index: 1;
 

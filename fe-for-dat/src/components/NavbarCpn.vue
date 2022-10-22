@@ -1,61 +1,77 @@
 <template>
-  <div class="navbar">
+  <div class="navbar navbar_modal">
     <div class="category" @mouseleave="handleLeave">
+      <!-- {{listItem}} -->
       <div
         class="item"
-        v-for="(item, i) in listItem"
+        v-for="(category, i) in listRootItem"
         :key="i"
-        @mouseover="handleHover(item.name)"
+        @mouseover="handleHover(category.children)"
       >
-        <img class="item-img" src="@/assets/images/icons-nav/unnamed.webp" />
-        <span>{{ item.name }}</span>
+        <span class="text-sm p-2">{{ category.category_name }}</span>
       </div>
       <div class="modal" :style="{ display: display }">
-        {{ item }}
+        <div
+          class="flex flex-wrap card-container column-gap-4 row-gap-6 category-modal"
+        >
+          <div v-for="(item, j) in items" :key="j">
+            <div v-if="item.children !== null" class="category_item">
+              <!-- {{item.products.length > 0}} -->
+              <router-link
+                v-if="item.products.length > 0"
+                to="/"
+                class="category_link"
+                >{{ item.category_name }}</router-link
+              >
+              <h4 v-else>{{ item.category_name }}</h4>
+              <div>
+                <NavbarChildrenCpn :listChildrenItem="item.children" />
+              </div>
+            </div>
+            <div v-else class="category_item">
+              <span>{{ item.category_name }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
+import NavbarChildrenCpn from "@/components/NavbarChildrenCpn.vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
+  components: { NavbarChildrenCpn },
+  props: {
+    listRootItem: { type: Object },
+    listBrand: { type: Object },
+  },
   setup() {
     const display = ref("none");
-    const item = ref(0);
-    const listItem = ref([
-      {
-        icon: "",
-        name: "Laptop",
-      },
-      {
-        icon: "",
-        name: "Sản phẩm apple",
-      },
-      {
-        icon: "",
-        name: "PC-Máy tính bộ",
-      },
-      {
-        icon: "",
-        name: "Pc-Màn hình máy tính",
-      },
-    ]);
+    const items = ref(0);
+    const store = useStore();
     const handleHover = (key) => {
       display.value = "block";
-      item.value = key;
+      items.value = key;
     };
     const handleLeave = () => {
-      item.value = 0;
+      items.value = 0;
       display.value = "none";
     };
+
+    const listItem = computed(() => {
+      return store.getters["category/getListCategory"] || [];
+    });
+
     return {
       display,
-      item,
-      listItem,
+      items,
       handleHover,
       handleLeave,
+      listItem,
     };
   },
 });
@@ -64,7 +80,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .navbar {
   position: absolute;
-  width: 200px;
+  width: 180px;
   height: 450px;
   background-color: #fff;
   top: 0;
@@ -74,17 +90,31 @@ export default defineComponent({
 
   .category {
     position: relative;
-
     .modal {
       position: absolute;
-      width: calc(100vw - 33rem);
-      height: 28.5rem;
+      width: calc(100vw - 72rem);
+      height: 28rem;
       background-color: #fff;
-      right: -500%;
+      left: 96%;
       top: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    }
+    .category-modal {
+      padding-top: 1rem;
+    }
+    .category_item {
+      margin-right: 2rem;
+      display: block;
+    }
+    .category_link {
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+  }
+  .brand {
+    .brand_link {
+      text-decoration: none;
+      color: black;
     }
   }
 
@@ -95,7 +125,7 @@ export default defineComponent({
     cursor: pointer;
     &:hover {
       background-color: rgb(243, 245, 252);
-      color: rgb(20, 53, 195);
+      color: rgb(207, 15, 15, 1);
       border-radius: 10px;
     }
 
@@ -108,6 +138,19 @@ export default defineComponent({
       font-size: 12px;
       font-weight: 600;
     }
+  }
+}
+@media only screen and (max-width: 1366px) {
+  .navbar {
+    height: 20rem;
+
+    .modal {
+      width: calc(100vw - 45rem) !important;
+      height: 20rem !important;
+    }
+  }
+  .navbar_modal {
+    left: 0 !important;
   }
 }
 </style>
