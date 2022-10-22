@@ -1,6 +1,6 @@
 <template>
     <div  v-for="(category, i) in listChildrenItem" :key="i">
-      <span v-if="category.children !== null">{{ category.category_name }}</span>
+      <router-link :to="{ name: 'showCategoryView', params: { category_name: category.category_name} }" v-if="category.children !== null && category.products.length >0" class="router-link-category">{{ category.category_name }}</router-link>
       <div v-else>
           <NavbarChildrenCpn :listChildrenItem="category.children" />
       </div>
@@ -29,4 +29,13 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style lang="scss">
+.router-link-category{
+  text-decoration: none;
+  color:black;
+  &:hover{
+    background-color: rgb(243, 245, 252);
+    color: rgb(207, 15, 15);
+  }
+}
+</style>

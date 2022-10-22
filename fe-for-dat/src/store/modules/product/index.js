@@ -12,17 +12,18 @@ const initDefaultState  = () => {
     productId: null,
     productName: "",
     productRating: null,
+    Product: null,
     error: null,
+    cart: null,
   };
 };
 
 const state = initDefaultState();
 const getters = {
   getListProduct: (state) => state.listProduct,
-  getProductId: (state) => state.productId,
-  getProductName: (state) => state.productName,
-  getMainImageSrc: (state) => state.getMainImageSrc,
-  getError: (state) => state.error,
+  getProduct: (state) => state.Product,
+  getCart: (state) => state.cart,
+
 };
 
 const mutations= {
@@ -31,6 +32,12 @@ const mutations= {
   },
   setProducts(state, products) {
    state.listProduct = products;
+  },
+  setProduct(state, product) {
+    state.Product = product;
+   },
+  setCart(state, payload) {
+    state.cart = payload;
   },
 };
 const actions = {
@@ -42,6 +49,25 @@ const actions = {
     //   console.log(s);
       return product;
       //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+  
+  async getProduct({commit}, payload){
+    try {
+      const product = await productServices.getProduct(payload);
+      commit("setProduct", product);
+    //   console.log(s);
+      return product;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+  async addCart({ commit }, data) {
+    try {
+      commit("setCart", data);
     } catch (error) {
       commit("setError", { error });
     }

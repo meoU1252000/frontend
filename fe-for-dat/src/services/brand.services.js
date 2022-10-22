@@ -7,7 +7,7 @@ class BrandServices {
     try {
       // const loginParams = translateLoginParams(credential);
       const response = await http.get("client/get-list-brand");
-      console.log(response);
+      // console.log(response);
       if (response.data.data) {
         return response.data.data;
       } else {

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full footer h-25rem">
+  <div class="w-full footer">
     <div class="flex justify-content-between footer_wrap h-full">
       <div class="flex-initial justify-content-center h-full">
         <h4 style="color: white">Thông tin Cửa Hàng</h4>
@@ -87,6 +87,7 @@ export default defineComponent({
 <style lang="scss" scope>
 .footer {
   background: #333333;
+  height: 25rem;
   .footer_wrap {
     padding: 3rem 10rem 0 10rem;
     .store_link {
@@ -129,5 +130,14 @@ export default defineComponent({
 
 .icon_link i{
   font-size: 1.25rem;
+}
+@media only screen and (max-width: 1366px) {
+  .footer{
+    font-size: 0.75rem !important;
+    height: 20rem;
+    .footer_wrap {
+      padding: 3rem 4rem 0 4rem;
+    }
+  }
 }
 </style>

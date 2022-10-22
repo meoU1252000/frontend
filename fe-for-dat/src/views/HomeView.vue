@@ -3,13 +3,13 @@
     <SliderCpn :listRootItem="listRootItem" :listBrand="listBrand" />
     <div class="product">
       <ListProductBrandCpn
-        v-for="(brand, i) in listBrandHaveProduct"
+        v-for="(brand, i) in listBrandHaveProduct.slice(0,2)"
         :key="i"
         :listBrand="listBrand"
         :brand="brand"
       />
       <ListProductCpn
-        v-for="(category, j) in listCategoryHaveProduct"
+        v-for="(category, j) in listCategoryHaveProduct.slice(0,5)"
         :key="j"
         :listProduct="listProduct"
         :category="category"
@@ -34,9 +34,11 @@ export default defineComponent({
     const store = useStore();
 
     onMounted(async () => {
-      await store.dispatch("product/getListProducts");
-      await store.dispatch("category/getListCategories");
-      await store.dispatch("brand/getListBrands");
+      // await store.dispatch("product/getListProducts");
+      // await store.dispatch("category/getListCategories");
+      // await store.dispatch("brand/getListBrands");
+      window.scrollTo(0, 0);
+
       // console.log("--------",store);
     });
     // const store = useStore();

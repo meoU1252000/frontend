@@ -1,117 +1,522 @@
 <template>
-  <router-link to="/" class="product no-underline">
-    <div class="image">
-      <img :src="product.main_image_src" alt="" />
-    </div>
-    <div class="wrap">
-      <div class="name">
-        <span>{{ product.product_name }}</span>
-      </div>
-      <div class="quantity">Còn {{product.product_quantity_stock}} sản phẩm</div>
-      <div class="product_footer_wrap">
-        <div class="price">
-          <span>{{formatter.format(product.product_price)}}</span>
-          <span class="price-second"></span>
+  <div class="p-7 mx-auto w-11 flex justify-content-between">
+    <div class="product-content flex w-9 flex mx-auto">
+      <div class="content-header flex p-2 w-full">
+        <div class="col-5 pt-5">
+          <div class="image flex justify-content-center">
+            <my-image
+              :src="currentSrc"
+              alt=""
+              imageClass="imageFit w-25rem h-25rem"
+              preview
+              v-if="currentSrc != null"
+            />
+            <my-image
+              :src="image"
+              alt=""
+              imageClass="imageFit w-25rem h-25rem"
+              preview
+              v-else
+            />
+          </div>
+          <div
+            class="image-slider flex mt-3 border-dashed border-x-none border-top-none"
+          >
+            <my-carousel
+              :value="listImage"
+              :numVisible="4"
+              :numScroll="1"
+              class="overflow-hidden"
+              :responsiveOptions="responsiveOptions"
+              v-if="listImage.length > 0"
+            >
+              <template #item="slotProps">
+                <my-image
+                  :src="slotProps.data.product_src"
+                  alt=""
+                  imageClass="w-5rem h-5rem mr-3"
+                  @mouseover="changeSource(slotProps.data.product_src)"
+                />
+              </template>
+            </my-carousel>
+          </div>
+          <div class="p-4 text-base">
+            <div v-for="(attribute, j) in productAttribute" :key="j">
+              <span>
+                - {{ attribute.attribute_name }}: {{ attribute.params }}
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="icon">
-          <img src="@/assets/images/icon-orthers/delivery-truck.png" alt="" />
+        <div class="col-7">
+          <div class="title border-dashed border-x-none border-top-none">
+            <div class="product-name">
+              <h6 class="text-3xl">{{ product.product_name }}</h6>
+            </div>
+            <div class="brand flex text-base align-items-baseline mt-2">
+              <div class="flex pr-3">
+                <label>Thương Hiệu</label>
+                <router-link to="/">{{ brand.brand_name }}</router-link>
+              </div>
+              <div class="separate"></div>
+              <div class="pl-3">
+                <label>Mã Sản Phẩm: </label>
+                <span>SP-{{ product.id }}</span>
+              </div>
+            </div>
+
+            <div
+              class="filter mt-3 brand"
+              v-for="(attribute, i) in attributes"
+              :key="i"
+            >
+              <div class="filter-color" v-if="attribute.param.length > 1">
+                <label
+                  >{{ attribute.attribute_name }}:
+                  {{ product_current_attribute[i]["params"] }}
+                </label>
+                <div class="flex mt-2">
+                  <div
+                    class="product-color pr-2 custom-button"
+                    v-for="(param, j) in attribute.param"
+                    :key="j"
+                  >
+                    <my-button
+                      :label="param.param_value"
+                      class="p-button-outlined p-button-sm"
+                      :class="{
+                        'button-2':
+                          product_current_attribute[i]['params'] ==
+                          param.param_value,
+                        'p-button-secondary':
+                          product_current_attribute[i]['params'] !=
+                          param.param_value,
+                      }"
+                      v-if="attribute.attribute_name == 'ROM'"
+                      @click="
+                        goToProductFilterPage(
+                          param.param_value,
+                          attribute.attribute_name
+                        )
+                      "
+                    ></my-button>
+                    <my-button
+                      :label="param.param_value"
+                      class="p-button-outlined p-button-sm"
+                      :class="{
+                        'button-2':
+                          product_current_attribute[i]['params'] ==
+                          param.param_value,
+                        'p-button-secondary':
+                          product_current_attribute[i]['params'] !=
+                          param.param_value,
+                      }"
+                      v-else
+                      @click="
+                        goToProductFilterPage(
+                          param.param_value,
+                          attribute.attribute_name
+                        )
+                      "
+                    ></my-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="quantity mt-3">
+              Còn {{ product.product_quantity_stock }} sản phẩm
+            </div>
+            <div class="product_footer_wrap mt-3">
+              <div class="price">
+                <span class="text-xl">{{
+                  formatter(product.product_price)
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex mt-4 action_button border-dashed border-x-none border-top-none"
+            v-if="product.product_quantity_stock > 0"
+          >
+            <div class="col-6">
+              <my-button class="w-full justify-content-center action-buy"
+                >MUA NGAY</my-button
+              >
+              <!-- <my-button
+                class="p-button-outlined w-full justify-content-center action-add" disabled="disabled"
+                v-else>Hết Hàng</my-button
+              > -->
+            </div>
+            <div class="col-6">
+              <my-button
+                class="p-button-outlined w-full justify-content-center action-add"
+                :value="product"
+                @click="addCart(product)"
+                >THÊM VÀO GIỎ HÀNG</my-button
+              >
+            </div>
+          </div>
+          <div
+            class="flex mt-4 action_button border-dashed border-x-none border-top-none"
+            v-else
+          >
+            <my-button
+              class="w-full justify-content-center p-button-secondary h-4rem"
+              disabled="disabled"
+              >HẾT HÀNG</my-button
+            >
+          </div>
+          <div class="pt-3 text-base event-content">
+            <h4>Khuyến mãi liên quan</h4>
+            <ul class="pl-4 text-sm">
+              <li class="pt-3 pb-2">
+                Trả góp 6 tháng lãi suất 0% với đơn hàng >3tr
+                <router-link to="/">Xem chi tiết</router-link>
+              </li>
+              <li class="pb-2">
+                Nhập mã PV100 giảm thêm 5% tối đa 100.000đ khi thanh toán qua
+                VNPAY-QR.
+                <router-link to="/">Xem chi tiết</router-link>
+              </li>
+              <li class="pb-2">
+                Nhập mã PV1000 giảm thêm 1.000.000đ khi thanh toán qua VNPAY-QR.
+                <router-link to="/">Xem chi tiết</router-link>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-  </router-link>
+
+    <div class="sidebar w-3 ml-3">
+      <SideBarCpn />
+    </div>
+  </div>
+  <div
+    class="px-7 pb-7 mx-auto w-11 flex justify-content-between"
+    v-if="product.product_description"
+  >
+    <ProductDescriptionCpn :product="product" />
+  </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-
+import { computed, defineComponent, ref } from "vue";
+// import { inject } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { formatter } from "@/function/common";
+import { addProductToCart,setStateCart} from "@/function/handleLocalStorage";
+import ProductDescriptionCpn from "./ProductDescriptionCpn.vue";
+import SideBarCpn from "./SideBarCpn.vue";
+// import Swal from 'sweetalert2';
 export default defineComponent({
+  components: { ProductDescriptionCpn, SideBarCpn },
   props: {
     product: { type: Object },
+    urlKind: { type: String },
   },
-  setup() {
-    const formatter = new Intl.NumberFormat("vi-VI", {
-      style: "currency",
-      currency: "VND",
-      minimumFractionDigits: 0,
+
+  setup(props) {
+    const images = ref([]);
+    const store = useStore();
+    const currentSrc = ref();
+    const route = useRouter();
+    const brand = computed(() => {
+      return props.product.brand || [];
     });
+    const responsiveOptions = ref([
+      {
+        breakpoint: "1366",
+        numVisible: 2,
+        numScroll: 1,
+      },
+    ]);
+    const filterParam = ref({
+      color: "",
+      rom: "",
+      ram:"",
+      chip: "",
+    });
+    const image = computed(() => {
+      return props.product.main_image_src || [];
+    });
+    const listImage = computed(() => {
+      return props.product.images || [];
+    });
+
+    const listProduct = computed(() => {
+      return store.getters["product/getListProduct"] || [];
+    });
+    const productAttribute = computed(() => {
+      return props.product.product_attribute || [];
+    });
+
+    const product_current_attribute = computed(() => {
+      const currentItem = productAttribute.value.filter((attribute) => {
+        return attribute.params;
+      });
+      if (props.urlKind.includes("iphone")) {
+        Object.assign(filterParam.value, {
+          color: currentItem[2].params,
+          rom: currentItem[3].params,
+        });
+      }
+      return currentItem;
+    });
+
+    const changeSource = (key) => {
+      return (currentSrc.value = key);
+    };
+
+    const category = computed(() => {
+      return props.product.category || [];
+    });
+
+    const attributes = computed(() => {
+      return category.value.attribute;
+    });
+
+    const goToProductFilterPage = (value, name) => {
+      const tempFilter = filterParam;
+      if (props.urlKind.includes("iphone")) {
+        switch (name) {
+          case "Màu Sắc":
+            filterParam.value.color = value;
+            break;
+          case "ROM":
+          default:
+            filterParam.value.rom = value;
+        }
+        try {
+          listProduct.value.forEach((ele) => {
+            if (ele.kind !== props.urlKind) return;
+            if (
+              ele.product_attribute[2].params == filterParam.value.color &&
+              ele.product_attribute[3].params == filterParam.value.rom
+            ) {
+              route.push(`/san-pham/${props.urlKind}/${ele.id}`);
+              changeSource(null);
+              throw "Nothing";
+            }
+          });
+        } catch (e) {
+          if (e === "Nothing") return;
+        }
+
+        filterParam.value = tempFilter;
+        console.log(filterParam.value);
+        window.Swal.fire({
+          icon: "error",
+          title: "Lỗi...",
+          text: "Không có sản phẩm tương ứng!",
+        });
+      } else {
+        filterParam.value.color = value;
+        try {
+          listProduct.value.forEach((ele) => {
+            if (ele.kind !== props.urlKind) return;
+            if (ele.product_attribute[2].params == filterParam.value.color) {
+              route.push(`/san-pham/${props.urlKind}/${ele.id}`);
+              changeSource(null);
+              throw "Nothing";
+            }
+          });
+        } catch (e) {
+          if (e === "Nothing") return;
+        }
+
+        filterParam.value = tempFilter;
+        console.log(filterParam.value);
+        window.Swal.fire({
+          icon: "error",
+          title: "Lỗi...",
+          text: "Không có sản phẩm tương ứng!",
+        });
+      }
+    };
+
+    const addCart = (item) => {
+      const cartItem = {
+        productId: item.id,
+        quantity: 1
+      }
+      addProductToCart(cartItem);
+      setStateCart(store)
+      window.Swal.fire({
+          icon: "success",
+          title: "Thành Công",
+          text: "Thêm sản phẩm vào giỏ hàng thành công!",
+        });
+    };
+    
+
     return {
-      formatter
+      brand,
+      images,
+      category,
+      formatter,
+      listImage,
+      currentSrc,
+      changeSource,
+      image,
+      productAttribute,
+      attributes,
+      responsiveOptions,
+      product_current_attribute,
+      goToProductFilterPage,
+      filterParam,
+      listProduct,
+      addCart,
+      addProductToCart
     };
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.product {
-  width: 20%;
-  height: 27rem;
-  color: var(--black-color);
-  border: 1px solid #cccccc36;
-
-  .image {
-    display: flex;
-    justify-content: center;
-    img {
-      width: 15rem;
-      height: 20rem;
-      object-fit: contain;
+.product-content {
+  min-height: 20rem;
+  background-color: white;
+  .content-header {
+    .col-5 {
+      .image {
+        display: flex;
+        justify-content: center;
+      }
     }
   }
 
-  .wrap {
-    margin: 0 1rem;
-
-    .name {
-      span {
-        font-size: 0.8rem;
-        font-weight: 400;
-        line-height: 1rem;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        line-clamp: 1;
-        -webkit-box-orient: vertical;
-      }
-    }
-
-    .quantity {
-      font-size: 0.75rem;
-      font-weight: 400;
-      color: #e6983a;
-
-      margin: 0.2rem 0;
-    }
-
-    .product_footer_wrap {
-      display: flex;
-      align-items: center;
-
-      .icon {
-        flex: 1;
-        display: flex;
-        justify-content: flex-end;
-
-        img {
-          width: 2rem;
-          height: 2rem;
-          object-fit: contain;
+  .content-header {
+    .col-5 {
+      .image-slider {
+        min-height: 7rem;
+        border-bottom: 1px solid;
+        border-color: rgb(224, 224, 224);
+        &:hover {
+          cursor: pointer;
         }
       }
     }
-    .price {
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      color: rgb(207, 15, 15,1);
-      font-weight: 700;
+  }
 
-      .price-second {
-        font-size: 0.85rem;
-        text-decoration: line-through;
-        color: #82869e;
-        font-weight: 500;
+  .brand {
+    color: rgb(130, 134, 158);
+    a {
+      padding-left: 0.4rem;
+      text-decoration: none;
+      color: rgb(207, 15, 15, 1);
+    }
+    .separate::after {
+      content: "";
+      border-right: 1px solid;
+      text-align: end;
+    }
+  }
+  .quantity {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #e6983a;
+
+    margin: 0.2rem 0;
+  }
+  .price {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: rgb(207, 15, 15, 1);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    .price-second {
+      font-size: 0.85rem;
+      text-decoration: line-through;
+      color: #82869e;
+      font-weight: 500;
+    }
+  }
+  .title {
+    min-height: 25rem;
+    border-bottom: 1px solid;
+    border-color: rgb(224, 224, 224);
+  }
+  .action_button {
+    min-height: 5rem;
+    border-bottom: 1px solid;
+    border-color: rgb(224, 224, 224);
+
+    .action-buy {
+      background-color: rgb(207, 15, 15, 1) !important;
+      border-color: rgb(207, 15, 15, 1) !important;
+      &:enabled:hover {
+        background-color: rgb(145, 10, 10) !important;
+        border-color: rgb(207, 15, 15, 1) !important;
+      }
+      &:focus {
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
+      }
+    }
+
+    .action-add {
+      color: rgb(207, 15, 15, 1) !important;
+      &:enabled:hover {
+        background: rgba(246, 59, 59, 0.04) !important;
+        border-color: rgb(145, 10, 10) !important;
+      }
+      &:focus {
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
+      }
+    }
+  }
+  .event-content {
+    a {
+      color: rgb(207, 15, 15, 1);
+    }
+  }
+}
+.text-base {
+  text-align: justify;
+}
+
+.custom-button {
+  .button-1 {
+    background-color: rgb(207, 15, 15, 1) !important;
+    border-color: rgb(207, 15, 15, 1) !important;
+    &:enabled:hover {
+      background-color: rgb(145, 10, 10) !important;
+      border-color: rgb(207, 15, 15, 1) !important;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
+    }
+  }
+
+  .button-2 {
+    color: rgb(207, 15, 15, 1) !important;
+    &:enabled:hover {
+      background: rgba(246, 59, 59, 0.04) !important;
+      border-color: rgb(145, 10, 10) !important;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
+    }
+  }
+}
+
+@media only screen and (max-width: 1366px) {
+  .product-content {
+    .content-header {
+      .col-5 {
+        .image {
+          .p-image {
+            img {
+              width: 100% !important;
+              height: 15rem !important;
+              object-fit: contain;
+            }
+          }
+        }
       }
     }
   }

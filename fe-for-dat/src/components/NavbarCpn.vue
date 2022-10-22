@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <div class="navbar navbar_modal">
     <div class="category" @mouseleave="handleLeave">
       <!-- {{listItem}} -->
       <div
@@ -8,24 +8,12 @@
         :key="i"
         @mouseover="handleHover(category.children)"
       >
-        <img class="item-img" src="@/assets/images/icons-nav/unnamed.webp" />
-        <span>{{ category.category_name }}</span>
+        <span class="text-sm p-2">{{ category.category_name }}</span>
       </div>
       <div class="modal" :style="{ display: display }">
         <div
-          class="flex flex-wrap card-container blue-container column-gap-4 row-gap-6 category-modal"
+          class="flex flex-wrap card-container column-gap-4 row-gap-6 category-modal"
         >
-          <div class="category_item">
-            <h4>Thương Hiệu</h4>
-            <div v-for="(brand, k) in listBrand" :key="k" class="brand">
-              <router-link
-                v-if="brand.products.length > 0 && brand.brand_status === 1"
-                to="/"
-                class="brand_link"
-                >{{ brand.brand_name }}</router-link
-              >
-            </div>
-          </div>
           <div v-for="(item, j) in items" :key="j">
             <div v-if="item.children !== null" class="category_item">
               <!-- {{item.products.length > 0}} -->
@@ -37,9 +25,7 @@
               >
               <h4 v-else>{{ item.category_name }}</h4>
               <div>
-                <NavbarChildrenCpn
-                  :listChildrenItem="item.children"
-                />
+                <NavbarChildrenCpn :listChildrenItem="item.children" />
               </div>
             </div>
             <div v-else class="category_item">
@@ -53,8 +39,9 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import NavbarChildrenCpn from "@/components/NavbarChildrenCpn.vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   components: { NavbarChildrenCpn },
@@ -65,7 +52,7 @@ export default defineComponent({
   setup() {
     const display = ref("none");
     const items = ref(0);
-
+    const store = useStore();
     const handleHover = (key) => {
       display.value = "block";
       items.value = key;
@@ -74,11 +61,17 @@ export default defineComponent({
       items.value = 0;
       display.value = "none";
     };
+
+    const listItem = computed(() => {
+      return store.getters["category/getListCategory"] || [];
+    });
+
     return {
       display,
       items,
       handleHover,
       handleLeave,
+      listItem,
     };
   },
 });
@@ -87,7 +80,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .navbar {
   position: absolute;
-  width: 200px;
+  width: 180px;
   height: 450px;
   background-color: #fff;
   top: 0;
@@ -99,7 +92,7 @@ export default defineComponent({
     position: relative;
     .modal {
       position: absolute;
-      width: calc(100vw - 33rem);
+      width: calc(100vw - 72rem);
       height: 28rem;
       background-color: #fff;
       left: 96%;
@@ -118,9 +111,8 @@ export default defineComponent({
       font-weight: bold;
     }
   }
-
-  .brand{
-    .brand_link{
+  .brand {
+    .brand_link {
       text-decoration: none;
       color: black;
     }
@@ -146,6 +138,19 @@ export default defineComponent({
       font-size: 12px;
       font-weight: 600;
     }
+  }
+}
+@media only screen and (max-width: 1366px) {
+  .navbar {
+    height: 20rem;
+
+    .modal {
+      width: calc(100vw - 45rem) !important;
+      height: 20rem !important;
+    }
+  }
+  .navbar_modal {
+    left: 0 !important;
   }
 }
 </style>
