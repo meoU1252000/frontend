@@ -21,7 +21,8 @@
     "vue-fb-customer-chat": "^0.2.1",
     "vue-router": "^4.0.3",
     "vue-sweetalert2": "^5.0.5",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

@@ -29,16 +29,24 @@
           <h3>{{ formatter(totalPrice) }}</h3>
         </div>
         <div class="flex">
-          <my-button class="mt-2 w-full flex justify-content-center" @click="goToCartPage">
+          <my-button
+            class="mt-2 w-full flex justify-content-center"
+            @click="goToCartPage"
+          >
             Xem Giỏ Hàng
           </my-button>
         </div>
       </div>
     </div>
-    <div v-else>
-      <div class="h-15rem flex justify-content-center align-items-center">
-        <h4>Giỏ hàng chưa có sản phẩm nào</h4>
+    <div v-else class="p-4 flex flex-column justify-content-center">
+      <div class="w-full flex justify-content-center mb-2">
+        <img
+          src="https://i.imgur.com/Drj57qu.png"
+          alt=""
+          class="h-8rem w-8rem"
+        />
       </div>
+      <h4 class="text-center">Không có sản phẩm trong giỏ hàng</h4>
     </div>
   </div>
 </template>
@@ -53,10 +61,9 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   props: {
     displayCart: { type: Boolean },
-    cartList: {type: Object}
+    cartList: { type: Object },
   },
   setup(props, { emit }) {
-   
     const route = useRouter();
     const handleCartLeave = () => {
       emit("handle-cart-leave");
@@ -79,7 +86,7 @@ export default defineComponent({
       formatter,
       totalPrice,
       handleCartLeave,
-      goToCartPage
+      goToCartPage,
     };
   },
 });

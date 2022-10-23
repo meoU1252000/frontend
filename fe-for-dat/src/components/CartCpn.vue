@@ -67,6 +67,16 @@
           </div>
         </div>
       </div>
+      <div v-else class="p-4 flex flex-column justify-content-center">
+        <div class="w-full flex justify-content-center mb-2">
+          <img
+            src="https://i.imgur.com/Drj57qu.png"
+            alt=""
+            class="h-10rem w-10rem"
+          />
+        </div>
+        <h4 class="text-center">Không có sản phẩm trong giỏ hàng</h4>
+      </div>
 
       <div class="sidebar w-3 ml-3"></div>
     </div>

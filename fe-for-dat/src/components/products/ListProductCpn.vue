@@ -10,30 +10,6 @@
           Xem tất cả >
         </my-button>
       </div>
-      <!-- <div class="head-categoryView">
-          <h4 class="title">Sắp xếp theo </h4>
-          <div class="filter">
-            <my-button
-              label="Bán Chạy"
-              class="p-button-outlined p-button-sm p-button-secondary"
-            ></my-button>
-            <my-button
-              label="Mới Về"
-              class="p-button-outlined p-button-sm p-button-secondary"
-              @click="sortByNewProduct(listProduct)"
-            ></my-button>
-            <my-button
-              label="Giá Giảm Dần"
-              class="p-button-outlined p-button-sm p-button-secondary"
-              @click="sortByLowPrice(listProduct)"
-            ></my-button>
-            <my-button
-              label="Giá Tăng Dần"
-              class="p-button-outlined p-button-sm p-button-secondary"
-              @click="sortByHigherPrice(listProduct)"
-            ></my-button>
-          </div>
-        </div> -->
       <div class="main-product">
         <my-carousel
           :value="category.products"
@@ -42,13 +18,11 @@
           v-if="category.products.length > 4"
         >
           <template #item="slotProps">
-            <ProductsCpn
-              :product="slotProps.data"
-            />
+            <ProductsCpn :product="slotProps.data" />
           </template>
         </my-carousel>
         <ProductsCpn
-        v-else
+          v-else
           v-for="(product, i) in category.products"
           :key="i"
           :product="product"
@@ -85,12 +59,12 @@
             class="mx-auto w-10 mb-4"
           ></my-slider>
         </div>
-
         <ListAttributeCpn
           v-for="(attribute, k) in listCategoryHaveAttribute"
           :key="k"
           :attribute="attribute"
           :listItem="listItem"
+          :category="category"
         />
       </div>
       <div class="col flex-grow-1 justify-content-center bg-white">
@@ -98,22 +72,32 @@
           <h4 class="title">Sắp xếp theo</h4>
           <div class="filter">
             <my-button
+              label="Mặc Định"
+              class="p-button-outlined p-button-sm p-button-secondary p-button"
+              :class="{ active: selected === 'a' }"
+              @click="sortByDefault(listProduct)"
+            ></my-button>
+            <my-button
               label="Bán Chạy"
-              class="p-button-outlined p-button-sm p-button-secondary"
+              class="p-button-outlined p-button-sm p-button-secondary p-button"
+              :class="{ active: selected === 'b' }"
             ></my-button>
             <my-button
               label="Mới Về"
               class="p-button-outlined p-button-sm p-button-secondary"
+              :class="{ active: selected === 'c' }"
               @click="sortByNewProduct(listProduct)"
             ></my-button>
             <my-button
               label="Giá Giảm Dần"
               class="p-button-outlined p-button-sm p-button-secondary"
+              :class="{ active: selected === 'd' }"
               @click="sortByLowPrice(listProduct)"
             ></my-button>
             <my-button
               label="Giá Tăng Dần"
               class="p-button-outlined p-button-sm p-button-secondary"
+              :class="{ active: selected === 'e' }"
               @click="sortByHigherPrice(listProduct)"
             ></my-button>
           </div>
@@ -134,7 +118,7 @@
 import { computed, defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import ProductsCpn from "./ProductsCpn.vue";
-import ListAttributeCpn from "../attribute/ListAttributeCpn.vue"
+import ListAttributeCpn from "../attribute/ListAttributeCpn.vue";
 export default defineComponent({
   props: {
     listCategoryHaveAttribute: { type: Object },
@@ -142,12 +126,13 @@ export default defineComponent({
     category: { type: Object },
     categoryView: { type: Boolean },
   },
-  components: { ProductsCpn ,ListAttributeCpn},
+  components: { ProductsCpn, ListAttributeCpn },
   setup(props) {
     const route = useRouter();
     const goToCategoryPage = (name) => {
       route.push(`/danh-muc/${name}`);
     };
+    const selected = ref("a");
     const valueMax = computed(() => {
       return props.category.highest_product_price * 2 || [];
     });
@@ -156,47 +141,59 @@ export default defineComponent({
 
     const drop = ref();
     const sortByLowPrice = (listProduct) => {
+      selected.value = "d";
       return listProduct.sort(function (a, b) {
-        return a.product_price - b.product_price;
+        return b.product_price - a.product_price;
       });
     };
     const sortByNewProduct = (listProduct) => {
+      selected.value = "c";
       return listProduct.sort(function (a, b) {
         return b.id - a.id;
       });
     };
 
-    const sortByHigherPrice = (listProduct) => {
+    const sortByDefault = (listProduct) => {
+      selected.value = "a";
       return listProduct.sort(function (a, b) {
-        return b.product_price - a.product_price;
+        return a.id - b.id;
       });
     };
 
-    const listItem = computed(() =>{
-      return props.category.products || [];
-    })
+    const sortByHigherPrice = (listProduct) => {
+      selected.value = "e";
+      return listProduct.sort(function (a, b) {
+        return a.product_price - b.product_price;
+      });
+    };
 
-    // const filteredItems = computed(() => {
-    //   return props.category.products.filter((product) => {
-    //     return product.product_attribute.forEach( params => {
-    //       if (product.product_attribute.params.includes(params)) {
-    //         return product.product_attribute.params.includes(params);
-    //       }
-    //     });
-    //   });
-    // })
+    const listItem = computed(() => {
+      return props.category.products || [];
+    });
+
+    const filteredItems = computed(() => {
+      return props.category.products.filter((product) => {
+        product.product_attribute.forEach((params) => {
+          if (product.product_attribute.params.includes(params)) {
+            product.product_attribute.params.includes(params);
+          }
+        });
+      });
+    });
 
     return {
       goToCategoryPage,
       sortByLowPrice,
       sortByHigherPrice,
       sortByNewProduct,
-      // filteredItems,
+      filteredItems,
       valueMax,
       valueMin,
       drop,
       valueChange,
-      listItem
+      listItem,
+      selected,
+      sortByDefault,
     };
     // ])
   },
@@ -266,8 +263,24 @@ export default defineComponent({
   display: flex;
   flex-wrap: wrap;
 }
+.active {
+  color: white !important;
+  background-color: rgb(207, 15, 15, 1) !important;
+  border-color: rgb(207, 15, 15, 1) !important;
+
+  &:enabled:hover {
+    background-color: rgb(145, 10, 10) !important;
+    border-color: rgb(207, 15, 15, 1) !important;
+  }
+  &:focus {
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black !important;
+  }
+  &:enabled:focus {
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black !important;
+  }
+}
 @media only screen and (max-width: 1366px) {
-  .list-product{
+  .list-product {
     padding: 2rem 5rem;
   }
 }
