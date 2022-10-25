@@ -1,5 +1,5 @@
 <template>
-   <my-dialog
+  <my-dialog
     header="Đăng Ký"
     :visible="displayModal"
     :breakpoints="{ '960px': '75vw', '640px': '90vw' }"
@@ -8,36 +8,73 @@
     @update:visible="closeModal"
   >
     <!-- <hr class="hr"> -->
-    <form action="">
-
-      <!-- <h5>Tên Đăng Nhập</h5>
+    <form @submit.prevent="handleSubmit(!v$.$invalid)">
+      <h5 :class="{ 'p-error': v$.user_name.$invalid && submitted }">
+        Họ và tên
+      </h5>
       <div class="col-12">
-        <my-inputText id="username1" type="username" class="w-full" />
-      </div> -->
-      <h5>Email</h5>
-      <div class="col-12">
-        <my-inputText id="email1" type="email" class="w-full" />
+        <my-inputText
+          id="user_name"
+          type="text"
+          class="w-full"
+          v-model="state.user_name"
+          :class="{ 'p-invalid': v$.user_name.$invalid && submitted }"
+        />
       </div>
-      <h5>Mật Khẩu</h5>
+      <h5 :class="{ 'p-error': v$.phone.$invalid && submitted }">
+        Số Điện Thoại
+      </h5>
+      <div class="col-12">
+        <my-inputText
+          id="phone"
+          type="text"
+          class="w-full"
+          v-model="state.phone"
+          :class="{ 'p-invalid': v$.phone.$invalid && submitted }"
+        />
+      </div>
+      <h5 :class="{ 'p-error': v$.email.$invalid && submitted }">Email</h5>
+      <div class="col-12">
+        <my-inputText
+          id="email"
+          type="email"
+          v-model="state.email"
+          class="w-full"
+          :class="{ 'p-invalid': v$.email.$invalid && submitted }"
+        />
+      </div>
+      <h5 :class="{ 'p-error': v$.password.$invalid && submitted }">
+        Mật Khẩu
+      </h5>
       <div class="col-12">
         <my-password
           :feedback="false"
           toggleMask
           class="w-full"
           inputClass="w-full"
+          id="password"
+          v-model="state.password"
+          :class="{ 'p-invalid': v$.password.$invalid && submitted }"
         />
         <small id="username1-help"
-          >Mật Khẩu phải có tối thiểu tám ký tự, ít nhất một chữ cái viết hoa, một
-          chữ cái viết thường, một số và một kí tự đặc biệt!</small
+          >Mật Khẩu phải có tối thiểu tám ký tự, ít nhất một chữ cái viết hoa,
+          một chữ cái viết thường, một số và một kí tự đặc biệt!</small
         >
       </div>
-      <h5>Xác Nhận Mật Khẩu</h5>
+      <h5 :class="{ 'p-error': v$.confirm_password.$invalid && submitted }">
+        Xác Nhận Mật Khẩu
+      </h5>
       <div class="col-12">
         <my-password
           :feedback="false"
           toggleMask
           class="w-full"
           inputClass="w-full"
+          id="confirm_password"
+          v-model="state.confirm_password"
+          :class="{
+            'p-invalid': v$.confirm_password.$invalid && submitted,
+          }"
         />
       </div>
       <div class="col-12">
@@ -110,34 +147,113 @@
           class="p-button-text"
           @click="closeModal"
         />
-        <my-button
-          label="Đăng Ký"
-          icon="pi pi-check"
-          @click="closeModal"
-          autofocus
-        />
+        <my-button label="Đăng Ký" type="submit" icon="pi pi-check" autofocus />
       </div>
     </form>
   </my-dialog>
- 
 </template>
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, reactive, ref, computed } from "vue";
+import {
+  helpers,
+  maxLength,
+  minLength,
+  required,
+  sameAs,
+} from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
+import { useStore } from "vuex";
 
 export default defineComponent({
   props: {
     displayModal: { type: Boolean },
   },
   setup(_props, { emit }) {
+    const store = useStore();
+    const state = reactive({
+      user_name: "",
+      phone: "",
+      email: "",
+      password: "",
+      confirm_password: "",
+    });
+
+    const rules = computed(() => {
+      return {
+        user_name: {
+          required: helpers.withMessage("Vui lòng nhập họ tên", required),
+        },
+        phone: {
+          required: helpers.withMessage(
+            "Vui lòng nhập số điện thoại",
+            required
+          ),
+          maxLength: maxLength(10),
+          minLengthValue: minLength(10),
+        },
+        email: {
+          required: helpers.withMessage("Vui lòng nhập email", required),
+        },
+        password: {
+          minLengthValue: minLength(8),
+          valid: function (value) {
+            const containsUppercase = /[A-Z]/.test(value);
+            const containsLowercase = /[a-z]/.test(value);
+            const containsNumber = /[0-9]/.test(value);
+            const containsSpecial = /[#?!@$%^&*-]/.test(value);
+            return (
+              containsUppercase &&
+              containsLowercase &&
+              containsNumber &&
+              containsSpecial
+            );
+          },
+          required: helpers.withMessage("Vui lòng nhập mật khẩu", required),
+        },
+        confirm_password: {
+          required: helpers.withMessage("Vui lòng nhập mật khẩu", required),
+          sameAs: sameAs(state.password),
+        },
+      };
+    });
+
+    const submitted = ref(false);
+
+    const v$ = useVuelidate(rules, state);
+
+    const handleSubmit = async (isFormValid) => {
+      submitted.value = true;
+      if (isFormValid) {
+        const customer = {
+          customer_name: state.user_name,
+          customer_phone: state.phone,
+          email: state.email,
+          password: state.password,
+          confirm_password: state.confirm_password,
+        };
+        await store.dispatch("auth/register", customer);
+        window.Swal.fire({
+          icon: "success",
+          title: "Thành Công",
+          text: "Đăng ký thành công",
+        });
+        closeModal();
+      }
+    };
+
     const closeModal = () => {
       emit("close-modal-register");
     };
-    const openLogin = () =>{
+    const openLogin = () => {
       emit("open-modal-login");
-    }
+    };
     return {
       closeModal,
-      openLogin
+      state,
+      openLogin,
+      v$,
+      handleSubmit,
+      submitted,
     };
   },
 });
@@ -244,7 +360,7 @@ h5 {
   text-align: center;
   position: inherit;
 }
-.dialog_footer_form{
+.dialog_footer_form {
   border-top: 0 none;
   background: #ffffff;
   color: #495057;
@@ -256,8 +372,8 @@ h5 {
   padding-bottom: 0;
 }
 
-.dialog_footer_form button{
+.dialog_footer_form button {
   margin: 0 0.5rem 0 0;
-    width: auto;
+  width: auto;
 }
 </style>

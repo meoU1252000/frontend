@@ -8,22 +8,29 @@
     @update:visible="closeModal"
   >
     <!-- <hr class="hr"> -->
-    <form action="">
-      <h5>Tên Đăng Nhập</h5>
+    <form @submit.prevent="handleLogin(!v$.$invalid)">
+      <h5 :class="{ 'p-error': v$.email.$invalid && submitted }">
+        Tên Đăng Nhập
+      </h5>
       <div class="col-12">
         <my-inputText
-          id="username1"
-          type="username"
-          v-model="email"
+          id="email"
+          type="email"
+          v-model="v$.email.$model"
           aria-describedby="username1-help"
           class="w-full"
+          :class="{ 'p-invalid': v$.email.$invalid && submitted }"
         />
       </div>
-      <h5>Mật Khẩu</h5>
+      <h5 :class="{ 'p-error': v$.password.$invalid && submitted }">
+        Mật Khẩu
+      </h5>
       <div class="col-12">
         <my-password
           :feedback="false"
-          v-model="valuePassword"
+          id="password"
+          v-model="v$.password.$model"
+          :class="{ 'p-invalid': v$.password.$invalid && submitted }"
           toggleMask
           class="w-full"
           inputClass="w-full"
@@ -99,16 +106,23 @@
           class="p-button-text"
           @click="closeModal"
         />
-        <my-button label="Đăng Nhập" icon="pi pi-check" autofocus @click="handleLogin"/>
+        <my-button
+          label="Đăng Nhập"
+          icon="pi pi-check"
+          type="submit"
+          autofocus
+        />
       </div>
-      
     </form>
   </my-dialog>
-
 </template>
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, reactive } from "vue";
 import { useStore } from "vuex";
+import useVuelidate from "@vuelidate/core";
+import { helpers, required } from "@vuelidate/validators";
+import { login, setStateLogin } from "@/function/handleLogin";
+
 // import RegisterView from "@/components/RegisterCpn.vue";
 export default defineComponent({
   components: {},
@@ -117,30 +131,59 @@ export default defineComponent({
   },
   setup(_props, { emit }) {
     const store = useStore();
+    const state = reactive({
+      email: "",
+      password: "",
+    });
+
     const closeModal = () => {
       emit("close-modal-login");
     };
 
-    const openRegister = () =>{
+    const openRegister = () => {
       emit("open-modal-register");
-    }
+    };
 
-    const valuePassword = ref("");
-    const email = ref("")
-    const handleLogin = async () => {
-      console.log("---", email.value, valuePassword.value);
-      await store.dispatch("auth/login", {
-        userName: email.value, 
-        password: valuePassword.value}
-      );
-    }
-    
+    const rules = {
+      email: {
+        required: helpers.withMessage("Email không đúng", required),
+      },
+      password: {
+        required: helpers.withMessage("Vui lòng nhập password", required),
+      },
+    };
+
+    const submitted = ref(false);
+
+    const v$ = useVuelidate(rules, state);
+
+    const handleLogin = async (isFormValid) => {
+      submitted.value = true;
+      const user = {
+        email: state.email,
+        password: state.password,
+      };
+      console.log(user);
+      if (isFormValid) {
+        // await store.dispatch("auth/login", user);
+        login(user);
+        setStateLogin(store);
+        window.Swal.fire({
+          icon: "success",
+          title: "Thành Công",
+          text: "Đăng nhập thành công",
+        });
+        closeModal();
+      }
+    };
+
     return {
       closeModal,
-      valuePassword,
-      email,
       openRegister,
       handleLogin,
+      submitted,
+      state,
+      v$,
     };
   },
 });
@@ -247,7 +290,7 @@ h5 {
   text-align: center;
   position: inherit;
 }
-.dialog_footer_form{
+.dialog_footer_form {
   border-top: 0 none;
   background: #ffffff;
   color: #495057;
@@ -259,8 +302,8 @@ h5 {
   padding-bottom: 0;
 }
 
-.dialog_footer_form button{
+.dialog_footer_form button {
   margin: 0 0.5rem 0 0;
-    width: auto;
+  width: auto;
 }
 </style>

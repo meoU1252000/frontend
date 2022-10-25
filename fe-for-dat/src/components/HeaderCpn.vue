@@ -44,9 +44,13 @@
     </div>
     <div class="login" @click="openModalLogin">
       <i class="pi pi-user" style="font-size: 1.6rem"></i>
-      <div class="text">
+      <div class="text" v-if="login.length > 0">
         <span>Đăng Nhập</span>
         <span>Đăng Ký</span>
+      </div>
+      <div class="text" v-else>
+        <span>Hello, </span>
+        <span>{{ login.userName }}</span>
       </div>
     </div>
     <div class="notification">
@@ -56,10 +60,14 @@
         v-badge="2"
       ></i>
     </div>
-    <div class="cart" @mouseover="handleCartHover" >
+    <div class="cart" @mouseover="handleCartHover">
       <i class="pi pi-shopping-cart" style="font-size: 1.8rem"></i>
-      <span>Giỏ hàng của bạn có ({{cartList.length}}) sản phẩm</span>
-      <CartModalCpn v-if="displayCart" @handle-cart-leave="handleCartLeave" :cartList="cartList"/>
+      <span>Giỏ hàng của bạn có ({{ cartList.length }}) sản phẩm</span>
+      <CartModalCpn
+        v-if="displayCart"
+        @handle-cart-leave="handleCartLeave"
+        :cartList="cartList"
+      />
     </div>
   </div>
   <LoginView
@@ -71,18 +79,16 @@
     :display-modal="showRegisterModal"
     @open-modal-login="openLoginModal"
     @close-modal-register="closeModalRegister"
-    
   />
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import LoginView from "@/components/LoginCpn.vue";
 import RegisterView from "@/components/RegisterCpn.vue";
 import NavbarCpn from "./NavbarCpn.vue";
 import CartModalCpn from "./CartModalCpn.vue";
-
-
+import { useStore } from "vuex";
 
 export default defineComponent({
   components: { LoginView, RegisterView, NavbarCpn, CartModalCpn },
@@ -90,10 +96,11 @@ export default defineComponent({
     propertyY: { type: Number },
     listModalRootItem: { type: Object },
     listModalBrand: { type: Object },
-    cartList: {type: Object}
+    cartList: { type: Object },
   },
   setup() {
     const search = ref();
+    const store = useStore();
     const showLoginModal = ref(false);
     const showRegisterModal = ref(false);
     const showCategoryModal = ref(false);
@@ -104,7 +111,7 @@ export default defineComponent({
     const closeModalLogin = () => {
       showLoginModal.value = false;
     };
-    const handleCartHover = () =>{
+    const handleCartHover = () => {
       displayCart.value = true;
     };
     const openRegisterModal = () => {
@@ -128,13 +135,14 @@ export default defineComponent({
       showCategoryModal.value = false;
     };
 
-   
-
     const handleCartLeave = () => {
       displayCart.value = false;
-    }
+    };
 
-    
+    const login = computed(() => {
+      return store.getters["auth/getUserInfo"] || [];
+    });
+
     return {
       search,
       showLoginModal,
@@ -150,6 +158,7 @@ export default defineComponent({
       handleCartHover,
       handleCartLeave,
       displayCart,
+      login,
       // cartList
     };
   },
@@ -243,24 +252,24 @@ export default defineComponent({
     }
   }
 }
-@media only screen and (max-width: 1366px){
-  .header{
-    padding:0 7rem;
-    a{
+@media only screen and (max-width: 1366px) {
+  .header {
+    padding: 0 7rem;
+    a {
       width: 10rem;
-      span{
+      span {
         font-size: 1rem !important;
       }
     }
-    .logo{
-      button{
-        width:8rem;
+    .logo {
+      button {
+        width: 8rem;
         height: 3rem;
       }
     }
-    .login{
-      .text{
-        span{
+    .login {
+      .text {
+        span {
           font-size: 12px !important;
         }
       }

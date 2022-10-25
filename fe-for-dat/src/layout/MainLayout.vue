@@ -1,6 +1,12 @@
 <template>
   <div class="main-layout" @scroll="handleScroll">
-    <HeaderCpn :propertyY="propertyY" :listModalBrand="listModalBrand" :listModalRootItem="listModalRootItem" :cartList="cartList"/>
+    <HeaderCpn
+      :propertyY="propertyY"
+      :listModalBrand="listModalBrand"
+      :listModalRootItem="listModalRootItem"
+      :cartList="cartList"
+      :login="login"
+    />
     <router-view />
     <!-- <div class="footer"></div> -->
     <FooterCpn />
@@ -8,16 +14,17 @@
 </template>
 
 <script>
-import { defineComponent, ref,computed, onMounted } from "vue";
+import { defineComponent, ref, computed, onMounted } from "vue";
 import HeaderCpn from "@/components/HeaderCpn.vue";
 import FooterCpn from "@/components/FooterCpn.vue";
 import { setStateCart } from "@/function/handleLocalStorage";
 import { getCartList } from "@/function/getCartList";
 import { useStore } from "vuex";
+import { setStateLogin } from "@/function/handleLogin";
 
 export default defineComponent({
-  created () {
-    window.addEventListener('scroll', this.handleScroll);
+  created() {
+    window.addEventListener("scroll", this.handleScroll);
   },
   components: { HeaderCpn, FooterCpn },
   setup() {
@@ -25,13 +32,14 @@ export default defineComponent({
     const propertyY = ref(0);
     const handleScroll = () => {
       propertyY.value = Math.round(window.pageYOffset);
-    }
+    };
 
     onMounted(async () => {
       await store.dispatch("product/getListProducts");
       await store.dispatch("category/getListCategories");
       await store.dispatch("brand/getListBrands");
       setStateCart(store);
+      setStateLogin(store);
       window.scrollTo(0, 0);
     });
 
@@ -41,12 +49,14 @@ export default defineComponent({
 
       return getCartList(listProduct, cartItem);
     });
-   
+
     const listModalItem = computed(() => {
       return store.getters["category/getListCategory"] || [];
     });
     const listModalRootItem = computed(() => {
-      return listModalItem.value.filter((item) => item.category_parent === 0 && item.category_status === 1);
+      return listModalItem.value.filter(
+        (item) => item.category_parent === 0 && item.category_status === 1
+      );
     });
 
     const listModalBrand = computed(() => {
@@ -59,7 +69,7 @@ export default defineComponent({
       listModalItem,
       listModalRootItem,
       listModalBrand,
-      cartList
+      cartList,
     };
   },
 });
