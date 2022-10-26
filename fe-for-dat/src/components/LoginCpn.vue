@@ -118,10 +118,9 @@
 </template>
 <script>
 import { defineComponent, ref, reactive } from "vue";
-import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
-import { login, setStateLogin } from "@/function/handleLogin";
+import { useStore } from "vuex";
 
 // import RegisterView from "@/components/RegisterCpn.vue";
 export default defineComponent({
@@ -163,11 +162,8 @@ export default defineComponent({
         email: state.email,
         password: state.password,
       };
-      console.log(user);
       if (isFormValid) {
-        // await store.dispatch("auth/login", user);
-        login(user);
-        setStateLogin(store);
+        await store.dispatch("auth/login", user);
         window.Swal.fire({
           icon: "success",
           title: "Thành Công",

@@ -40,7 +40,7 @@
             <div class="col-12">
               <my-inputNumber
                 inputId="horizontal"
-                v-model="value19"
+                v-model="item.quantity"
                 mode="decimal"
                 showButtons
                 buttonLayout="horizontal"
@@ -51,6 +51,8 @@
                 decrementButtonIcon="pi pi-minus"
                 inputClass="w-full text-center"
                 min="1"
+                :max="item.productStock"
+                @click="handleUpdateQuantity(item.productId, item.quantity)"
               />
             </div>
             <div class="col-12 text-center">
@@ -82,32 +84,31 @@
     </div>
     <div class="sidebar w-3 ml-3">
       <EventCpn />
-      <CartCheckOutCpn :totalPrice="totalPrice" />
+      <CartSideBar :totalPrice="totalPrice" />
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, computed } from "vue";
 import { useStore } from "vuex";
 import { getCartList } from "@/function/getCartList";
 import { formatter } from "@/function/common";
 import {
   removeProductFromCart,
   setStateCart,
+  updateQuantity,
 } from "@/function/handleLocalStorage";
 import EventCpn from "./EventCpn.vue";
-import CartCheckOutCpn from "./CartCheckOutCpn.vue";
+import CartSideBar from "./CartSideBar.vue";
 
 export default defineComponent({
   components: {
     EventCpn,
-    CartCheckOutCpn,
+    CartSideBar,
   },
   setup() {
     const store = useStore();
-    const value19 = ref(1);
-
     const listProduct = computed(() => {
       return store.getters["product/getListProduct"] || [];
     });
@@ -148,13 +149,22 @@ export default defineComponent({
       });
     };
 
+    const handleUpdateQuantity = (id, quantity) => {
+      const cartItem = {
+        productId: id,
+        quantity: quantity,
+      };
+      updateQuantity(cartItem);
+      setStateCart(store);
+    };
+
     return {
-      value19,
       cartList,
       formatter,
       listProduct,
       handleRemoveProduct,
       totalPrice,
+      handleUpdateQuantity,
     };
   },
 });

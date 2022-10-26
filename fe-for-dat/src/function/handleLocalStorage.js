@@ -12,12 +12,13 @@ export const addProductToCart = (item) => {
     let check = false;
     arrCart.forEach((itemCart) => {
       if (itemCart.productId === item.productId) {
-        itemCart.quantity += item.quantity;
+        if (itemCart.quantity < itemCart.maxQuantity) {
+          itemCart.quantity += item.quantity;
+        }
         check = true;
       } else {
         check = false;
       }
-      
     });
     if (!check) {
       arrCart.push(item);
@@ -27,6 +28,19 @@ export const addProductToCart = (item) => {
     return;
   }
   setItemLocal("cart", [item]);
+};
+
+export const updateQuantity = (item) => {
+  const arrCart = getItemLocal("cart") || [];
+  if (arrCart.length) {
+    arrCart.forEach((itemCart) => {
+      if (itemCart.productId === item.productId) {
+        itemCart.quantity = item.quantity;
+      }
+    });
+    setItemLocal("cart", arrCart);
+    return;
+  }
 };
 
 export const removeProductFromCart = (id) => {

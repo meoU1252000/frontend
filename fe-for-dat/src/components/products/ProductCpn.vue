@@ -207,8 +207,9 @@ import { computed, defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { formatter } from "@/function/common";
-import { addProductToCart,setStateCart} from "@/function/handleLocalStorage";
+import { addProductToCart, setStateCart } from "@/function/handleLocalStorage";
 import ProductDescriptionCpn from "./ProductDescriptionCpn.vue";
+import { getCartList } from "@/function/getCartList";
 import SideBarCpn from "./SideBarCpn.vue";
 // import Swal from 'sweetalert2';
 export default defineComponent({
@@ -236,7 +237,7 @@ export default defineComponent({
     const filterParam = ref({
       color: "",
       rom: "",
-      ram:"",
+      ram: "",
       chip: "",
     });
     const image = computed(() => {
@@ -337,20 +338,47 @@ export default defineComponent({
       }
     };
 
+    const cartList = computed(() => {
+      const cartItem = store.getters["product/getCart"] || [];
+
+      return getCartList(listProduct.value, cartItem);
+    });
+
     const addCart = (item) => {
       const cartItem = {
         productId: item.id,
-        quantity: 1
-      }
+        quantity: 1,
+        maxQuantity: item.product_quantity_stock,
+      };
       addProductToCart(cartItem);
-      setStateCart(store)
-      window.Swal.fire({
+      setStateCart(store);
+      if (cartList.value.length > 0) {
+        cartList.value.filter((product) => {
+          if (
+            product.productId === item.id &&
+            product.quantity >= product.productStock
+          ) {
+            window.Swal.fire({
+              icon: "error",
+              title: "Lỗi...",
+              text: "Số lượng sản phẩm vượt quá số lượng tồn. Vui lòng thử lại!",
+            });
+          } else {
+            window.Swal.fire({
+              icon: "success",
+              title: "Thành Công",
+              text: "Thêm sản phẩm vào giỏ hàng thành công!",
+            });
+          }
+        });
+      } else {
+        window.Swal.fire({
           icon: "success",
           title: "Thành Công",
           text: "Thêm sản phẩm vào giỏ hàng thành công!",
         });
+      }
     };
-    
 
     return {
       brand,
@@ -369,7 +397,7 @@ export default defineComponent({
       filterParam,
       listProduct,
       addCart,
-      addProductToCart
+      addProductToCart,
     };
   },
 });
