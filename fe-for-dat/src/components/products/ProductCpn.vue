@@ -345,33 +345,39 @@ export default defineComponent({
     });
 
     const addCart = (item) => {
-      const cartItem = {
-        productId: item.id,
-        quantity: 1,
-        maxQuantity: item.product_quantity_stock,
-      };
-      addProductToCart(cartItem);
-      setStateCart(store);
       if (cartList.value.length > 0) {
-        cartList.value.filter((product) => {
-          if (
-            product.productId === item.id &&
-            product.quantity >= product.productStock
-          ) {
-            window.Swal.fire({
-              icon: "error",
-              title: "Lỗi...",
-              text: "Số lượng sản phẩm vượt quá số lượng tồn. Vui lòng thử lại!",
-            });
-          } else {
-            window.Swal.fire({
-              icon: "success",
-              title: "Thành Công",
-              text: "Thêm sản phẩm vào giỏ hàng thành công!",
-            });
+        cartList.value.find((product) => {
+          if (product.productId === item.id) {
+            if (product.quantity >= product.productStock) {
+              window.Swal.fire({
+                icon: "error",
+                title: "Lỗi...",
+                text: "Số lượng sản phẩm vượt quá số lượng tồn. Vui lòng thử lại!",
+              });
+            } else {
+              window.Swal.fire({
+                icon: "success",
+                title: "Thành Công",
+                text: "Thêm sản phẩm vào giỏ hàng thành công!",
+              });
+              const cartItem = {
+                productId: item.id,
+                quantity: 1,
+                maxQuantity: item.product_quantity_stock,
+              };
+              addProductToCart(cartItem);
+              setStateCart(store);
+            }
           }
         });
       } else {
+        const cartItem = {
+          productId: item.id,
+          quantity: 1,
+          maxQuantity: item.product_quantity_stock,
+        };
+        addProductToCart(cartItem);
+        setStateCart(store);
         window.Swal.fire({
           icon: "success",
           title: "Thành Công",

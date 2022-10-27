@@ -42,17 +42,21 @@
         />
       </span>
     </div>
-    <div class="login" @click="openModalLogin">
+    <div class="login" @click="openModalLogin"  v-if="login.length > 0">
       <i class="pi pi-user" style="font-size: 1.6rem"></i>
-      <div class="text" v-if="login.length > 0">
-        <span>Đăng Nhập</span>
-        <span>Đăng Ký</span>
-      </div>
-      <div class="text" v-else>
+      <div class="text">
         <span>Hello, </span>
         <span>{{ login.userName }}</span>
       </div>
     </div>
+    <div class="login" @click="openModalLogin" v-else>
+      <i class="pi pi-user" style="font-size: 1.6rem"></i>
+      <div class="text" >
+        <span>Đăng Nhập</span>
+        <span>Đăng Ký</span>
+      </div>
+    </div>
+ 
     <div class="notification">
       <i
         class="pi pi-bell mr-4 p-text-secondary"
@@ -70,28 +74,30 @@
       />
     </div>
   </div>
-  <LoginView
+  <LoginCpn
     :display-modal="showLoginModal"
     @close-modal-login="closeModalLogin"
     @open-modal-register="openRegisterModal"
   />
-  <RegisterView
+  <RegisterCpn
     :display-modal="showRegisterModal"
     @open-modal-login="openLoginModal"
     @close-modal-register="closeModalRegister"
   />
+  <UserCpn :display-modal="showUserInfoModal" />
 </template>
 
 <script>
 import { defineComponent, ref, computed } from "vue";
-import LoginView from "@/components/LoginCpn.vue";
-import RegisterView from "@/components/RegisterCpn.vue";
+import LoginCpn from "@/components/LoginCpn.vue";
+import RegisterCpn from "@/components/RegisterCpn.vue";
+import UserCpn from "@/components/user/UserCpn.vue";
 import NavbarCpn from "./NavbarCpn.vue";
 import CartModalCpn from "./CartModalCpn.vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
-  components: { LoginView, RegisterView, NavbarCpn, CartModalCpn },
+  components: { LoginCpn, RegisterCpn, NavbarCpn, CartModalCpn,UserCpn },
   props: {
     propertyY: { type: Number },
     listModalRootItem: { type: Object },
@@ -104,6 +110,7 @@ export default defineComponent({
     const showLoginModal = ref(false);
     const showRegisterModal = ref(false);
     const showCategoryModal = ref(false);
+    const showUserInfoModal = ref(false);
     const displayCart = ref(false);
     const openModalLogin = () => {
       showLoginModal.value = true;
@@ -122,6 +129,9 @@ export default defineComponent({
       showRegisterModal.value = false;
       showLoginModal.value = true;
     };
+    const openUserInfoModal = () =>{
+      showUserInfoModal.value = true;
+    }
 
     const closeModalRegister = () => {
       showRegisterModal.value = false;
@@ -159,6 +169,8 @@ export default defineComponent({
       handleCartLeave,
       displayCart,
       login,
+      showUserInfoModal,
+      openUserInfoModal
       // cartList
     };
   },

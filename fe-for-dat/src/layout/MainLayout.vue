@@ -5,7 +5,6 @@
       :listModalBrand="listModalBrand"
       :listModalRootItem="listModalRootItem"
       :cartList="cartList"
-      :login="login"
     />
     <router-view />
     <!-- <div class="footer"></div> -->

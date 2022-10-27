@@ -36,7 +36,7 @@ const actions = {
     try {
       const store = useStore();
       const data = await authServices.login(user);
-      login(data.access_token);
+      login(data);
       setStateLogin(store);
       console.log(data);
       commit("setUser", {

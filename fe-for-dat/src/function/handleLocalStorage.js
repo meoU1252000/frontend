@@ -9,22 +9,18 @@ export const getItemLocal = (name) => {
 export const addProductToCart = (item) => {
   const arrCart = getItemLocal("cart") || [];
   if (arrCart.length) {
-    let check = false;
-    arrCart.forEach((itemCart) => {
-      if (itemCart.productId === item.productId) {
-        if (itemCart.quantity < itemCart.maxQuantity) {
+    // let check = false;
+    const check = arrCart.find((itemCart) => {
+      if(itemCart.productId === item.productId){
+        if (itemCart.quantity < itemCart.maxQuantity) 
           itemCart.quantity += item.quantity;
-        }
-        check = true;
-      } else {
-        check = false;
-      }
-    });
+          return itemCart;
+      }})
     if (!check) {
       arrCart.push(item);
     }
     setItemLocal("cart", arrCart);
-    check = false;
+    // check = false;
     return;
   }
   setItemLocal("cart", [item]);
