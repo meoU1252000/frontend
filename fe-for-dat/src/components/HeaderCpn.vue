@@ -43,15 +43,16 @@
       </span>
     </div>
 
-    <div class="user-info" @mouseover="handleUserInfoHover" v-if="login">
+    <div class="user-info" @mouseover="handleUserInfoHover" v-if="login.userName != null">
       <i class="pi pi-user" style="font-size: 1.6rem"></i>
       <div class="text">
         <span>Hello, </span>
-        <span>{{ login.userName }}</span>
+        <span>{{ login.userName.split(' ').slice(-1).join(' ')}}</span>
       </div>
       <UserCpn
         v-if="displayUserInfo"
         @handle-user-info-leave="handleUserInfoLeave"
+        :login="login"
       />
     </div>
     <div class="login" @click="openModalLogin" v-else>

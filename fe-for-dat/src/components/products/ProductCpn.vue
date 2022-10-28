@@ -525,9 +525,6 @@ export default defineComponent({
     }
   }
 }
-.text-base {
-  text-align: justify;
-}
 
 .custom-button {
   .button-1 {

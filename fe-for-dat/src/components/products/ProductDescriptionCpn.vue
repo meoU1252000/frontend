@@ -151,15 +151,17 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .product-content {
   min-height: 20rem;
   background-color: white;
 }
-.product-description > * {
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-  text-align: justify;
+.product-description {
+  ::v-deep *{
+    font-size: 1rem;
+    margin-bottom: 1rem !important;
+    text-align: justify !important;
+  }
 }
 
 .product-information {

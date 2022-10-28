@@ -163,13 +163,23 @@ export default defineComponent({
         password: state.password,
       };
       if (isFormValid) {
-        await store.dispatch("auth/login", user);
-        window.Swal.fire({
-          icon: "success",
-          title: "Thành Công",
-          text: "Đăng nhập thành công",
-        });
-        closeModal();
+        const check = await store.dispatch("auth/login", user);
+        console.log(check)
+        if(check){
+          window.Swal.fire({
+            icon: "success",
+            title: "Thành Công",
+            text: "Đăng nhập thành công",
+          });
+          closeModal();
+        }else{
+          window.Swal.fire({
+            icon: "error",
+            title: "Thất Bại",
+            text: "Tài khoản không tồn tại. Vui lòng thử lại",
+          });
+          closeModal();
+        }
       }
     };
 

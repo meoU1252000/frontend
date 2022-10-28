@@ -2,7 +2,7 @@
   <div class="user-modal" @mouseleave="handleUserInfoLeave">
     <h3>
       Hello
-      <p>Customer1</p>
+      <p>{{ login.userName }}</p>
     </h3>
     <ul class="user_wrap--list">
       <li>
@@ -19,30 +19,49 @@
       </li>
       <li>
         <i class="pi pi-sign-out"></i>
-        <a href="./logout.php" class="logout">Đăng Xuất</a>
+        <a @click="handleLogOut(login)" class="logout">Đăng Xuất</a>
       </li>
     </ul>
   </div>
 </template>
 <script>
 import { defineComponent } from "vue";
+import { useStore } from "vuex";
+// import { removeUserLocal } from "@/function/handleLogin";
 
 export default defineComponent({
   props: {
     showUserInfoModal: { type: Boolean },
+    login: { type: Object },
   },
   setup(props, { emit }) {
+    const store = useStore();
     const handleUserInfoLeave = () => {
       emit("handle-user-info-leave");
     };
-    return { handleUserInfoLeave };
+
+    const handleLogOut = async (login) => {
+      const credential = login.token;
+      await store.dispatch("auth/logout", credential);
+      window.Swal.fire({
+        icon: "success",
+        title: "Thành Công",
+        text: "Đăng xuất thành công",
+      });
+      // removeUserLocal('login')
+    };
+
+    return {
+      handleUserInfoLeave,
+      handleLogOut,
+    };
   },
 });
 </script>
 <style lang="scss" scoped>
 .user-modal {
-  top: 6rem;
-  transform: translateX(-5rem);
+  top: 5rem;
+  transform: translateX(-6rem);
   width: 200px;
   background-color: white;
   position: absolute;

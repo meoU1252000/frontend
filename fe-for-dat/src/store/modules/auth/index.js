@@ -35,7 +35,6 @@ const actions = {
     try {
       const data = await authServices.login(user);
       login(data);
-      console.log(data.user);
       commit("setUser", {
         userId: data.user.id,
         userName: data.user.customer_name,
@@ -44,7 +43,7 @@ const actions = {
         token: data.access_token,
       });
       commit("setError", { error: null });
-
+      return user;
       //call api
     } catch (error) {
       commit("setError", { error });
@@ -69,6 +68,16 @@ const actions = {
         token: data.access_token,
       });
       commit("setError", { error: null });
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+  async logout({ commit }, credential) {
+    try {
+      commit("setError", {});
+      const res = await authServices.logout(credential);
+      return res;
+      //call api
     } catch (error) {
       commit("setError", { error });
     }

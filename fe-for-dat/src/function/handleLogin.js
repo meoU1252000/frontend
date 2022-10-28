@@ -13,3 +13,7 @@ export const setStateLogin = (store) => {
   const user = getUserLocal("login");
   store.dispatch("auth/setStateLogin", user);
 };
+
+export const removeUserLocal = (name) => {
+  localStorage.removeItem(name);
+}
