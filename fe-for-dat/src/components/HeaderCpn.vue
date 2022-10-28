@@ -42,21 +42,26 @@
         />
       </span>
     </div>
-    <div class="login" @click="openModalLogin"  v-if="login.length > 0">
+
+    <div class="user-info" @mouseover="handleUserInfoHover" v-if="login">
       <i class="pi pi-user" style="font-size: 1.6rem"></i>
       <div class="text">
         <span>Hello, </span>
         <span>{{ login.userName }}</span>
       </div>
+      <UserCpn
+        v-if="displayUserInfo"
+        @handle-user-info-leave="handleUserInfoLeave"
+      />
     </div>
     <div class="login" @click="openModalLogin" v-else>
       <i class="pi pi-user" style="font-size: 1.6rem"></i>
-      <div class="text" >
+      <div class="text">
         <span>Đăng Nhập</span>
         <span>Đăng Ký</span>
       </div>
     </div>
- 
+
     <div class="notification">
       <i
         class="pi pi-bell mr-4 p-text-secondary"
@@ -84,7 +89,6 @@
     @open-modal-login="openLoginModal"
     @close-modal-register="closeModalRegister"
   />
-  <UserCpn :display-modal="showUserInfoModal" />
 </template>
 
 <script>
@@ -97,7 +101,7 @@ import CartModalCpn from "./CartModalCpn.vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
-  components: { LoginCpn, RegisterCpn, NavbarCpn, CartModalCpn,UserCpn },
+  components: { LoginCpn, RegisterCpn, NavbarCpn, CartModalCpn, UserCpn },
   props: {
     propertyY: { type: Number },
     listModalRootItem: { type: Object },
@@ -110,7 +114,7 @@ export default defineComponent({
     const showLoginModal = ref(false);
     const showRegisterModal = ref(false);
     const showCategoryModal = ref(false);
-    const showUserInfoModal = ref(false);
+    const displayUserInfo = ref(false);
     const displayCart = ref(false);
     const openModalLogin = () => {
       showLoginModal.value = true;
@@ -129,9 +133,6 @@ export default defineComponent({
       showRegisterModal.value = false;
       showLoginModal.value = true;
     };
-    const openUserInfoModal = () =>{
-      showUserInfoModal.value = true;
-    }
 
     const closeModalRegister = () => {
       showRegisterModal.value = false;
@@ -149,6 +150,13 @@ export default defineComponent({
       displayCart.value = false;
     };
 
+    const handleUserInfoHover = () => {
+      displayUserInfo.value = true;
+    };
+
+    const handleUserInfoLeave = () => {
+      displayUserInfo.value = false;
+    };
     const login = computed(() => {
       return store.getters["auth/getUserInfo"] || [];
     });
@@ -169,9 +177,9 @@ export default defineComponent({
       handleCartLeave,
       displayCart,
       login,
-      showUserInfoModal,
-      openUserInfoModal
-      // cartList
+      displayUserInfo,
+      handleUserInfoLeave,
+      handleUserInfoHover,
     };
   },
 });
@@ -235,6 +243,22 @@ export default defineComponent({
 
     &:hover {
       color: rgb(207, 15, 15, 1) !important;
+    }
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-right: 1.5rem;
+    cursor: pointer;
+    width: 150px;
+
+    .text {
+      span {
+        display: block;
+        margin-left: 1rem;
+        font-size: 15px;
+      }
     }
   }
 

@@ -346,7 +346,7 @@ export default defineComponent({
 
     const addCart = (item) => {
       if (cartList.value.length > 0) {
-        cartList.value.find((product) => {
+        const check = cartList.value.find((product) => {
           if (product.productId === item.id) {
             if (product.quantity >= product.productStock) {
               window.Swal.fire({
@@ -354,6 +354,7 @@ export default defineComponent({
                 title: "Lỗi...",
                 text: "Số lượng sản phẩm vượt quá số lượng tồn. Vui lòng thử lại!",
               });
+              return 1;
             } else {
               window.Swal.fire({
                 icon: "success",
@@ -367,9 +368,24 @@ export default defineComponent({
               };
               addProductToCart(cartItem);
               setStateCart(store);
+              return 1;
             }
           }
         });
+        if (!check) {
+          window.Swal.fire({
+            icon: "success",
+            title: "Thành Công",
+            text: "Thêm sản phẩm vào giỏ hàng thành công!",
+          });
+          const cartItem = {
+            productId: item.id,
+            quantity: 1,
+            maxQuantity: item.product_quantity_stock,
+          };
+          addProductToCart(cartItem);
+          setStateCart(store);
+        }
       } else {
         const cartItem = {
           productId: item.id,

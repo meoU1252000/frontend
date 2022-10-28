@@ -11,5 +11,5 @@ export const login = (user) => {
 
 export const setStateLogin = (store) => {
   const user = getUserLocal("login");
-  store.dispatch("auth/login", user);
+  store.dispatch("auth/setStateLogin", user);
 };

@@ -1,8 +1,7 @@
 // import axios from "axios"
 
 import authServices from "@/services/auth.services";
-import { login, setStateLogin } from "@/function/handleLogin";
-import { useStore } from "vuex";
+import { login } from "@/function/handleLogin";
 
 const initDefaultState = () => {
   return {
@@ -34,16 +33,14 @@ const mutations = {
 const actions = {
   async login({ commit }, user) {
     try {
-      const store = useStore();
       const data = await authServices.login(user);
       login(data);
-      setStateLogin(store);
-      console.log(data);
+      console.log(data.user);
       commit("setUser", {
-        userId: data.id,
-        userName: data.customer_name,
-        userPhone: data.customer_phone,
-        userEmail: data.email,
+        userId: data.user.id,
+        userName: data.user.customer_name,
+        userPhone: data.user.customer_phone,
+        userEmail: data.user.email,
         token: data.access_token,
       });
       commit("setError", { error: null });
@@ -59,6 +56,19 @@ const actions = {
       const res = await authServices.register(newCustomer);
       return res;
       //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+  async setStateLogin({ commit }, data) {
+    try {
+      commit("setUser", {
+        userName: data.user.customer_name,
+        userPhone: data.user.customer_phone,
+        userEmail: data.user.email,
+        token: data.access_token,
+      });
+      commit("setError", { error: null });
     } catch (error) {
       commit("setError", { error });
     }
