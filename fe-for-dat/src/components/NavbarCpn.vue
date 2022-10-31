@@ -25,7 +25,11 @@
               >
               <h4 v-else>{{ item.category_name }}</h4>
               <div>
-                <NavbarChildrenCpn :listChildrenItem="item.children" />
+                <NavbarChildrenCpn
+                  :listChildrenItem="item.children"
+                  :showCategoryModal="showCategoryModal"
+                  @close-modal-category="closeModal"
+                />
               </div>
             </div>
             <div v-else class="category_item">
@@ -48,8 +52,9 @@ export default defineComponent({
   props: {
     listRootItem: { type: Object },
     listBrand: { type: Object },
+    showCategoryModal: { type: Boolean },
   },
-  setup() {
+  setup(props, { emit }) {
     const display = ref("none");
     const items = ref(0);
     const store = useStore();
@@ -62,6 +67,10 @@ export default defineComponent({
       display.value = "none";
     };
 
+    const closeModal = () => {
+      emit("close-modal-category");
+    };
+
     const listItem = computed(() => {
       return store.getters["category/getListCategory"] || [];
     });
@@ -72,6 +81,7 @@ export default defineComponent({
       handleHover,
       handleLeave,
       listItem,
+      closeModal,
     };
   },
 });

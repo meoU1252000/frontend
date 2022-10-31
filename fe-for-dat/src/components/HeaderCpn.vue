@@ -29,6 +29,8 @@
         <NavbarCpn
           :listRootItem="listModalRootItem"
           :listBrand="listModalBrand"
+          :showCategoryModal="showCategoryModal"
+          @close-modal-category="closeModalCategory"
         />
       </my-dialog>
     </div>
@@ -43,11 +45,15 @@
       </span>
     </div>
 
-    <div class="user-info" @mouseover="handleUserInfoHover" v-if="login.userName != null">
+    <div
+      class="user-info"
+      @mouseover="handleUserInfoHover"
+      v-if="login.userName != null"
+    >
       <i class="pi pi-user" style="font-size: 1.6rem"></i>
       <div class="text">
         <span>Hello, </span>
-        <span>{{ login.userName.split(' ').slice(-1).join(' ')}}</span>
+        <span>{{ login.userName.split(" ").slice(-1).join(" ") }}</span>
       </div>
       <UserCpn
         v-if="displayUserInfo"

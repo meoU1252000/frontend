@@ -8,6 +8,7 @@ const initDefaultState = () => {
     userId: null,
     userName: "",
     userInfo: null,
+    userAddress: null,
     role: null,
     error: null,
   };
@@ -17,6 +18,7 @@ const state = initDefaultState();
 const getters = {
   getUserId: (state) => state.userId,
   getUserName: (state) => state.userName,
+  getUserAddress: (state) => state.userAddress,
   getUserInfo: (state) => state.userInfo,
   getError: (state) => state.error,
 };
@@ -27,6 +29,9 @@ const mutations = {
   },
   setUser(state, user) {
     state.userInfo = user;
+  },
+  setAddress(state, user) {
+    state.userAddress = user;
   },
 };
 
@@ -77,6 +82,18 @@ const actions = {
       commit("setUser", null);
       const res = await authServices.logout(credential);
       return res;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+  async getListAddress({ commit }, credential) {
+    try {
+      const address = await authServices.getListAddress(credential);
+      //   console.log(category);
+      commit("setAddress", address);
+      //   console.log(s);
+      return address;
       //call api
     } catch (error) {
       commit("setError", { error });

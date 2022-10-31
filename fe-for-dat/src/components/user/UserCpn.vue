@@ -7,15 +7,15 @@
     <ul class="user_wrap--list">
       <li>
         <i class="pi pi-user"></i>
-        <a href="index.php?page_layout=accountPage">Tài Khoản</a>
+        <router-link to="/tai-khoan">Tài Khoản</router-link>
       </li>
       <li>
         <i class="pi pi-bookmark"></i>
-        <a href="index.php?page_layout=customeraddress">Địa Chỉ</a>
+        <router-link to="/dia-chi">Địa Chỉ</router-link>
       </li>
       <li>
         <i class="pi pi-truck"></i>
-        <a href="index.php?page_layout=orderCustomer">Đơn Hàng</a>
+        <router-link to="/">Đơn Hàng</router-link>
       </li>
       <li>
         <i class="pi pi-sign-out"></i>
@@ -41,7 +41,6 @@ export default defineComponent({
     };
 
     const handleLogOut = async (login) => {
-
       const credential = login.token;
       await store.dispatch("auth/logout", credential);
       window.Swal.fire({
@@ -49,7 +48,7 @@ export default defineComponent({
         title: "Thành Công",
         text: "Đăng xuất thành công",
       });
-      removeUserLocal('login')
+      removeUserLocal("login");
       setStateLogin(store);
     };
 

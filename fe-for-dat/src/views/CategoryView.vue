@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref,computed } from "vue";
+import { defineComponent, onMounted, ref, computed } from "vue";
 // import SliderCpn from "@/components/SliderCpn.vue";
 import ListProductCpn from "@/components/products/ListProductCpn.vue";
 import { useStore } from "vuex";
@@ -37,7 +37,7 @@ export default defineComponent({
     const listItem = computed(() => {
       return store.getters["category/getCategory"] || [];
     });
-    
+
     const listCategoryHaveProduct = computed(() => {
       return listItem.value.filter((item) => item.products.length > 0);
     });
@@ -51,7 +51,7 @@ export default defineComponent({
         ? listItem.value[0].category_attributes
         : [];
     });
-    
+
     // const params = ref();
     // const handleFilter = () => {
     //   console.log(params.value);
@@ -75,7 +75,7 @@ export default defineComponent({
 
   .product {
     background-color: rgb(248 248 252);
-    min-height: 100vh;
+    min-height: 80vh;
     :deep(.list-product) {
       padding: 0;
     }

@@ -4,6 +4,8 @@ import CategoryView from "../views/CategoryView.vue";
 import ProductView from "../views/ProductView.vue";
 import BrandView from "../views/BrandView.vue";
 import CartView from "../views/CartView.vue";
+import UserView from "../views/UserView.vue";
+import AddressView from "../views/AddressView.vue";
 
 import MainLayout from "@/layout/MainLayout.vue";
 
@@ -19,26 +21,36 @@ const routes = [
         component: HomeView,
       },
       {
-        path:"/danh-muc/:category_name",
+        path: "/danh-muc/:category_name",
         name: "showCategoryView",
         props: true,
-        component: CategoryView
+        component: CategoryView,
       },
       {
-        path:"/thuong-hieu/:brand_name",
+        path: "/thuong-hieu/:brand_name",
         name: "showBrandView",
-        component: BrandView
+        component: BrandView,
       },
       {
-        path:"/san-pham/:kind/:id",
+        path: "/san-pham/:kind/:id",
         name: "showProductView",
-        component: ProductView
+        component: ProductView,
       },
       {
-        path:"/gio-hang",
+        path: "/gio-hang",
         name: "showCartView",
-        component: CartView
-      }
+        component: CartView,
+      },
+      {
+        path: "/tai-khoan",
+        name: "showAccountView",
+        component: UserView,
+      },
+      {
+        path: "/dia-chi",
+        name: "showAddressView",
+        component: AddressView,
+      },
     ],
   },
   // {

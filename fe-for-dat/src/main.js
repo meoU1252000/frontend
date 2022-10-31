@@ -17,11 +17,12 @@ import Slider from "primevue/slider";
 import PanelMenu from "primevue/panelmenu";
 import Checkbox from "primevue/checkbox";
 // import VueFbCustomerChat from "vue-fb-customer-chat";
-import Image from 'primevue/image';
-import Carousel from 'primevue/carousel';
-import Galleria from 'primevue/galleria';
-import VueSweetalert2 from 'vue-sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
+import Image from "primevue/image";
+import Carousel from "primevue/carousel";
+import Galleria from "primevue/galleria";
+import VueSweetalert2 from "vue-sweetalert2";
+import InputMask from "primevue/inputmask";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -34,8 +35,7 @@ app.use(store);
 app.use(router);
 app.use(PrimeVue);
 app.use(VueSweetalert2);
-window.Swal =  app.config.globalProperties.$swal;
-
+window.Swal = app.config.globalProperties.$swal;
 
 app.directive("badge", BadgeDirective);
 app.component("DataView", DataView);
@@ -49,9 +49,9 @@ app.component("my-password", Password);
 app.component("my-panel", PanelMenu);
 app.component("my-checkbox", Checkbox);
 app.component("my-image", Image);
-app.component("my-carousel",Carousel);
-app.component("my-galleria",Galleria);
-
+app.component("my-carousel", Carousel);
+app.component("my-galleria", Galleria);
+app.component("my-InputMask", InputMask);
 app.use(VueGoogleMaps, {
   load: {
     key: "AIzaSyD-ssz8mLgCIWlm_EcxZ935oXoVrWYPsCE",
