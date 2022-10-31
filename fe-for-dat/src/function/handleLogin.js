@@ -1,9 +1,9 @@
 export const setUserLocal = (name, item) => {
-  localStorage.setItem(name, JSON.stringify(item));
+  sessionStorage.setItem(name, JSON.stringify(item));
 };
 
 export const getUserLocal = (name) => {
-  return JSON.parse(localStorage.getItem(name));
+  return JSON.parse(sessionStorage.getItem(name));
 };
 export const login = (user) => {
   setUserLocal("login", user);
@@ -15,5 +15,6 @@ export const setStateLogin = (store) => {
 };
 
 export const removeUserLocal = (name) => {
-  localStorage.removeItem(name);
+  sessionStorage.removeItem(name);
 }
+

@@ -27,7 +27,7 @@
 <script>
 import { defineComponent } from "vue";
 import { useStore } from "vuex";
-// import { removeUserLocal } from "@/function/handleLogin";
+import { setStateLogin, removeUserLocal } from "@/function/handleLogin";
 
 export default defineComponent({
   props: {
@@ -41,6 +41,7 @@ export default defineComponent({
     };
 
     const handleLogOut = async (login) => {
+
       const credential = login.token;
       await store.dispatch("auth/logout", credential);
       window.Swal.fire({
@@ -48,7 +49,8 @@ export default defineComponent({
         title: "Thành Công",
         text: "Đăng xuất thành công",
       });
-      // removeUserLocal('login')
+      removeUserLocal('login')
+      setStateLogin(store);
     };
 
     return {

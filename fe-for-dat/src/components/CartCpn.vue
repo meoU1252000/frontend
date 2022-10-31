@@ -193,6 +193,9 @@ export default defineComponent({
         font-size: 0.9rem;
         color: black;
         cursor: pointer;
+        &:hover {
+          color: rgb(207, 15, 15, 1);
+        }
       }
       span {
         font-size: 0.9rem;

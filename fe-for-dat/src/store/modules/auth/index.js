@@ -74,7 +74,7 @@ const actions = {
   },
   async logout({ commit }, credential) {
     try {
-      commit("setError", {});
+      commit("setUser", null);
       const res = await authServices.logout(credential);
       return res;
       //call api

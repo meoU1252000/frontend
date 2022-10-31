@@ -29,7 +29,9 @@ class AuthService {
   }
   async logout(credential) {
     try {
-      const response = await http.post("client/logout", credential);
+      const response = await http.post("client/logout", credential, {headers:{
+        'Authorization': `Bearer ${credential}`
+      }});
       if (response.data.data) {
         return response.data.data;
       } else {
