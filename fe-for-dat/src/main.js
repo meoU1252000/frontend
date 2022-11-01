@@ -22,6 +22,8 @@ import Carousel from "primevue/carousel";
 import Galleria from "primevue/galleria";
 import VueSweetalert2 from "vue-sweetalert2";
 import InputMask from "primevue/inputmask";
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 import "sweetalert2/dist/sweetalert2.min.css";
 
 import "primevue/resources/themes/lara-light-blue/theme.css";
@@ -52,6 +54,9 @@ app.component("my-image", Image);
 app.component("my-carousel", Carousel);
 app.component("my-galleria", Galleria);
 app.component("my-InputMask", InputMask);
+app.component("my-TabView", TabView);
+app.component("my-TabPanel", TabPanel);
+
 app.use(VueGoogleMaps, {
   load: {
     key: "AIzaSyD-ssz8mLgCIWlm_EcxZ935oXoVrWYPsCE",

@@ -28,6 +28,7 @@
 import { defineComponent } from "vue";
 import { useStore } from "vuex";
 import { setStateLogin, removeUserLocal } from "@/function/handleLogin";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   props: {
@@ -39,6 +40,7 @@ export default defineComponent({
     const handleUserInfoLeave = () => {
       emit("handle-user-info-leave");
     };
+    const route = useRouter();
 
     const handleLogOut = async (login) => {
       const credential = login.token;
@@ -50,6 +52,7 @@ export default defineComponent({
       });
       removeUserLocal("login");
       setStateLogin(store);
+      route.push(`/`);
     };
 
     return {
