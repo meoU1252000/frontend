@@ -9,6 +9,7 @@ const initDefaultState = () => {
     userName: "",
     userInfo: null,
     userAddress: null,
+    cities: null,
     role: null,
     error: null,
   };
@@ -20,6 +21,7 @@ const getters = {
   getUserName: (state) => state.userName,
   getUserAddress: (state) => state.userAddress,
   getUserInfo: (state) => state.userInfo,
+  getCities: (state) => state.cities,
   getError: (state) => state.error,
 };
 
@@ -32,6 +34,9 @@ const mutations = {
   },
   setAddress(state, user) {
     state.userAddress = user;
+  },
+  setCities(state, cities) {
+    state.cities = cities;
   },
 };
 
@@ -48,7 +53,7 @@ const actions = {
         token: data.access_token,
       });
       commit("setError", { error: null });
-      return user;
+      return data;
       //call api
     } catch (error) {
       commit("setError", { error });
@@ -90,10 +95,31 @@ const actions = {
   async getListAddress({ commit }, credential) {
     try {
       const address = await authServices.getListAddress(credential);
-      //   console.log(category);
       commit("setAddress", address);
       //   console.log(s);
       return address;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+  async getListCity({ commit }) {
+    try {
+      const cities = await authServices.getListCity();
+      //   console.log(category);
+      commit("setCities", cities);
+      //   console.log(s);
+      return cities;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+  async createAddress({ commit }, newAddress) {
+    try {
+      commit("setError", {});
+      const res = await authServices.createAddress(newAddress);
+      return res;
       //call api
     } catch (error) {
       commit("setError", { error });

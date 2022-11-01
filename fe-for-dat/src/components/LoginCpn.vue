@@ -164,15 +164,16 @@ export default defineComponent({
       };
       if (isFormValid) {
         const check = await store.dispatch("auth/login", user);
-        console.log(check)
-        if(check){
+        await store.dispatch("auth/getListAddress", check.access_token);
+        console.log(check.access_token);
+        if (check) {
           window.Swal.fire({
             icon: "success",
             title: "Thành Công",
             text: "Đăng nhập thành công",
           });
           closeModal();
-        }else{
+        } else {
           window.Swal.fire({
             icon: "error",
             title: "Thất Bại",
