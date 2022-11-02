@@ -15,7 +15,11 @@
           </div>
         </div>
         <div class="flex justify-content-between text-base mt-4">
-          <my-button label="Tiếp Tục" class="w-full"></my-button>
+          <my-button
+            label="Tiếp Tục"
+            class="w-full"
+            @click="goToCheckOutPage"
+          ></my-button>
         </div>
       </div>
     </div>
@@ -25,14 +29,21 @@
 <script>
 import { defineComponent } from "vue";
 import { formatter } from "@/function/common";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   props: {
     totalPrice: { type: Number },
   },
   setup() {
+    const route = useRouter();
+
+    const goToCheckOutPage = () => {
+      route.push(`/thanh-toan`);
+    };
     return {
       formatter,
+      goToCheckOutPage,
     };
   },
 });

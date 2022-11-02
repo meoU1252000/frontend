@@ -6,6 +6,7 @@ import BrandView from "../views/BrandView.vue";
 import CartView from "../views/CartView.vue";
 import UserView from "../views/UserView.vue";
 import AddressView from "../views/AddressView.vue";
+import CheckOutView from "../views/CheckOutView.vue";
 
 import MainLayout from "@/layout/MainLayout.vue";
 
@@ -50,6 +51,11 @@ const routes = [
         path: "/dia-chi",
         name: "showAddressView",
         component: AddressView,
+      },
+      {
+        path: "/thanh-toan",
+        name: "showCheckOutView",
+        component: CheckOutView,
       },
     ],
   },

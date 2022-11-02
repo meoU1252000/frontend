@@ -104,7 +104,7 @@ import LoginCpn from "@/components/LoginCpn.vue";
 import RegisterCpn from "@/components/RegisterCpn.vue";
 import UserCpn from "@/components/user/UserCpn.vue";
 import NavbarCpn from "./NavbarCpn.vue";
-import CartModalCpn from "./CartModalCpn.vue";
+import CartModalCpn from "./cart/CartModalCpn.vue";
 import { useStore } from "vuex";
 
 export default defineComponent({

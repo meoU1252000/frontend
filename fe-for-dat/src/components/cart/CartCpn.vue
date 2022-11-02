@@ -52,7 +52,6 @@
                 inputClass="w-full text-center"
                 min="1"
                 :max="item.productStock"
-                aria-readonly
                 @click="handleUpdateQuantity(item.productId, item.quantity)"
               />
             </div>
@@ -80,8 +79,6 @@
         </div>
         <h4 class="text-center">Không có sản phẩm trong giỏ hàng</h4>
       </div>
-
-      <div class="sidebar w-3 ml-3"></div>
     </div>
     <div class="sidebar w-3 ml-3">
       <EventCpn />

@@ -22,9 +22,10 @@ import Carousel from "primevue/carousel";
 import Galleria from "primevue/galleria";
 import VueSweetalert2 from "vue-sweetalert2";
 import InputMask from "primevue/inputmask";
-import TabView from 'primevue/tabview';
-import TabPanel from 'primevue/tabpanel';
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
 import "sweetalert2/dist/sweetalert2.min.css";
+import Textarea from "primevue/textarea";
 
 import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -56,6 +57,7 @@ app.component("my-galleria", Galleria);
 app.component("my-InputMask", InputMask);
 app.component("my-TabView", TabView);
 app.component("my-TabPanel", TabPanel);
+app.component("my-Textarea", Textarea);
 
 app.use(VueGoogleMaps, {
   load: {

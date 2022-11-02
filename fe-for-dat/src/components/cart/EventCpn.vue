@@ -12,7 +12,7 @@
           header="Mã Giảm Giá"
           v-model:visible="displayEventModal"
           :breakpoints="{ '960px': '75vw', '640px': '90vw' }"
-          :style="{ width: '26vw'}"
+          :style="{ width: '26vw' }"
           :modal="true"
           :dismissableMask="true"
           :closeOnEscape="true"
@@ -25,25 +25,29 @@
           </div>
           <div class="col-12 mt-2">
             <h4>Mã giảm giá</h4>
-            <div
-              class="event-code flex h-6rem border-1 mt-3"
-            >
+            <div class="event-code flex h-6rem border-1 mt-3">
               <div class="col-3">
                 <div class="image">
-                    <img src="https://shopfront-cdn.tekoapis.com/cart/discount.png" alt="">
+                  <img
+                    src="https://shopfront-cdn.tekoapis.com/cart/discount.png"
+                    alt=""
+                  />
                 </div>
               </div>
               <div class="col-9">
                 <div class="flex flex-column">
-                    <div class="event-code-content h-3rem">
-                        <h5>Giảm 1.000.000đ</h5>
-                    </div>
-                    <div class="flex justify-content-between text-sm align-items-center">
-                        <span class="text-500">
-                           HSD: 31/11/2022
-                        </span>
-                        <my-button label="Áp Dụng" class="p-button-link p-button-sm" />
-                    </div>
+                  <div class="event-code-content h-3rem">
+                    <h5>Giảm 1.000.000đ</h5>
+                  </div>
+                  <div
+                    class="flex justify-content-between text-sm align-items-center"
+                  >
+                    <span class="text-500"> HSD: 31/11/2022 </span>
+                    <my-button
+                      label="Áp Dụng"
+                      class="p-button-link p-button-sm"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -62,7 +66,6 @@
 </template>
 
 <script>
-
 import { defineComponent, ref } from "vue";
 
 export default defineComponent({
@@ -89,10 +92,10 @@ export default defineComponent({
   background-color: white;
   .header {
     .header-content {
-      h6{
-          font-size: 1rem;
-          font-weight: 500;
-        }
+      h6 {
+        font-size: 1rem;
+        font-weight: 500;
+      }
       a {
         text-decoration: none;
         color: rgb(207, 15, 15, 1);
@@ -105,27 +108,26 @@ export default defineComponent({
 .event-code {
   border-color: #ccc;
   border-radius: 8px;
-  .col-3{
-    .image{
-        border-style: none;
-        border-radius: 0.25rem;
-        border-width: 1px;
-        border-color: unset;
-        opacity: 1;
-        background-color: rgb(232, 235, 249);
-        width: 70%;
-        min-width: 76px;
-        height: 76px;
-        display: flex;
-        -webkit-box-align: center;
-        align-items: center;
-        -webkit-box-pack: center;
-        justify-content: center;
-
+  .col-3 {
+    .image {
+      border-style: none;
+      border-radius: 0.25rem;
+      border-width: 1px;
+      border-color: unset;
+      opacity: 1;
+      background-color: rgb(232, 235, 249);
+      width: 70%;
+      min-width: 76px;
+      height: 76px;
+      display: flex;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      justify-content: center;
     }
   }
 }
-.p-button-link{
-    color: rgb(207, 15, 15, 1) !important;
+.p-button-link {
+  color: rgb(207, 15, 15, 1) !important;
 }
 </style>
