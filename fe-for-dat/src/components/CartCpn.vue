@@ -52,6 +52,7 @@
                 inputClass="w-full text-center"
                 min="1"
                 :max="item.productStock"
+                aria-readonly
                 @click="handleUpdateQuantity(item.productId, item.quantity)"
               />
             </div>

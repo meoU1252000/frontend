@@ -125,6 +125,28 @@ const actions = {
       commit("setError", { error });
     }
   },
+
+  async updateAddress({ commit }, address) {
+    try {
+      commit("setError", {});
+      const res = await authServices.updateAddress(address);
+      return res;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+
+  async deleteAddress({ commit }, address) {
+    try {
+      commit("setError", {});
+      const res = await authServices.deleteAddress(address);
+      return res;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
 };
 
 const auth = {

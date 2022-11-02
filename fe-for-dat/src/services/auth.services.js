@@ -74,10 +74,41 @@ class AuthService {
   }
   async createAddress(newAddress) {
     try {
-      console.log(newAddress.token);
       const response = await http.post("client/createAddress", newAddress, {
         headers: {
           Authorization: `Bearer ${newAddress.token}`,
+        },
+      });
+      if (response.data.data) {
+        return response.data.data;
+      } else {
+        throw new Error("Wrong credential");
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  }
+  async updateAddress(address) {
+    try {
+      const response = await http.post("client/updateAddress", address, {
+        headers: {
+          Authorization: `Bearer ${address.token}`,
+        },
+      });
+      if (response.data.data) {
+        return response.data.data;
+      } else {
+        throw new Error("Wrong credential");
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  }
+  async deleteAddress(address) {
+    try {
+      const response = await http.post("client/deleteAddress", address, {
+        headers: {
+          Authorization: `Bearer ${address.token}`,
         },
       });
       if (response.data.data) {

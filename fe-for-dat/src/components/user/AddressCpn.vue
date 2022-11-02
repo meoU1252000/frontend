@@ -28,6 +28,20 @@
                     field="receiver_phone"
                     header="Số Điện Thoại"
                   ></Column>
+                  <Column
+                    :exportable="false"
+                    style="max-width: 3.5rem"
+                    header="Tác Vụ"
+                    class="text-center"
+                  >
+                    <template #body="slotProps">
+                      <my-button
+                        icon="pi pi-trash"
+                        class="p-button-rounded p-button-warning"
+                        @click="handleDeleteAddress(slotProps.data)"
+                      />
+                    </template>
+                  </Column>
                 </DataTable>
               </div>
             </my-TabPanel>
@@ -145,6 +159,136 @@
                 </div>
               </form>
             </my-TabPanel>
+            <my-TabPanel header="Sửa Địa Chỉ">
+              <div class="pt-2 w-full text-center">
+                <h2>Sửa Địa Chỉ Giao Hàng</h2>
+              </div>
+              <form @submit.prevent="handleUpdate(!v$.$invalid)">
+                <div class="mt-5">
+                  <div class="grid p-fluid px-4">
+                    <div class="col-12">
+                      <my-dropdown
+                        v-model="selectedAddress"
+                        :options="listAddress"
+                        optionLabel="receiver_address"
+                        optionValue="id"
+                        placeholder="Chọn địa chỉ cần sửa"
+                        @change="dataSelectedAddress"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div v-if="selectedAddress != null">
+                  <div class="mt-5">
+                    <div class="grid p-fluid px-4">
+                      <div class="col-12 md:col-6">
+                        <div class="p-inputgroup">
+                          <span class="p-inputgroup-addon">
+                            <i class="pi pi-user"></i>
+                          </span>
+                          <my-inputText
+                            placeholder="Họ và tên"
+                            v-model="state.user_name"
+                            :class="{
+                              'p-invalid': v$.user_name.$invalid && submitted,
+                            }"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col-12 md:col-6">
+                        <div class="p-inputgroup">
+                          <span class="p-inputgroup-addon">
+                            <i class="pi pi-phone"></i>
+                          </span>
+                          <my-inputText
+                            placeholder="Số điện thoại"
+                            v-model="state.phone"
+                            :class="{
+                              'p-invalid': v$.phone.$invalid && submitted,
+                            }"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-5">
+                    <div class="grid p-fluid px-4">
+                      <div class="col-12 md:col-6">
+                        <div class="p-inputgroup">
+                          <my-dropdown
+                            v-model="state.city"
+                            :options="listCities"
+                            optionLabel="full_name"
+                            optionValue="code"
+                            placeholder="Chọn tỉnh/thành phố"
+                            :filter="true"
+                            :class="{
+                              'p-invalid': v$.city.$invalid && submitted,
+                            }"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 md:col-6">
+                        <div class="p-inputgroup">
+                          <my-dropdown
+                            v-model="state.district"
+                            :options="listDistricts"
+                            optionLabel="full_name"
+                            optionValue="code"
+                            placeholder="Chọn quận/huyện"
+                            :filter="true"
+                            :class="{
+                              'p-invalid': v$.district.$invalid && submitted,
+                            }"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-5">
+                    <div class="grid p-fluid px-4">
+                      <div class="col-12 md:col-6">
+                        <div class="p-inputgroup">
+                          <my-dropdown
+                            v-model="state.ward"
+                            :options="listWards"
+                            optionLabel="full_name"
+                            optionValue="code"
+                            placeholder="Chọn xã/phường/thị trấn"
+                            :filter="true"
+                            :class="{
+                              'p-invalid': v$.ward.$invalid && submitted,
+                            }"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 md:col-6">
+                        <div class="p-inputgroup">
+                          <span class="p-inputgroup-addon">
+                            <i class="pi pi-bookmark"></i>
+                          </span>
+                          <my-inputText
+                            placeholder="Nhập địa chỉ"
+                            v-model="state.address"
+                            :class="{
+                              'p-invalid': v$.address.$invalid && submitted,
+                            }"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="my-5 px-4">
+                    <my-button
+                      class="mt-2 flex justify-content-center"
+                      label="Xác Nhận"
+                      type="submit"
+                    />
+                  </div>
+                </div>
+              </form>
+            </my-TabPanel>
           </my-TabView>
         </div>
       </div>
@@ -153,7 +297,6 @@
 </template>
 <script>
 import { defineComponent, onMounted, computed, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -172,7 +315,6 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore();
-    const route = useRouter();
     const state = reactive({
       user_name: "",
       phone: "",
@@ -181,6 +323,8 @@ export default defineComponent({
       ward: "",
       address: "",
     });
+
+    const selectedAddress = ref();
 
     const rules = computed(() => {
       return {
@@ -219,9 +363,6 @@ export default defineComponent({
     const submitted = ref(false);
 
     const v$ = useVuelidate(rules, state);
-    const goToAddAddressPage = () => {
-      route.push(`/danh-muc/`);
-    };
 
     onMounted(async () => {
       await store.dispatch("auth/getListCity");
@@ -234,6 +375,27 @@ export default defineComponent({
     const listAddress = computed(() => {
       return store.getters["auth/getUserAddress"] || [];
     });
+
+    const dataSelectedAddress = async () => {
+      const data = listAddress.value.filter((address) => {
+        if (address.id == selectedAddress.value) {
+          return address;
+        }
+      });
+      if (data.length > 0) {
+        state.user_name = data[0].receiver_name;
+        state.phone = data[0].receiver_phone;
+
+        const arr_address = data[0].receiver_address.split(",");
+        state.address = arr_address[0];
+        state.ward = arr_address[1];
+        state.district = arr_address[2];
+        state.city = arr_address[3];
+
+        return data;
+      }
+      return [];
+    };
 
     const listDistricts = computed(() => {
       const province = listCities.value.filter((code) => {
@@ -297,12 +459,84 @@ export default defineComponent({
           title: "Thành Công",
           text: "Thêm địa chỉ thành công",
         });
+        store.dispatch("auth/getListAddress", props.account.token);
       }
+    };
+
+    const handleUpdate = async (isFormValid) => {
+      submitted.value = true;
+      if (isFormValid) {
+        const city = listCities.value.filter((code) => {
+          if (state.city == code.code) {
+            return code.districts;
+          }
+        });
+        const districts = listDistricts.value.filter((code) => {
+          if (state.district == code.code) {
+            return code.wards;
+          }
+        });
+        const wards = listWards.value.filter((code) => state.ward == code.code);
+        const address =
+          state.address +
+          "," +
+          wards[0].full_name +
+          "," +
+          districts[0].full_name +
+          "," +
+          city[0].full_name;
+
+        const customer_address = {
+          address_id: selectedAddress.value,
+          receiver_name: state.user_name,
+          receiver_phone: state.phone,
+          receiver_address: address,
+          token: props.account.token,
+        };
+
+        const check = store.dispatch("auth/updateAddress", customer_address);
+        if (check) {
+          window.Swal.fire({
+            icon: "success",
+            title: "Thành Công",
+            text: "Cập nhật địa chỉ thành công",
+          });
+          store.dispatch("auth/getListAddress", props.account.token);
+          selectedAddress.value = null;
+        }
+      }
+    };
+
+    const handleDeleteAddress = async (address) => {
+      window.Swal.fire({
+        title: "Chắc chắn xóa?",
+        text: "Địa chỉ này sẽ được xóa khỏi tài khoản của bạn.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Xóa!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.Swal.fire(
+            "Xóa thành công!",
+            "Đã xóa địa chỉ giao hàng.",
+            "success"
+          );
+          const customer_address = {
+            token: props.account.token,
+            address_id: address.id,
+          };
+          store.dispatch("auth/deleteAddress", customer_address);
+          store.dispatch("auth/getListAddress", props.account.token);
+        }
+      });
     };
 
     return {
       listAddress,
-      goToAddAddressPage,
+      dataSelectedAddress,
+      selectedAddress,
       listDistricts,
       listWards,
       listCities,
@@ -311,6 +545,8 @@ export default defineComponent({
       rules,
       state,
       handleSubmit,
+      handleDeleteAddress,
+      handleUpdate,
     };
   },
 });

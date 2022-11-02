@@ -12,9 +12,11 @@ export const login = (user) => {
 export const setStateLogin = (store) => {
   const user = getUserLocal("login");
   store.dispatch("auth/setStateLogin", user);
+  if (user) {
+    store.dispatch("auth/getListAddress", user.access_token);
+  }
 };
 
 export const removeUserLocal = (name) => {
   sessionStorage.removeItem(name);
-}
-
+};
