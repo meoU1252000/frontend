@@ -295,27 +295,35 @@ export default defineComponent({
     }
   }
 }
-@media only screen and (max-width: 1366px) {
+@media only screen and (max-width: 1920px) {
   .header {
     padding: 0 7rem;
     a {
-      width: 10rem;
       span {
-        font-size: 1rem !important;
+        font-size: 1.5rem !important;
       }
     }
     .logo {
       button {
-        width: 8rem;
+        width: 13rem;
         height: 3rem;
+        span {
+          font-size: 12px !important;
+        }
+      }
+      .p-button-sm{
+        font-size: 0.8rem
       }
     }
     .login {
       .text {
         span {
-          font-size: 12px !important;
+          font-size: 1rem !important;
         }
       }
+    }
+    .user-info {
+      margin-right:0rem;
     }
   }
 }

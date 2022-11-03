@@ -40,7 +40,7 @@ export default defineComponent({
 });
 </script>
 <style>
-@media only screen and (max-width: 1366px) {
+@media only screen and (max-width: 1920px) {
   .vue-map{
     width: 22rem !important;
     height: 15rem !important;

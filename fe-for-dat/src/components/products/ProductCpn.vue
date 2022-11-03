@@ -229,8 +229,8 @@ export default defineComponent({
     });
     const responsiveOptions = ref([
       {
-        breakpoint: "1366",
-        numVisible: 2,
+        breakpoint: "1920",
+        numVisible: 3,
         numScroll: 1,
       },
     ]);
@@ -551,7 +551,7 @@ export default defineComponent({
   }
 }
 
-@media only screen and (max-width: 1366px) {
+@media only screen and (max-width: 1920px) {
   .product-content {
     .content-header {
       .col-5 {
@@ -564,6 +564,9 @@ export default defineComponent({
             }
           }
         }
+      }
+      .col-7{
+        padding: 1rem !important;
       }
     }
   }

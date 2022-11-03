@@ -130,4 +130,18 @@ export default defineComponent({
 .p-button-link {
   color: rgb(207, 15, 15, 1) !important;
 }
+@media only screen and (max-width: 1920px) {
+  .sidebar-content {
+    .header {
+    .header-content {
+      h6 {
+        font-size: 0.8rem;
+      }
+      a{
+        font-size:0.8rem;
+      }
+    }
+  }
+}
+}
 </style>

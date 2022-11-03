@@ -15,11 +15,7 @@
                   showGridlines
                   responsiveLayout="scroll"
                 >
-                  <Column
-                    field="receiver_address"
-                    header="Địa Chỉ"
-                    style="min-width: 200px"
-                  ></Column>
+                  <Column field="receiver_address" header="Địa Chỉ"></Column>
                   <Column
                     field="receiver_name"
                     header="Tên Người Nhận"
@@ -30,7 +26,6 @@
                   ></Column>
                   <Column
                     :exportable="false"
-                    style="max-width: 3.5rem"
                     header="Tác Vụ"
                     class="text-center"
                   >
@@ -567,5 +562,33 @@ export default defineComponent({
       box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
     }
   }
+}
+@media only screen and (max-width: 1920px) {
+  .user-content {
+    .content-header {
+      .card {
+        :deep(.p-datatable) {
+          font-size: 0.8rem;
+          .p-datatable-wrapper {
+            table {
+              tbody {
+                tr {
+                  .text-center {
+                    text-align: left !important;
+                    button {
+                      i{
+                        width: 2rem !important;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
 }
 </style>

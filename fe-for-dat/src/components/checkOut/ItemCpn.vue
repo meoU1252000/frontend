@@ -11,7 +11,7 @@
     <div class="body-content">
       <div class="flex h-7rem mb-4" v-for="(item, i) in cartList" :key="i">
         <div class="col-3 cart-image justify-content-center flex">
-          <img :src="item.img" alt="" class="w-7rem h-7rem" />
+          <img :src="item.img" alt="" />
         </div>
         <div class="col-9 cart-name">
           <router-link
@@ -74,6 +74,8 @@ export default defineComponent({
       .cart-image {
         img {
           border: 1px solid #eeee;
+          width: 7rem;
+          height: 7rem;
         }
       }
       .cart-name {
@@ -99,5 +101,38 @@ export default defineComponent({
       }
     }
   }
+}
+@media only screen and (max-width: 1920px) {
+.sidebar-content {
+  .header {
+    .header-content {
+      h5{
+        font-size:0.9rem;
+      }
+      a{
+        font-size: 0.8rem;
+      }
+    }
+  }
+  .body-content {
+    justify-content: center;
+    display: flex;
+    .flex {
+      .cart-image {
+        img {
+          width: 5rem;
+          height: 5rem;
+        }
+      }
+
+      .col-3{
+          width: 35%;
+      }
+      .col-9{
+        width: 65%
+      }
+    }
+  }
+}
 }
 </style>

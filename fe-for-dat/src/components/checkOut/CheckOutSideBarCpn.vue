@@ -76,4 +76,13 @@ export default defineComponent({
     box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
   }
 }
+@media only screen and (max-width: 1920px) {
+.sidebar-content {
+  .header {
+    .header-content {
+    
+    }
+  }
+}
+}
 </style>

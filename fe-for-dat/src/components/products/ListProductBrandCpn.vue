@@ -11,12 +11,12 @@
         </my-button>
       </div>
       <div class="main-product">
-        <!-- {{brand.products}} -->
         <my-carousel
           :value="brand.products.slice(0,20)"
           :numVisible="4"
           :numScroll="4"
           v-if="brand.products.length >4"
+          class="w-full"
         >
           <template #item="slotProps">
             <ProductsCpn :product="slotProps.data" />
@@ -88,7 +88,7 @@ export default defineComponent({
     flex-wrap: wrap;
   }
 }
-@media only screen and (max-width: 1366px) {
+@media only screen and (max-width: 1920px) {
   .list-product {
     padding: 2rem 5rem;
   }

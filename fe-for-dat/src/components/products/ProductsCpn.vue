@@ -118,7 +118,7 @@ export default defineComponent({
     }
   }
 }
-@media only screen and (max-width: 1366px) {
+@media only screen and (max-width: 1920px) {
   .product {
     height: 22rem;
     .image {

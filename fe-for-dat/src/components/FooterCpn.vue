@@ -131,7 +131,7 @@ export default defineComponent({
 .icon_link i{
   font-size: 1.25rem;
 }
-@media only screen and (max-width: 1366px) {
+@media only screen and (max-width: 1920px) {
   .footer{
     font-size: 0.75rem !important;
     height: 20rem;

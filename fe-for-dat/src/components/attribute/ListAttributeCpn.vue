@@ -142,9 +142,7 @@ export default defineComponent({
 .attribute {
   padding: 1rem 0.5rem;
 }
-@media only screen and (max-width: 1366px) {
-  .filter-params {
-    flex-direction: column;
-  }
+@media only screen and (max-width: 1920px) {
+
 }
 </style>

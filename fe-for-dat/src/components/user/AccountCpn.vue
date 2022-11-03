@@ -147,4 +147,16 @@ export default defineComponent({
     }
   }
 }
+@media only screen and (max-width: 1920px) {
+  .user-content {
+    .content-header{
+      .px-4{
+        .w-1{
+          width: 13.33333% !important;
+        }
+      }
+    }
+   
+  }
+}
 </style>
