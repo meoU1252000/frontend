@@ -150,7 +150,7 @@ export default defineComponent({
     }
   }
 }
-@media only screen and (max-width: 1366px) {
+@media only screen and (max-width: 1920px) {
   .navbar {
     height: 20rem;
 

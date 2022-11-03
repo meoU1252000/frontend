@@ -173,4 +173,10 @@ export default defineComponent({
     }
   }
 }
+@media only screen and (max-width: 1920px) {
+  .cart-modal {
+    top:5.5rem;
+    right:9rem;
+  }
+}
 </style>

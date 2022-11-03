@@ -75,4 +75,13 @@ export default {
     }
   }
 }
+@media only screen and (max-width: 1920px) {
+  .sidebar-content {
+    .header {
+      .header-content{
+        padding:1rem 1rem 1rem 0rem !important;
+      }
+    }
+  }
+}
 </style>
