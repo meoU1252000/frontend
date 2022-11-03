@@ -20,3 +20,37 @@ export const setStateLogin = (store) => {
 export const removeUserLocal = (name) => {
   sessionStorage.removeItem(name);
 };
+
+const timeoutInMS = 1800000; // 30 minutes -> 30 * 60 * 1000
+let timeoutId;
+
+export const handleInactive = () => {
+  if (getUserLocal("login")) {
+    // store.dispatch("auth/logout", user.access_token);
+    sessionStorage.removeItem("login");
+    window.Swal.fire({
+      icon: "error",
+      title: "Thông Báo",
+      text: "Đã hết thời gian sử dụng. Vui lòng đăng nhập lại",
+    });
+  }
+};
+
+export const startTimer = () => {
+  // setTimeout returns an ID (can be used to start or clear a timer)
+  timeoutId = setTimeout(handleInactive, timeoutInMS);
+};
+
+export const resetTimer = () => {
+  clearTimeout(timeoutId);
+  startTimer();
+};
+
+export const setupTimers = () => {
+  document.addEventListener("keypress", resetTimer, false);
+  document.addEventListener("mousemove", resetTimer, false);
+  document.addEventListener("mousedown", resetTimer, false);
+  document.addEventListener("touchmove", resetTimer, false);
+
+  startTimer();
+};

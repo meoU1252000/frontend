@@ -120,6 +120,22 @@ class AuthService {
       console.log("error");
     }
   }
+  async createOrder(newOrder) {
+    try {
+      const response = await http.post("client/createOrder", newOrder, {
+        headers: {
+          Authorization: `Bearer ${newOrder.token}`,
+        },
+      });
+      if (response.data.data) {
+        return response.data.data;
+      } else {
+        throw new Error("Wrong credential");
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  }
 }
 
 export default new AuthService();

@@ -26,6 +26,7 @@ import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import "sweetalert2/dist/sweetalert2.min.css";
 import Textarea from "primevue/textarea";
+import Tag from "primevue/tag";
 
 import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -58,6 +59,7 @@ app.component("my-InputMask", InputMask);
 app.component("my-TabView", TabView);
 app.component("my-TabPanel", TabPanel);
 app.component("my-Textarea", Textarea);
+app.component("my-Tag", Tag);
 
 app.use(VueGoogleMaps, {
   load: {

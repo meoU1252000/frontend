@@ -19,7 +19,7 @@ import FooterCpn from "@/components/FooterCpn.vue";
 import { setStateCart } from "@/function/handleLocalStorage";
 import { getCartList } from "@/function/getCartList";
 import { useStore } from "vuex";
-import { setStateLogin } from "@/function/handleLogin";
+import { setStateLogin, setupTimers } from "@/function/handleLogin";
 
 export default defineComponent({
   created() {
@@ -39,6 +39,7 @@ export default defineComponent({
       await store.dispatch("brand/getListBrands");
       setStateCart(store);
       setStateLogin(store);
+      setupTimers();
       window.scrollTo(0, 0);
     });
 

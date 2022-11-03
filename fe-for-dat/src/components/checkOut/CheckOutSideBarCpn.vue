@@ -19,7 +19,11 @@
           </div>
         </div>
         <div class="flex justify-content-between text-base mt-4">
-          <my-button label="Thanh Toán" class="w-full"></my-button>
+          <my-button
+            label="Thanh Toán"
+            class="w-full"
+            type="submit"
+          ></my-button>
         </div>
       </div>
     </div>

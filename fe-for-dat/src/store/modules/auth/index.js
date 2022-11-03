@@ -126,6 +126,17 @@ const actions = {
     }
   },
 
+  async createOrder({ commit }, newOrder) {
+    try {
+      commit("setError", {});
+      const res = await authServices.createOrder(newOrder);
+      return res;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+
   async updateAddress({ commit }, address) {
     try {
       commit("setError", {});
