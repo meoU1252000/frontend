@@ -33,6 +33,7 @@ export const handleInactive = () => {
       title: "Thông Báo",
       text: "Đã hết thời gian sử dụng. Vui lòng đăng nhập lại",
     });
+    location.reload();
   }
 };
 
