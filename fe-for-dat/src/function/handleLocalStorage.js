@@ -6,6 +6,10 @@ export const getItemLocal = (name) => {
   return JSON.parse(localStorage.getItem(name));
 };
 
+export const removeItemLocal = (name) => {
+  localStorage.removeItem(name);
+};
+
 export const addProductToCart = (item) => {
   const arrCart = getItemLocal("cart") || [];
   if (arrCart.length) {

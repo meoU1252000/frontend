@@ -45,7 +45,7 @@
           </div>
           <div class="px-2 py-3 product-information">Thông tin chung</div>
           <div
-            v-for="(attribute, k) in product.product_attribute.slice(0, 4)"
+            v-for="(attribute, k) in product.product_attribute.slice(0, 5)"
             :key="k"
             class="product-params"
           >
@@ -59,7 +59,7 @@
             </div>
           </div>
           <div
-            v-if="product.product_attribute.length > 8"
+            v-if="product.product_attribute.length > 5"
             class="align-items-center justify-content-center text-center"
           >
             <a class="read-more-href" @click="openAttributeModal"

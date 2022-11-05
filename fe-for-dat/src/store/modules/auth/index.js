@@ -50,6 +50,8 @@ const actions = {
         userName: data.user.customer_name,
         userPhone: data.user.customer_phone,
         userEmail: data.user.email,
+        userAddress: data.user.address,
+        userOrders: data.user.orders,
         token: data.access_token,
       });
       commit("setError", { error: null });
@@ -75,6 +77,8 @@ const actions = {
         userName: data.user.customer_name,
         userPhone: data.user.customer_phone,
         userEmail: data.user.email,
+        userAddress: data.user.address,
+        userOrders: data.user.orders,
         token: data.access_token,
       });
       commit("setError", { error: null });

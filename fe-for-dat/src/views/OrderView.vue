@@ -1,16 +1,16 @@
 <template>
   <div class="home-view">
     <div class="product">
-      <CheckOutCpn />
+      <OrderCpn />
     </div>
   </div>
 </template>
 <script>
-import CheckOutCpn from "@/components/checkOut/CheckOutCpn.vue";
+import OrderCpn from "@/components/order/OrderCpn.vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  components: { CheckOutCpn },
+  components: { OrderCpn },
 
   setup() {
     return {};

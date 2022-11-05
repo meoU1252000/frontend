@@ -15,7 +15,7 @@
       </li>
       <li>
         <i class="pi pi-truck"></i>
-        <router-link to="/">Đơn Hàng</router-link>
+        <router-link to="/don-hang">Đơn Hàng</router-link>
       </li>
       <li>
         <i class="pi pi-sign-out"></i>

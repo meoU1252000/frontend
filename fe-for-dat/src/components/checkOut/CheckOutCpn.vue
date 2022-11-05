@@ -88,7 +88,7 @@
               </div>
               <div class="col-12">
                 <my-Textarea
-                  v-model="value2"
+                  v-model="order_note"
                   :autoResize="true"
                   rows="5"
                   cols="30"
@@ -163,6 +163,8 @@ import { defineComponent, ref, computed, reactive } from "vue";
 import ItemCpn from "@/components/checkOut/ItemCpn.vue";
 import CheckOutSideBarCpn from "./CheckOutSideBarCpn.vue";
 import { getCartList } from "@/function/getCartList";
+import { removeItemLocal,setStateCart } from "@/function/handleLocalStorage";
+
 import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
@@ -176,6 +178,7 @@ export default defineComponent({
     const state = reactive({
       address_id: "",
     });
+    const order_note = ref();
 
     const rules = {
       address_id: {
@@ -213,6 +216,7 @@ export default defineComponent({
           total_price: totalPrice.value,
           cart_list: cartList.value,
           token: account.value.token,
+          order: order_note.value,
         };
         const check = await store.dispatch("auth/createOrder", order);
         if (check) {
@@ -221,6 +225,8 @@ export default defineComponent({
             title: "Thành Công",
             text: "Thanh toán thành công",
           });
+          removeItemLocal('cart');
+          setStateCart(store);
         } else {
           window.Swal.fire({
             icon: "error",
@@ -228,6 +234,12 @@ export default defineComponent({
             text: "Lỗi thanh toán. Vui lòng thử lại sau",
           });
         }
+      }else{
+        window.Swal.fire({
+            icon: "error",
+            title: "Thất Bại",
+            text: "Vui lòng chọn địa chỉ giao hàng hoặc đăng nhập để thanh toán",
+          });
       }
     };
 
@@ -272,6 +284,7 @@ export default defineComponent({
       submitted,
       rules,
       handleSubmit,
+      order_note
     };
   },
 });
@@ -351,5 +364,10 @@ export default defineComponent({
       box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
     }
   }
+}
+@media only screen and (max-width: 1920px) {
+.p-inputtext{
+  font-size:0.8rem
+}
 }
 </style>
