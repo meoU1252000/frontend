@@ -44,7 +44,7 @@
                 mode="decimal"
                 showButtons
                 buttonLayout="horizontal"
-                style="width: 70%; margin: 0 auto; display: flex"
+                style="width: 90%; margin: 0 auto; display: flex"
                 decrementButtonClass="p-button-secondary"
                 incrementButtonClass="p-button-secondary"
                 incrementButtonIcon="pi pi-plus"

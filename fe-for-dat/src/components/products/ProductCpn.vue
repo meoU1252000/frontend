@@ -7,14 +7,14 @@
             <my-image
               :src="currentSrc"
               alt=""
-              imageClass="imageFit w-25rem h-25rem"
+              imageClass="imageFit"
               preview
               v-if="currentSrc != null"
             />
             <my-image
               :src="image"
               alt=""
-              imageClass="imageFit w-25rem h-25rem"
+              imageClass="imageFit"
               preview
               v-else
             />
@@ -34,7 +34,7 @@
                 <my-image
                   :src="slotProps.data.product_src"
                   alt=""
-                  imageClass="w-5rem h-5rem mr-3"
+                  imageClass="w-4rem h-4rem mr-3"
                   @mouseover="changeSource(slotProps.data.product_src)"
                 />
               </template>
@@ -231,7 +231,7 @@ export default defineComponent({
       {
         breakpoint: "1920",
         numVisible: 3,
-        numScroll: 1,
+        numScroll: 3,
       },
     ]);
     const filterParam = ref({
@@ -555,8 +555,8 @@ export default defineComponent({
   .product-content {
     .content-header {
       .col-5 {
-        .image {
-          .p-image {
+        .image{
+          :deep(.p-image) {
             img {
               width: 100% !important;
               height: 15rem !important;
@@ -565,7 +565,7 @@ export default defineComponent({
           }
         }
       }
-      .col-7{
+      .col-7 {
         padding: 1rem !important;
       }
     }

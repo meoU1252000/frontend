@@ -12,7 +12,7 @@
         </div>
         <div class="mt-5">
           <div class="grid p-fluid px-4">
-            <div class="col-12">
+            <div class="col-12 p-inputtext-sm">
               <my-dropdown
                 v-model="state.address_id"
                 :options="listAddress"
@@ -29,7 +29,7 @@
         <div v-if="state.address_id != ''">
           <div class="mt-4">
             <div class="grid p-fluid px-4">
-              <div class="col-12 md:col-6">
+              <div class="col-12 md:col-6 p-inputtext-sm">
                 <div class="mb-3">
                   <h4>Họ tên người nhận hàng</h4>
                 </div>
@@ -40,7 +40,7 @@
                   disabled
                 />
               </div>
-              <div class="col-12 md:col-6">
+              <div class="col-12 md:col-6 p-inputtext-sm">
                 <div class="mb-3">
                   <h4>Số điện thoại liên hệ</h4>
                 </div>
@@ -58,7 +58,7 @@
               <div class="col-12">
                 <h4>Địa chỉ nhận hàng</h4>
               </div>
-              <div class="col-12">
+              <div class="col-12 p-inputtext-sm">
                 <my-inputText
                   placeholder="Địa chỉ"
                   v-model="dataSelectedAddress[0].receiver_address"
@@ -72,7 +72,7 @@
               <div class="col-12">
                 <h4>Địa chỉ Email</h4>
               </div>
-              <div class="col-12">
+              <div class="col-12 p-inputtext-sm">
                 <my-inputText
                   placeholder="Địa chỉ Email"
                   v-model="account.userEmail"
@@ -83,7 +83,7 @@
           </div>
           <div class="my-4">
             <div class="grid p-fluid px-4">
-              <div class="col-12">
+              <div class="col-12 p-inputtext-sm">
                 <h4>Ghi Chú Đơn Hàng</h4>
               </div>
               <div class="col-12">
@@ -115,7 +115,7 @@
           <h4>Thông tin thanh toán của bạn sẽ luôn được bảo mật</h4>
         </div>
         <div class="flex w-full justify-content-between h-11rem">
-          <div class="w-6 p-4 h-full">
+          <div class="w-6 p-3 h-full">
             <div
               class="card h-full"
               @click="activeVNPay"
@@ -137,7 +137,7 @@
               </div>
             </div>
           </div>
-          <div class="w-6 p-4 h-full">
+          <div class="w-6 p-3 h-full">
             <div
               class="card h-full"
               :class="{ active: isActive === 1 }"
@@ -163,8 +163,8 @@ import { defineComponent, ref, computed, reactive } from "vue";
 import ItemCpn from "@/components/checkOut/ItemCpn.vue";
 import CheckOutSideBarCpn from "./CheckOutSideBarCpn.vue";
 import { getCartList } from "@/function/getCartList";
-import { removeItemLocal,setStateCart } from "@/function/handleLocalStorage";
-
+import { removeItemLocal, setStateCart } from "@/function/handleLocalStorage";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
@@ -173,6 +173,7 @@ export default defineComponent({
 
   setup() {
     const store = useStore();
+    const route = useRouter();
     const isActive = ref(0);
     const selectedAddress = ref();
     const state = reactive({
@@ -216,7 +217,7 @@ export default defineComponent({
           total_price: totalPrice.value,
           cart_list: cartList.value,
           token: account.value.token,
-          order: order_note.value,
+          note: order_note.value,
         };
         const check = await store.dispatch("auth/createOrder", order);
         if (check) {
@@ -225,8 +226,9 @@ export default defineComponent({
             title: "Thành Công",
             text: "Thanh toán thành công",
           });
-          removeItemLocal('cart');
+          removeItemLocal("cart");
           setStateCart(store);
+          route.push(`/don-hang`);
         } else {
           window.Swal.fire({
             icon: "error",
@@ -234,12 +236,12 @@ export default defineComponent({
             text: "Lỗi thanh toán. Vui lòng thử lại sau",
           });
         }
-      }else{
+      } else {
         window.Swal.fire({
-            icon: "error",
-            title: "Thất Bại",
-            text: "Vui lòng chọn địa chỉ giao hàng hoặc đăng nhập để thanh toán",
-          });
+          icon: "error",
+          title: "Thất Bại",
+          text: "Vui lòng chọn địa chỉ giao hàng hoặc đăng nhập để thanh toán",
+        });
       }
     };
 
@@ -284,7 +286,7 @@ export default defineComponent({
       submitted,
       rules,
       handleSubmit,
-      order_note
+      order_note,
     };
   },
 });
@@ -366,8 +368,18 @@ export default defineComponent({
   }
 }
 @media only screen and (max-width: 1920px) {
-.p-inputtext{
-  font-size:0.8rem
+  .w-6{
+    .card {
+      font-size:0.8rem !important;
+      .p-tag {
+        text-align: center;
+        padding:0.15rem 0.15rem !important;
+      }
+    }
+  }
+:deep(.p-inputtext-sm .p-inputtext){
+  font-size: 0.75rem !important;
 }
 }
 </style>
+
