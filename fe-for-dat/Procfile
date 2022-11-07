@@ -1,1 +1,1 @@
-web: fe-for-dat/node_modules public/ 
+web: node app.js
