@@ -12,8 +12,11 @@ export const login = (user) => {
 export const setStateLogin = (store) => {
   const user = getUserLocal("login");
   store.dispatch("auth/setStateLogin", user);
+  store.dispatch("auth/getListOrder", user.access_token);
+
   if (user) {
     store.dispatch("auth/getListAddress", user.access_token);
+    store.dispatch("auth/getListOrder", user.access_token);
   }
 };
 

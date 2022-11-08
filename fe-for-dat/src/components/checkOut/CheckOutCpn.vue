@@ -226,6 +226,7 @@ export default defineComponent({
             title: "Thành Công",
             text: "Thanh toán thành công",
           });
+          await store.dispatch("auth/getListOrder", account.value.token);
           removeItemLocal("cart");
           setStateCart(store);
           route.push(`/don-hang`);
@@ -368,18 +369,17 @@ export default defineComponent({
   }
 }
 @media only screen and (max-width: 1920px) {
-  .w-6{
+  .w-6 {
     .card {
-      font-size:0.8rem !important;
+      font-size: 0.8rem !important;
       .p-tag {
         text-align: center;
-        padding:0.15rem 0.15rem !important;
+        padding: 0.15rem 0.15rem !important;
       }
     }
   }
-:deep(.p-inputtext-sm .p-inputtext){
-  font-size: 0.75rem !important;
-}
+  :deep(.p-inputtext-sm .p-inputtext) {
+    font-size: 0.75rem !important;
+  }
 }
 </style>
-

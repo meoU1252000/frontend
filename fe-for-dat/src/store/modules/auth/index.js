@@ -9,6 +9,7 @@ const initDefaultState = () => {
     userName: "",
     userInfo: null,
     userAddress: null,
+    userOrder: null,
     cities: null,
     role: null,
     error: null,
@@ -19,6 +20,7 @@ const state = initDefaultState();
 const getters = {
   getUserId: (state) => state.userId,
   getUserName: (state) => state.userName,
+  getUserOrder: (state) => state.userOrder,
   getUserAddress: (state) => state.userAddress,
   getUserInfo: (state) => state.userInfo,
   getCities: (state) => state.cities,
@@ -34,6 +36,9 @@ const mutations = {
   },
   setAddress(state, user) {
     state.userAddress = user;
+  },
+  setOrder(state, user) {
+    state.userOrder = user;
   },
   setCities(state, cities) {
     state.cities = cities;
@@ -107,6 +112,17 @@ const actions = {
       commit("setError", { error });
     }
   },
+  async getListOrder({ commit }, credential) {
+    try {
+      const order = await authServices.getListOrder(credential);
+      commit("setOrder", order);
+      //   console.log(s);
+      return order;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
   async getListCity({ commit }) {
     try {
       const cities = await authServices.getListCity();
@@ -156,6 +172,17 @@ const actions = {
     try {
       commit("setError", {});
       const res = await authServices.deleteAddress(address);
+      return res;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+
+  async cancelOrder({ commit }, order) {
+    try {
+      commit("setError", {});
+      const res = await authServices.cancelOrder(order);
       return res;
       //call api
     } catch (error) {

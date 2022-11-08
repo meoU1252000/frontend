@@ -136,6 +136,39 @@ class AuthService {
       console.log("error");
     }
   }
+  async getListOrder(credential) {
+    try {
+      const response = await http.post("client/get-list-order", credential, {
+        headers: {
+          Authorization: `Bearer ${credential}`,
+        },
+      });
+      if (response.data.data) {
+        return response.data.data;
+      } else {
+        throw new Error("Wrong credential");
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  }
+
+  async cancelOrder(order) {
+    try {
+      const response = await http.post("client/cancel-order", order, {
+        headers: {
+          Authorization: `Bearer ${order.token}`,
+        },
+      });
+      if (response.data.data) {
+        return response.data.data;
+      } else {
+        throw new Error("Wrong credential");
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  }
 }
 
 export default new AuthService();
