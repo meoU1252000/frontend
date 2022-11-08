@@ -1,4 +1,4 @@
 export const Config = {
-    API_URL: "http://luanvan-backend.herokuapp.com/api",
+    API_URL: "https://luanvan-backend.herokuapp.com/api",
   };
   
