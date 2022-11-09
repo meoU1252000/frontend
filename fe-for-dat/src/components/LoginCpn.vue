@@ -171,9 +171,9 @@ export default defineComponent({
             title: "Thành Công",
             text: "Đăng nhập thành công",
           });
+          closeModal();
           await store.dispatch("auth/getListAddress", check.access_token);
           await store.dispatch("auth/getListOrder", check.access_token);
-          closeModal();
         } else {
           window.Swal.fire({
             icon: "error",

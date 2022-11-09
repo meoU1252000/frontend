@@ -41,8 +41,14 @@
           type="text"
           v-model="search"
           placeholder="Nhập từ khóa cần tìm"
+          v-on:keyup.enter="handleSearch(search)"
         />
       </span>
+      <my-button
+        icon="pi pi-microphone"
+        class="p-button-rounded p-button-text"
+        @click="handleSearchByVoice"
+      />
     </div>
 
     <div
@@ -106,6 +112,7 @@ import UserCpn from "@/components/user/UserCpn.vue";
 import NavbarCpn from "./NavbarCpn.vue";
 import CartModalCpn from "./cart/CartModalCpn.vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   components: { LoginCpn, RegisterCpn, NavbarCpn, CartModalCpn, UserCpn },
@@ -118,6 +125,7 @@ export default defineComponent({
   setup() {
     const search = ref();
     const store = useStore();
+    const route = useRouter();
     const showLoginModal = ref(false);
     const showRegisterModal = ref(false);
     const showCategoryModal = ref(false);
@@ -168,6 +176,55 @@ export default defineComponent({
       return store.getters["auth/getUserInfo"] || [];
     });
 
+    const handleSearch = async (search) => {
+      const check = await store.dispatch("search/getListProducts", search);
+      if (check) {
+        route.push(`/tim-kiem/`);
+      }
+    };
+
+    // var message = document.querySelector("#message");
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechGrammarList =
+      window.SpeechGrammarList || window.webkitSpeechGrammarList;
+
+    const grammar = "#JSGF V1.0;";
+
+    const recognition = new SpeechRecognition();
+    const speechRecognitionList = new SpeechGrammarList();
+    speechRecognitionList.addFromString(grammar, 1);
+    recognition.grammars = speechRecognitionList;
+    recognition.lang = "vi-VN";
+    recognition.interimResults = false;
+
+    recognition.onresult = async (event) => {
+      var lastResult = event.results.length - 1;
+      var content = event.results[lastResult][0].transcript;
+      search.value = content;
+      const check = await store.dispatch("search/getListProducts", content);
+      if (check) {
+        route.push(`/tim-kiem/`);
+      }
+    };
+
+    recognition.onspeechend = () => {
+      recognition.stop();
+    };
+
+    recognition.onerror = (event) => {
+      search.value = "Error occurred in recognition: " + event.error;
+    };
+
+    // document.querySelector("#btnTalk").addEventListener("click", function () {
+    //   recognition.start();
+    // });
+
+    const handleSearchByVoice = () => {
+      recognition.start();
+    };
+
     return {
       search,
       showLoginModal,
@@ -187,6 +244,8 @@ export default defineComponent({
       displayUserInfo,
       handleUserInfoLeave,
       handleUserInfoHover,
+      handleSearch,
+      handleSearchByVoice,
     };
   },
 });
@@ -226,6 +285,11 @@ export default defineComponent({
 
   .search {
     margin: 0 1.5rem;
+    display: flex;
+    align-items: baseline;
+    button {
+      transform: translateX(-3rem);
+    }
   }
 
   :deep(.p-inputtext) {
@@ -311,8 +375,8 @@ export default defineComponent({
           font-size: 12px !important;
         }
       }
-      .p-button-sm{
-        font-size: 0.8rem
+      .p-button-sm {
+        font-size: 0.8rem;
       }
     }
     .login {
@@ -323,7 +387,7 @@ export default defineComponent({
       }
     }
     .user-info {
-      margin-right:0rem;
+      margin-right: 0rem;
     }
   }
 }

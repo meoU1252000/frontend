@@ -8,6 +8,7 @@ import UserView from "../views/UserView.vue";
 import AddressView from "../views/AddressView.vue";
 import CheckOutView from "../views/CheckOutView.vue";
 import OrderView from "../views/OrderView.vue";
+import SearchView from "../views/SearchView.vue";
 
 import MainLayout from "@/layout/MainLayout.vue";
 
@@ -27,6 +28,12 @@ const routes = [
         name: "showCategoryView",
         props: true,
         component: CategoryView,
+      },
+      {
+        path: "/tim-kiem",
+        name: "showSearchView",
+        props: true,
+        component: SearchView,
       },
       {
         path: "/thuong-hieu/:brand_name",
