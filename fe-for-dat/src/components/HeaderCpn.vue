@@ -362,18 +362,22 @@ export default defineComponent({
 @media only screen and (max-width: 1920px) {
   .header {
     padding: 0 7rem;
+    .logo-link {
+      height: 1.5rem;
+    }
     a {
       span {
-        font-size: 1.5rem !important;
+        font-size: 1.2rem !important;
       }
+    }
+    .search {
+      margin-left: 1.5rem;
+      margin-right: 1rem;
     }
     .logo {
       button {
-        width: 13rem;
-        height: 3rem;
-        span {
-          font-size: 12px !important;
-        }
+        width: 9rem;
+        height: 2.5rem;
       }
       .p-button-sm {
         font-size: 0.8rem;
@@ -382,12 +386,19 @@ export default defineComponent({
     .login {
       .text {
         span {
-          font-size: 1rem !important;
+          font-size: 0.8rem !important;
         }
       }
     }
     .user-info {
       margin-right: 0rem;
+    }
+
+    .cart {
+      margin-left: 2rem;
+      span {
+        font-size: 0.8rem;
+      }
     }
   }
 }
