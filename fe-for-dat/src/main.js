@@ -71,6 +71,7 @@ app.use(VueGoogleMaps, {
   },
 });
 
+
 // app.use(VueFbCustomerChat, {
 //   page_id: 100083056603992, //  change 'null' to your Facebook Page ID,
 //   theme_color: "#333333", // theme color in HEX

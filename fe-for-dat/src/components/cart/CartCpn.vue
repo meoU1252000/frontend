@@ -29,13 +29,17 @@
                 >{{ item.name }}</router-link
               >
               <div class="pl-2">
-                <span>Mã Sản Phẩm: SP-{{ item.productId }}</span>
+                <span class="quantity">Còn: {{ item.productStock }} sản phẩm</span>
               </div>
+              <div class="pl-2">
+                <span>Mã Sản Phẩm: SP-{{ item.productId }}</span>
+              </div>             
             </div>
           </div>
           <div class="col-2 text-right">
             <span>{{ formatter(item.price) }}</span>
           </div>
+
           <div class="col-3">
             <div class="col-12">
               <my-inputNumber
@@ -198,6 +202,9 @@ export default defineComponent({
       span {
         font-size: 0.9rem;
         color: rgb(130, 134, 158);
+      }
+      .quantity{
+        color: #e6983a;
       }
     }
     .col-2 {

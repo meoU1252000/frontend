@@ -33,14 +33,14 @@
                     :key="j"
                     class="flex order-content mb-2"
                   >
-                    <div class="col-1 order-image justify-content-center flex">
+                    <div class="col-2 order-image justify-content-center flex">
                       <img
                         :src="order_detail.product.main_image_src"
                         alt=""
                         class="w-5rem h-5rem"
                       />
                     </div>
-                    <div class="col-11 order-name">
+                    <div class="col-10 order-name">
                       <router-link
                         :to="{
                           name: 'showProductView',
@@ -140,14 +140,14 @@
                     :key="j"
                     class="flex order-content mb-2"
                   >
-                    <div class="col-1 order-image justify-content-center flex">
+                    <div class="col-2 order-image justify-content-center flex">
                       <img
                         :src="order_detail.product.main_image_src"
                         alt=""
                         class="w-5rem h-5rem"
                       />
                     </div>
-                    <div class="col-11 order-name">
+                    <div class="col-10 order-name">
                       <router-link
                         :to="{
                           name: 'showProductView',
@@ -236,14 +236,14 @@
                     :key="j"
                     class="flex order-content mb-2"
                   >
-                    <div class="col-1 order-image justify-content-center flex">
+                    <div class="col-2 order-image justify-content-center flex">
                       <img
                         :src="order_detail.product.main_image_src"
                         alt=""
                         class="w-5rem h-5rem"
                       />
                     </div>
-                    <div class="col-11 order-name">
+                    <div class="col-10 order-name">
                       <router-link
                         :to="{
                           name: 'showProductView',
@@ -332,14 +332,14 @@
                     :key="j"
                     class="flex order-content mb-2"
                   >
-                    <div class="col-1 order-image justify-content-center flex">
+                    <div class="col-2 order-image justify-content-center flex">
                       <img
                         :src="order_detail.product.main_image_src"
                         alt=""
                         class="w-5rem h-5rem"
                       />
                     </div>
-                    <div class="col-11 order-name">
+                    <div class="col-10 order-name">
                       <router-link
                         :to="{
                           name: 'showProductView',
@@ -414,29 +414,42 @@
                         <h3>Đánh giá sản phẩm</h3>
                       </div>
                     </div>
-                    <div
-                      v-for="(order_detail, j) in order.order_details"
-                      :key="j"
-                      class="flex mb-2 w-full"
-                    >
+                    <div class="flex justify-content-center">
                       <div
-                        class="flex mb-2 w-full justify-content-between align-items-center"
+                        v-for="(order_detail, j) in order.order_details"
+                        :key="j"
+                        class="flex mb-2 w-11 order-rating-content"
                       >
                         <div
-                          class="col-1 order-image justify-content-center flex"
+                          class="col-1 mx-4 flex mb-2 w-full justify-content-between align-items-center"
                         >
-                          <img
-                            :src="order_detail.product.main_image_src"
-                            alt=""
-                            class="w-5rem h-5rem"
-                          />
-                        </div>
-                        <div class="mr-4">
-                          <star-rating
-                            v-model:rating="rating"
-                            :show-rating="false"
-                            star-size="30"
-                          ></star-rating>
+                          <div
+                            class="col-1 order-image justify-content-center flex"
+                          >
+                            <img
+                              :src="order_detail.product.main_image_src"
+                              alt=""
+                              class="w-5rem h-5rem"
+                            />
+                          </div>
+                          <div class="mr-4" v-if="order_detail.star_rating">
+                            <star-rating
+                              v-model:rating="
+                                order_detail.star_rating.star_rating_number
+                              "
+                              :show-rating="false"
+                              read-only="true"
+                              star-size="30"
+                            ></star-rating>
+                          </div>
+                          <div class="mr-4" v-else>
+                            <star-rating
+                              v-model:rating="rating"
+                              :show-rating="false"
+                              star-size="30"
+                              @click="rateProduct(order_detail)"
+                            ></star-rating>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -448,7 +461,7 @@
                         <h3>Phản hồi</h3>
                         <div class="block mt-3 w-full mb-3">
                           <my-Textarea
-                            v-model="value"
+                            v-model="content"
                             :autoResize="true"
                             rows="5"
                             cols="30"
@@ -457,9 +470,9 @@
                           />
                         </div>
                         <my-button
-                          class="flex button-primary justify-content-end w-1 ratingButton"
+                          class="flex button-primary justify-content-end w-2 ratingButton"
                           label="Đánh Giá"
-                          @click="goToRatingPage(order.id)"
+                          @click="handleComment(content)"
                         />
                       </div>
                     </div>
@@ -496,14 +509,14 @@
                     :key="j"
                     class="flex order-content mb-2"
                   >
-                    <div class="col-1 order-image justify-content-center flex">
+                    <div class="col-2 order-image justify-content-center flex">
                       <img
                         :src="order_detail.product.main_image_src"
                         alt=""
                         class="w-5rem h-5rem"
                       />
                     </div>
-                    <div class="col-11 order-name">
+                    <div class="col-10 order-name">
                       <router-link
                         :to="{
                           name: 'showProductView',
@@ -580,6 +593,7 @@ export default defineComponent({
     const store = useStore();
     const route = useRouter();
     const maxStars = ref(5);
+    const rating = ref(0);
     const hasCounter = true;
     const stars = ref(0);
     const grade = ref(0);
@@ -649,6 +663,24 @@ export default defineComponent({
         stars.value = stars.value === star ? star - 1 : star;
     };
 
+    const rateProduct = async (order_detail) => {
+      const data = {
+        product_id: order_detail.product.id,
+        order_id: order_detail.order_id,
+        star_rating_number: rating.value,
+        token: account.value.token,
+      };
+      const check = await store.dispatch("auth/rating", data);
+      if (check) {
+        await store.dispatch("auth/getListOrder", account.value.token);
+        window.Swal.fire({
+          icon: "success",
+          title: "Thành Công",
+          text: "Đánh giá sản phẩm thành công",
+        });
+      }
+    };
+
     const handleCancelOrder = (data) => {
       const orderCancel = {
         id: data,
@@ -692,6 +724,8 @@ export default defineComponent({
       stars,
       grade,
       rate,
+      rateProduct,
+      rating,
     };
   },
 });
@@ -732,6 +766,11 @@ export default defineComponent({
   .order-content {
     border-top: 1px solid #eeee;
   }
+
+  .order-rating-content {
+    content: "";
+    border-top: 1px solid #eeee;
+  }
   .order-rating {
     border: 1px solid #eeee;
   }
@@ -744,6 +783,7 @@ export default defineComponent({
     font-size: 0.8rem;
     line-height: 1.5;
     a {
+      width: 75%;
       text-decoration: none;
       color: black;
       overflow: hidden;
