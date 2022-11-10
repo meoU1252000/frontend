@@ -50,9 +50,9 @@ export default defineComponent({
         title: "Thành Công",
         text: "Đăng xuất thành công",
       });
+      route.push(`/`);
       removeUserLocal("login");
       setStateLogin(store);
-      route.push(`/`);
     };
 
     return {

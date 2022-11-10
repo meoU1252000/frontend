@@ -27,7 +27,8 @@ import TabPanel from "primevue/tabpanel";
 import "sweetalert2/dist/sweetalert2.min.css";
 import Textarea from "primevue/textarea";
 import Tag from "primevue/tag";
-import Fieldset from 'primevue/fieldset';
+import Fieldset from "primevue/fieldset";
+import StarRating from "vue-star-rating";
 
 import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -62,6 +63,7 @@ app.component("my-TabPanel", TabPanel);
 app.component("my-Textarea", Textarea);
 app.component("my-Tag", Tag);
 app.component("my-Fieldset", Fieldset);
+app.component("star-rating", StarRating);
 
 app.use(VueGoogleMaps, {
   load: {

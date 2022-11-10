@@ -396,6 +396,74 @@
                       </div>
                     </div>
                   </div>
+                  <!-- <div class="order-button">
+                    <div class="flex justify-content-end">
+                      <div class="col-6 flex justify-content-end">
+                        <my-button
+                          class="flex button-primary justify-content-center w-6"
+                          label="Đánh Giá Đơn Hàng"
+                          @click="goToRatingPage(order.id)"
+                        />
+                      </div>
+                    </div>
+                  </div> -->
+                  <div class="order-rating mb-4">
+                    <div class="flex align-items-baseline p-4 w-full">
+                      <i class="pi pi-heart-fill"></i>
+                      <div class="ml-2 line-height-3 w-full">
+                        <h3>Đánh giá sản phẩm</h3>
+                      </div>
+                    </div>
+                    <div
+                      v-for="(order_detail, j) in order.order_details"
+                      :key="j"
+                      class="flex mb-2 w-full"
+                    >
+                      <div
+                        class="flex mb-2 w-full justify-content-between align-items-center"
+                      >
+                        <div
+                          class="col-1 order-image justify-content-center flex"
+                        >
+                          <img
+                            :src="order_detail.product.main_image_src"
+                            alt=""
+                            class="w-5rem h-5rem"
+                          />
+                        </div>
+                        <div class="mr-4">
+                          <star-rating
+                            v-model:rating="rating"
+                            :show-rating="false"
+                            star-size="30"
+                          ></star-rating>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="order-comment mb-4">
+                    <div class="flex align-items-baseline p-4">
+                      <div class="ml-2 line-height-3 w-full">
+                        <h3>Phản hồi</h3>
+                        <div class="block mt-3 w-full mb-3">
+                          <my-Textarea
+                            v-model="value"
+                            :autoResize="true"
+                            rows="5"
+                            cols="30"
+                            class="w-full"
+                            placeholder="Tối đa 255 ký tự ...."
+                          />
+                        </div>
+                        <my-button
+                          class="flex button-primary justify-content-end w-1 ratingButton"
+                          label="Đánh Giá"
+                          @click="goToRatingPage(order.id)"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </my-Fieldset>
               </div>
             </my-TabPanel>
@@ -502,12 +570,19 @@
   </div>
 </template>
 <script>
-import { defineComponent, computed, onMounted } from "vue";
+import { defineComponent, computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { formatter } from "@/function/common";
+import { useRouter } from "vue-router";
+
 export default defineComponent({
   setup() {
     const store = useStore();
+    const route = useRouter();
+    const maxStars = ref(5);
+    const hasCounter = true;
+    const stars = ref(0);
+    const grade = ref(0);
     onMounted(async () => {
       window.scrollTo(0, 0);
     });
@@ -520,6 +595,9 @@ export default defineComponent({
     const orders = computed(() => {
       return stateOrder.value || [];
     });
+    const goToRatingPage = (id) => {
+      route.push(`/danh-gia/${id}`);
+    };
     const orders1 = computed(() => {
       return (
         orders.value.filter((orders) => {
@@ -566,6 +644,11 @@ export default defineComponent({
       );
     });
 
+    const rate = (star) => {
+      if (typeof star === "number" && star <= maxStars.value && star >= 0)
+        stars.value = stars.value === star ? star - 1 : star;
+    };
+
     const handleCancelOrder = (data) => {
       const orderCancel = {
         id: data,
@@ -603,6 +686,12 @@ export default defineComponent({
       formatter,
       stateOrder,
       handleCancelOrder,
+      goToRatingPage,
+      maxStars,
+      hasCounter,
+      stars,
+      grade,
+      rate,
     };
   },
 });
@@ -611,6 +700,9 @@ export default defineComponent({
 .user-content {
   min-height: 20rem;
   background-color: white;
+  .ratingButton {
+    float: right;
+  }
   .button-primary {
     background-color: rgb(207, 15, 15, 1) !important;
     border-color: rgb(207, 15, 15, 1) !important;
@@ -634,8 +726,14 @@ export default defineComponent({
   .order-delivery {
     border: 1px solid #eeee;
   }
+  .order-comment {
+    border: 1px solid #eeee;
+  }
   .order-content {
     border-top: 1px solid #eeee;
+  }
+  .order-rating {
+    border: 1px solid #eeee;
   }
   .order-image {
     img {
@@ -668,6 +766,37 @@ export default defineComponent({
     .total-price {
       font-weight: bold;
     }
+  }
+  $active-color: #f3d23e;
+
+  .rating {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    font-size: 22px;
+    color: #a7a8a8;
+  }
+  .list {
+    margin: 0 0 5px 0;
+    padding: 0;
+    list-style-type: none;
+    &:hover {
+      .star {
+        color: $active-color;
+      }
+    }
+  }
+  .star {
+    display: inline-block;
+    cursor: pointer;
+    &:hover {
+      & ~ .star {
+        &:not(.active) {
+          color: inherit;
+        }
+      }
+    }
+  }
+  .active {
+    color: $active-color;
   }
 }
 @media only screen and (max-width: 1920px) {

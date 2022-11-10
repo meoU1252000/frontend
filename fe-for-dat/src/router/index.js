@@ -35,6 +35,7 @@ const routes = [
         props: true,
         component: SearchView,
       },
+
       {
         path: "/thuong-hieu/:brand_name",
         name: "showBrandView",
