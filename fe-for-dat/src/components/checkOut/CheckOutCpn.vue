@@ -101,7 +101,54 @@
 
       <div class="sidebar w-5 ml-3">
         <ItemCpn :cartList="cartList" />
-        <CheckOutSideBarCpn :totalPrice="totalPrice" />
+        <div class="sidebar-cart-content mt-3">
+          <div class="header text-xl">
+            <div class="header-content w-full p-4">
+              <h6 class="font-medium">Thanh toán</h6>
+              <div class="flex justify-content-between text-base mt-4">
+                <span>Tổng tạm tính</span>
+                <span class="font-bold">{{ formatter(totalPrice) }}</span>
+              </div>
+              <div class="flex justify-content-between text-base mt-2">
+                <span>Phí vận chuyển</span>
+                <span class="font-bold">Miễn phí</span>
+              </div>
+              <div class="flex justify-content-between text-base mt-2">
+                <span>Thành tiền</span>
+                <div class="flex flex-column align-items-end total-price-end">
+                  <span>{{ formatter(totalPrice) }}</span>
+                  <span class="text-sm text-600 font-medium"
+                    >(Đã bao gồm VAT)</span
+                  >
+                </div>
+              </div>
+              <div
+                class="flex justify-content-between text-base mt-4"
+                v-if="isActive === 1"
+              >
+                <my-button
+                  label="Thanh Toán"
+                  class="w-full"
+                  type="submit"
+                ></my-button>
+              </div>
+              <div
+                class="flex justify-content-between text-base mt-4"
+                v-if="isActive === 0"
+              >
+                <PayPalCpn
+                  :totalPrice="totalPrice"
+                  @complete-paypal="orderPaypal"
+                  v-if="state.address_id != ''"
+                />
+
+                <div v-else class="w-full">
+                  <h3 class="text-center">Vui lòng chọn địa chỉ thanh toán.</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="px-7 pb-7 mx-auto w-9 flex justify-content-start">
@@ -122,15 +169,15 @@
               :class="{ active: isActive === 0 }"
             >
               <div class="p-2 flex">
-                <h4>Thanh toán qua VNPAY</h4>
+                <h4>Thanh toán qua PayPal</h4>
                 <my-Tag class="mr-2 ml-2" value="Khuyên dùng" rounded></my-Tag>
               </div>
-              <div class="p-2 w-10">
+              <!-- <div class="p-2 w-10">
                 <span
                   >Thanh toán qua Internet Banking, Visa, Master, JCB,
                   VNPAY-QR</span
                 >
-              </div>
+              </div> -->
               <div class="conner" v-if="isActive === 0"></div>
               <div class="check" v-if="isActive === 0">
                 <i class="pi pi-check"></i>
@@ -161,15 +208,19 @@
 <script>
 import { defineComponent, ref, computed, reactive } from "vue";
 import ItemCpn from "@/components/checkOut/ItemCpn.vue";
-import CheckOutSideBarCpn from "./CheckOutSideBarCpn.vue";
+// import CheckOutSideBarCpn from "./CheckOutSideBarCpn.vue";
+
 import { getCartList } from "@/function/getCartList";
 import { removeItemLocal, setStateCart } from "@/function/handleLocalStorage";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
+import { formatter } from "@/function/common";
+import PayPalCpn from "./PayPal.vue";
+
 export default defineComponent({
-  components: { ItemCpn, CheckOutSideBarCpn },
+  components: { ItemCpn, PayPalCpn },
 
   setup() {
     const store = useStore();
@@ -209,6 +260,39 @@ export default defineComponent({
       return [];
     });
 
+    const createOrder = async (order) => {
+      const check = await store.dispatch("auth/createOrder", order);
+      if (check) {
+        window.Swal.fire({
+          icon: "success",
+          title: "Thành Công",
+          text: "Thanh toán thành công",
+        });
+        await store.dispatch("auth/getListOrder", account.value.token);
+        removeItemLocal("cart");
+        setStateCart(store);
+        route.push(`/don-hang`);
+      } else {
+        window.Swal.fire({
+          icon: "error",
+          title: "Thất Bại",
+          text: "Lỗi thanh toán. Vui lòng thử lại sau",
+        });
+      }
+    };
+
+    const orderPaypal = async () => {
+      const order = {
+        address_id: state.address_id,
+        total_price: totalPrice.value,
+        cart_list: cartList.value,
+        token: account.value.token,
+        note: order_note.value,
+        payment: isActive.value,
+      };
+      createOrder(order);
+    };
+
     const handleSubmit = async (isFormValid) => {
       submitted.value = true;
       if (isFormValid) {
@@ -218,25 +302,9 @@ export default defineComponent({
           cart_list: cartList.value,
           token: account.value.token,
           note: order_note.value,
+          payment: isActive.value,
         };
-        const check = await store.dispatch("auth/createOrder", order);
-        if (check) {
-          window.Swal.fire({
-            icon: "success",
-            title: "Thành Công",
-            text: "Thanh toán thành công",
-          });
-          await store.dispatch("auth/getListOrder", account.value.token);
-          removeItemLocal("cart");
-          setStateCart(store);
-          route.push(`/don-hang`);
-        } else {
-          window.Swal.fire({
-            icon: "error",
-            title: "Thất Bại",
-            text: "Lỗi thanh toán. Vui lòng thử lại sau",
-          });
-        }
+        createOrder(order);
       } else {
         window.Swal.fire({
           icon: "error",
@@ -288,6 +356,9 @@ export default defineComponent({
       rules,
       handleSubmit,
       order_note,
+      formatter,
+      orderPaypal,
+      createOrder,
     };
   },
 });
@@ -359,6 +430,56 @@ export default defineComponent({
     background-color: rgb(207, 15, 15, 1) !important;
     border-color: rgb(207, 15, 15, 1) !important;
 
+    &:enabled:hover {
+      background-color: rgb(145, 10, 10) !important;
+      border-color: rgb(207, 15, 15, 1) !important;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
+    }
+  }
+  .p-button {
+    background-color: rgb(207, 15, 15, 1) !important;
+    border-color: rgb(207, 15, 15, 1) !important;
+    &:enabled:hover {
+      background-color: rgb(145, 10, 10) !important;
+      border-color: rgb(207, 15, 15, 1) !important;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
+    }
+  }
+}
+.sidebar-cart-content {
+  min-height: 20rem;
+  background-color: white;
+  .header {
+    .header-content {
+      color: black;
+      h6 {
+        font-size: 1rem;
+      }
+    }
+    .total-price-end {
+      color: rgb(207, 15, 15, 1) !important;
+      font-weight: bold;
+    }
+  }
+  button {
+    background-color: rgb(207, 15, 15, 1) !important;
+    border-color: rgb(207, 15, 15, 1) !important;
+
+    &:enabled:hover {
+      background-color: rgb(145, 10, 10) !important;
+      border-color: rgb(207, 15, 15, 1) !important;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
+    }
+  }
+  .p-button {
+    background-color: rgb(207, 15, 15, 1) !important;
+    border-color: rgb(207, 15, 15, 1) !important;
     &:enabled:hover {
       background-color: rgb(145, 10, 10) !important;
       border-color: rgb(207, 15, 15, 1) !important;

@@ -77,7 +77,12 @@
                       <i class="pi pi-dollar"></i>
                       <div class="ml-2 line-height-3">
                         <h3>Phương thức thanh toán</h3>
-                        <span class="block"> Thanh toán khi nhận hàng </span>
+                        <span class="block" v-if="order.payment == 1">
+                          Thanh toán khi nhận hàng
+                        </span>
+                        <span class="block" v-if="order.payment == 0">
+                          Đã thanh toán bằng Paypal
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -88,7 +93,10 @@
                         <h3>Thông tin vận chuyển</h3>
                         <div class="block">
                           <div class="flex">
-                            <span>Thời gian đặt hàng</span>
+                            <span
+                              >Thời gian đặt hàng :
+                              {{ format_date(order.created_at) }}</span
+                            >
                           </div>
                           <div class="flex">
                             <span>Thời gian nhận hàng (dự kiến)</span>
@@ -184,7 +192,12 @@
                       <i class="pi pi-dollar"></i>
                       <div class="ml-2 line-height-3">
                         <h3>Phương thức thanh toán</h3>
-                        <span class="block"> Thanh toán khi nhận hàng </span>
+                        <span class="block" v-if="order.payment == 1">
+                          Thanh toán khi nhận hàng
+                        </span>
+                        <span class="block" v-if="order.payment == 0">
+                          Đã thanh toán bằng Paypal
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -195,10 +208,18 @@
                         <h3>Thông tin vận chuyển</h3>
                         <div class="block">
                           <div class="flex">
-                            <span>Thời gian đặt hàng</span>
+                            <span
+                              >Thời gian đặt hàng:
+                              {{ format_date(order.created_at) }}</span
+                            >
                           </div>
                           <div class="flex">
-                            <span>Thời gian nhận hàng (dự kiến)</span>
+                            <span
+                              >Thời gian nhận hàng (dự kiến):
+                              {{
+                                format_date(addDays(order.created_at, 5))
+                              }}</span
+                            >
                           </div>
                         </div>
                       </div>
@@ -280,7 +301,12 @@
                       <i class="pi pi-dollar"></i>
                       <div class="ml-2 line-height-3">
                         <h3>Phương thức thanh toán</h3>
-                        <span class="block"> Thanh toán khi nhận hàng </span>
+                        <span class="block" v-if="order.payment == 1">
+                          Thanh toán khi nhận hàng
+                        </span>
+                        <span class="block" v-if="order.payment == 0">
+                          Đã thanh toán bằng Paypal
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -291,10 +317,18 @@
                         <h3>Thông tin vận chuyển</h3>
                         <div class="block">
                           <div class="flex">
-                            <span>Thời gian đặt hàng</span>
+                            <span
+                              >Thời gian đặt hàng:
+                              {{ format_date(order.created_at) }}</span
+                            >
                           </div>
                           <div class="flex">
-                            <span>Thời gian nhận hàng (dự kiến)</span>
+                            <span
+                              >Thời gian nhận hàng (dự kiến):
+                              {{
+                                format_date(addDays(order.created_at, 5))
+                              }}</span
+                            >
                           </div>
                         </div>
                       </div>
@@ -376,7 +410,12 @@
                       <i class="pi pi-dollar"></i>
                       <div class="ml-2 line-height-3">
                         <h3>Phương thức thanh toán</h3>
-                        <span class="block"> Thanh toán khi nhận hàng </span>
+                        <span class="block" v-if="order.payment == 1">
+                          Thanh toán khi nhận hàng
+                        </span>
+                        <span class="block" v-if="order.payment == 0">
+                          Đã thanh toán bằng Paypal
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -387,10 +426,16 @@
                         <h3>Thông tin vận chuyển</h3>
                         <div class="block">
                           <div class="flex">
-                            <span>Thời gian đặt hàng</span>
+                            <span
+                              >Thời gian đặt hàng:
+                              {{ format_date(order.created_at) }}</span
+                            >
                           </div>
                           <div class="flex">
-                            <span>Thời gian nhận hàng (dự kiến)</span>
+                            <span
+                              >Thời gian nhận hàng:
+                              {{ format_date(order.receive_date) }}</span
+                            >
                           </div>
                         </div>
                       </div>
@@ -454,7 +499,7 @@
                       </div>
                     </div>
                   </div>
-
+                  <!-- 
                   <div class="order-comment mb-4">
                     <div class="flex align-items-baseline p-4">
                       <div class="ml-2 line-height-3 w-full">
@@ -476,7 +521,7 @@
                         />
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                 </my-Fieldset>
               </div>
             </my-TabPanel>
@@ -553,7 +598,12 @@
                       <i class="pi pi-dollar"></i>
                       <div class="ml-2 line-height-3">
                         <h3>Phương thức thanh toán</h3>
-                        <span class="block"> Thanh toán khi nhận hàng </span>
+                        <span class="block" v-if="order.payment == 1">
+                          Thanh toán khi nhận hàng
+                        </span>
+                        <span class="block" v-if="order.payment == 0">
+                          Đã thanh toán bằng Paypal
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -564,7 +614,10 @@
                         <h3>Thông tin vận chuyển</h3>
                         <div class="block">
                           <div class="flex">
-                            <span>Thời gian đặt hàng</span>
+                            <span
+                              >Thời gian đặt hàng:
+                              {{ format_date(order.created_at) }}</span
+                            >
                           </div>
                           <div class="flex">
                             <span>Thời gian nhận hàng (dự kiến)</span>
@@ -587,6 +640,7 @@ import { defineComponent, computed, onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { formatter } from "@/function/common";
 import { useRouter } from "vue-router";
+import { format_date, addDays } from "@/function/common";
 
 export default defineComponent({
   setup() {
@@ -721,11 +775,13 @@ export default defineComponent({
       goToRatingPage,
       maxStars,
       hasCounter,
+      format_date,
       stars,
       grade,
       rate,
       rateProduct,
       rating,
+      addDays,
     };
   },
 });

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from "moment";
 
 export const formatter = (price) => {
   return new Intl.NumberFormat("vi-VI", {
@@ -10,6 +10,13 @@ export const formatter = (price) => {
 
 export const format_date = (value) => {
   if (value) {
-    return moment(String(value)).format('MMMM Do YYYY, h:mm:ss');
+    moment.locale("vi");
+    return moment(String(value)).format("LLL");
   }
+};
+
+export const addDays = (date, days) => {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
 };

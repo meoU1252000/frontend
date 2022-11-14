@@ -18,12 +18,21 @@
             <span class="text-sm text-600 font-medium">(Đã bao gồm VAT)</span>
           </div>
         </div>
-        <div class="flex justify-content-between text-base mt-4">
+        <div
+          class="flex justify-content-between text-base mt-4"
+          v-if="isActive === 1"
+        >
           <my-button
             label="Thanh Toán"
             class="w-full"
             type="submit"
           ></my-button>
+        </div>
+        <div
+          class="flex justify-content-between text-base mt-4"
+          v-if="isActive === 0"
+        >
+          <PayPalCpn :totalPrice="totalPrice" @complete-paypal="orderPaypal" />
         </div>
       </div>
     </div>
@@ -34,10 +43,14 @@
 import { defineComponent } from "vue";
 import { formatter } from "@/function/common";
 import { useRouter } from "vue-router";
+import PayPalCpn from "./PayPal.vue";
 
 export default defineComponent({
+  components: { PayPalCpn },
   props: {
     totalPrice: { type: Number },
+    isActive: { type: Number },
+    orderPaypal: { type: Object },
   },
   setup() {
     const route = useRouter();
@@ -81,12 +94,11 @@ export default defineComponent({
   }
 }
 @media only screen and (max-width: 1920px) {
-.sidebar-content {
-  .header {
-    .header-content {
-    
+  .sidebar-content {
+    .header {
+      .header-content {
+      }
     }
   }
-}
 }
 </style>
