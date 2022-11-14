@@ -10,8 +10,8 @@
             class="product-description px-2 pt-4 mr-8"
             v-html="product.product_description.slice(0, 2000)"
           ></div>
-          <div class="w-full justify-content-center flex my-4">
-            <my-button label="Read More" @click="readMore()"></my-button>
+          <div class="w-full justify-content-center flex my-4 ">
+            <my-button label="Read More" @click="readMore()" class="button-primary"></my-button>
           </div>
         </div>
         <div v-if="readMoreActive">
@@ -23,7 +23,7 @@
             <my-button
               label="Less"
               @click="readMore()"
-              class="p-button-outlined"
+              class="p-button-outlined button-outline"
             ></my-button>
           </div>
         </div>
@@ -179,4 +179,28 @@ export default defineComponent({
   color: rgb(207, 15, 15);
   cursor: pointer;
 }
+
+ .button-primary {
+    background-color: rgb(207, 15, 15, 1) !important;
+    border-color: rgb(207, 15, 15, 1) !important;
+
+    &:enabled:hover {
+      background-color: rgb(145, 10, 10) !important;
+      border-color: rgb(207, 15, 15, 1) !important;
+    }
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
+    }
+  }
+
+  .button-outline {
+      color: rgb(207, 15, 15, 1) !important;
+      &:enabled:hover {
+        background: rgba(246, 59, 59, 0.04) !important;
+        border-color: rgb(145, 10, 10) !important;
+      }
+      &:focus {
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #fb9db4, 0 1px 2px 0 black;
+      }
+    }
 </style>

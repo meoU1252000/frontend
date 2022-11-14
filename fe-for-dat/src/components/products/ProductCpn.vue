@@ -199,6 +199,12 @@
   >
     <ProductDescriptionCpn :product="product" />
   </div>
+  <div
+    class="px-7 pb-7 mx-auto w-11 flex justify-content-between"
+    v-if="product.product_description"
+  >
+    <ProductCommentCpn :product="product" />
+  </div>
 </template>
 
 <script>
@@ -209,11 +215,12 @@ import { useStore } from "vuex";
 import { formatter } from "@/function/common";
 import { addProductToCart, setStateCart } from "@/function/handleLocalStorage";
 import ProductDescriptionCpn from "./ProductDescriptionCpn.vue";
+import ProductCommentCpn from "./ProductCommentCpn.vue";
 import { getCartList } from "@/function/getCartList";
 import SideBarCpn from "./SideBarCpn.vue";
 // import Swal from 'sweetalert2';
 export default defineComponent({
-  components: { ProductDescriptionCpn, SideBarCpn },
+  components: { ProductDescriptionCpn, SideBarCpn, ProductCommentCpn },
   props: {
     product: { type: Object },
     urlKind: { type: String },
@@ -555,7 +562,7 @@ export default defineComponent({
   .product-content {
     .content-header {
       .col-5 {
-        .image{
+        .image {
           :deep(.p-image) {
             img {
               width: 100% !important;

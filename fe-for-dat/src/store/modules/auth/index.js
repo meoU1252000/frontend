@@ -189,6 +189,27 @@ const actions = {
       commit("setError", { error });
     }
   },
+
+  async rating({ commit }, data) {
+    try {
+      commit("setError", {});
+      const res = await authServices.rating(data);
+      return res;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+  async comment({ commit }, data) {
+    try {
+      commit("setError", {});
+      const res = await authServices.comment(data);
+      return res;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
 };
 
 const auth = {
