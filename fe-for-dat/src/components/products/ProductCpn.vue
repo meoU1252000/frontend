@@ -201,7 +201,6 @@
   </div>
   <div
     class="px-7 pb-7 mx-auto w-11 flex justify-content-between"
-    v-if="product.product_description"
   >
     <ProductCommentCpn :product="product" />
   </div>

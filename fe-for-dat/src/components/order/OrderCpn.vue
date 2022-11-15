@@ -753,6 +753,9 @@ export default defineComponent({
         if (result.isConfirmed) {
           await store.dispatch("auth/cancelOrder", orderCancel);
           await store.dispatch("auth/getListOrder", orderCancel.token);
+          await store.dispatch("product/getListProducts");
+          await store.dispatch("category/getListCategories");
+          await store.dispatch("brand/getListBrands");
           window.Swal.fire(
             "Hủy thành công!",
             "Đã hủy thành công đơn hàng.",

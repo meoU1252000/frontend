@@ -269,6 +269,9 @@ export default defineComponent({
           text: "Thanh toán thành công",
         });
         await store.dispatch("auth/getListOrder", account.value.token);
+        await store.dispatch("product/getListProducts");
+        await store.dispatch("category/getListCategories");
+        await store.dispatch("brand/getListBrands");
         removeItemLocal("cart");
         setStateCart(store);
         route.push(`/don-hang`);
