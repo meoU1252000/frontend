@@ -22,11 +22,12 @@
                 :class="{
                   'p-invalid': v$.address_id.$invalid && submitted,
                 }"
+                @change="checkAddress($event)"
               />
             </div>
           </div>
         </div>
-        <div v-if="state.address_id != ''">
+        <div v-if="state.address_id != '' && state.address_id != '-1'">
           <div class="mt-4">
             <div class="grid p-fluid px-4">
               <div class="col-12 md:col-6 p-inputtext-sm">
@@ -130,7 +131,11 @@
                   label="Thanh Toán"
                   class="w-full"
                   type="submit"
+                  v-if="state.address_id != '' && state.address_id != '-1'"
                 ></my-button>
+                <div v-else class="w-full">
+                  <h4 class="text-center">Vui lòng chọn địa chỉ thanh toán.</h4>
+                </div>
               </div>
               <div
                 class="flex justify-content-between text-base mt-4"
@@ -139,11 +144,11 @@
                 <PayPalCpn
                   :totalPrice="totalPrice"
                   @complete-paypal="orderPaypal"
-                  v-if="state.address_id != ''"
+                  v-if="state.address_id != '' && state.address_id != '-1'"
                 />
 
                 <div v-else class="w-full">
-                  <h3 class="text-center">Vui lòng chọn địa chỉ thanh toán.</h3>
+                  <h4 class="text-center">Vui lòng chọn địa chỉ thanh toán.</h4>
                 </div>
               </div>
             </div>
@@ -161,7 +166,7 @@
         <div class="pt-2 w-full px-4">
           <h4>Thông tin thanh toán của bạn sẽ luôn được bảo mật</h4>
         </div>
-        <div class="flex w-full justify-content-between h-11rem">
+        <div class="flex w-full justify-content-between h-8rem">
           <div class="w-6 p-3 h-full">
             <div
               class="card h-full"
@@ -204,11 +209,19 @@
       <div class="sidebar w-5 ml-3"></div>
     </div>
   </form>
+
+  <AddressModalCpn
+    :account="account"
+    :display-modal="displayModal"
+    @close-modal="closeModal"
+    v-if="displayModal"
+  />
 </template>
 <script>
 import { defineComponent, ref, computed, reactive } from "vue";
 import ItemCpn from "@/components/checkOut/ItemCpn.vue";
 // import CheckOutSideBarCpn from "./CheckOutSideBarCpn.vue";
+import AddressModalCpn from "@/components/checkOut/AddressModalCpn.vue";
 
 import { getCartList } from "@/function/getCartList";
 import { removeItemLocal, setStateCart } from "@/function/handleLocalStorage";
@@ -220,13 +233,20 @@ import { formatter } from "@/function/common";
 import PayPalCpn from "./PayPal.vue";
 
 export default defineComponent({
-  components: { ItemCpn, PayPalCpn },
+  components: { ItemCpn, PayPalCpn, AddressModalCpn },
 
   setup() {
     const store = useStore();
     const route = useRouter();
     const isActive = ref(0);
     const selectedAddress = ref();
+    const displayModal = ref(false);
+    const openModal = () => {
+      displayModal.value = true;
+    };
+    const closeModal = () => {
+      displayModal.value = false;
+    };
     const state = reactive({
       address_id: "",
     });
@@ -242,8 +262,20 @@ export default defineComponent({
 
     const v$ = useVuelidate(rules, state);
     const listAddress = computed(() => {
-      return store.getters["auth/getUserAddress"] || [];
+      const result = store.getters["auth/getUserAddress"] || [];
+      return result.concat([
+        {
+          id: -1,
+          receiver_address: "Thêm Địa Chỉ Mới",
+        },
+      ]);
     });
+
+    const checkAddress = (evt) => {
+      if (evt.value !== -1) return;
+      // open modal
+      openModal();
+    };
     const account = computed(() => {
       return store.getters["auth/getUserInfo"] || [];
     });
@@ -362,6 +394,10 @@ export default defineComponent({
       formatter,
       orderPaypal,
       createOrder,
+      checkAddress,
+      displayModal,
+      openModal,
+      closeModal,
     };
   },
 });
