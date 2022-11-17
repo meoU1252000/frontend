@@ -277,13 +277,21 @@ export default defineComponent({
           token: props.account.token,
         };
 
-        await store.dispatch("auth/createAddress", customer_address);
-        window.Swal.fire({
-          icon: "success",
-          title: "Thành Công",
-          text: "Thêm địa chỉ thành công",
-        });
-        await store.dispatch("auth/getListAddress", props.account.token);
+        const check = await store.dispatch("auth/createAddress", customer_address);
+        if(check){
+          window.Swal.fire({
+            icon: "success",
+            title: "Thành Công",
+            text: "Thêm địa chỉ thành công",
+          });
+          await store.dispatch("auth/getListAddress", props.account.token);
+        }else {
+          window.Swal.fire({
+            icon: "error",
+            title: "Thất Bại",
+            text: "Lỗi khi thêm địa chỉ. Vui lòng đăng nhập hoặc thử lại sau.",
+          });
+        }
         closeModal();
       }
     };

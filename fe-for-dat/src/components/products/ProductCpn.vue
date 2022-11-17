@@ -64,7 +64,16 @@
                 <span>SP-{{ product.id }}</span>
               </div>
             </div>
-
+            <div class="flex mt-3 align-items-center">
+              <star-rating
+                v-model:rating="rating"
+                :show-rating="false"
+                :read-only="true"
+                star-size="30"
+                class="justify-content-center"
+              ></star-rating>
+              <h5 class="ml-2">{{total}} đánh giá</h5>
+            </div>
             <div
               class="filter mt-3 brand"
               v-for="(attribute, i) in attributes"
@@ -199,9 +208,10 @@
   >
     <ProductDescriptionCpn :product="product" />
   </div>
-  <div
-    class="px-7 pb-7 mx-auto w-11 flex justify-content-between"
-  >
+  <div class="px-7 pb-7 mx-auto w-11 flex justify-content-between">
+    <ProductRatingCpn :product="product" />
+  </div>
+  <div class="px-7 pb-7 mx-auto w-11 flex justify-content-between">
     <ProductCommentCpn :product="product" />
   </div>
 </template>
@@ -215,11 +225,17 @@ import { formatter } from "@/function/common";
 import { addProductToCart, setStateCart } from "@/function/handleLocalStorage";
 import ProductDescriptionCpn from "./ProductDescriptionCpn.vue";
 import ProductCommentCpn from "./ProductCommentCpn.vue";
+import ProductRatingCpn from "./ProductRatingCpn.vue";
 import { getCartList } from "@/function/getCartList";
 import SideBarCpn from "./SideBarCpn.vue";
 // import Swal from 'sweetalert2';
 export default defineComponent({
-  components: { ProductDescriptionCpn, SideBarCpn, ProductCommentCpn },
+  components: {
+    ProductDescriptionCpn,
+    SideBarCpn,
+    ProductCommentCpn,
+    ProductRatingCpn,
+  },
   props: {
     product: { type: Object },
     urlKind: { type: String },
@@ -408,6 +424,45 @@ export default defineComponent({
       }
     };
 
+    const star = computed(() => {
+      return props.product.product_star || 0;
+    });
+
+    const star5 = computed(() => {
+      return star.value.star_5 || 0;
+    });
+
+    const star4 = computed(() => {
+      return star.value.star_4 || 0;
+    });
+
+    const star3 = computed(() => {
+      return star.value.star_3 || 0;
+    });
+
+    const star2 = computed(() => {
+      return star.value.star_2 || 0;
+    });
+
+    const star1 = computed(() => {
+      return star.value.star_1 || 0;
+    });
+
+    const total = computed(() => {
+      return star.value.total || 0;
+    });
+
+     const rating = computed(() => {
+      return (
+        (star1.value * 1 +
+          star2.value * 2 +
+          star3.value * 3 +
+          star4.value * 4 +
+          star5.value * 5) /
+          total.value || 0
+      );
+    });
+
     return {
       brand,
       images,
@@ -426,6 +481,14 @@ export default defineComponent({
       listProduct,
       addCart,
       addProductToCart,
+      star,
+      star5,
+      star4,
+      star3,
+      star2,
+      star1,
+      total,
+      rating,
     };
   },
 });

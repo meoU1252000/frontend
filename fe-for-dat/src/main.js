@@ -29,6 +29,7 @@ import Textarea from "primevue/textarea";
 import Tag from "primevue/tag";
 import Fieldset from "primevue/fieldset";
 import StarRating from "vue-star-rating";
+import ProgressBar from 'primevue/progressbar';
 
 import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -64,6 +65,7 @@ app.component("my-Textarea", Textarea);
 app.component("my-Tag", Tag);
 app.component("my-Fieldset", Fieldset);
 app.component("star-rating", StarRating);
+app.component("my-progress", ProgressBar);
 
 app.use(VueGoogleMaps, {
   load: {
