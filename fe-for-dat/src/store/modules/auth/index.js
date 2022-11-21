@@ -210,6 +210,45 @@ const actions = {
       commit("setError", { error });
     }
   },
+
+  async changeInfo({commit}, data){
+    try {
+      commit("setError", {});
+      const res = await authServices.changeInfo(data);
+      return res;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+
+   async changePassword({commit}, data){
+    try {
+      commit("setError", {});
+      // commit("setUser", null);
+      const res = await authServices.changePassword(data);
+      if(res.message != "Request failed with status code 400"){
+        commit("setUser", null);
+        console.log(res);
+      }
+      return res;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  },
+
+  async createNewToken({commit}, data){
+    try {
+      commit("setError", {});
+      const res = await authServices.createNewToken(data);
+      return res;
+      //call api
+    } catch (error) {
+      commit("setError", { error });
+    }
+  }
+
 };
 
 const auth = {

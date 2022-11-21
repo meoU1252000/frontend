@@ -1,5 +1,5 @@
 <template>
-  <div class="comment-content w-full">
+  <div class="comment-content w-9">
     <div class="content-header p-2 w-full">
       <div class="w-full px-3 py-2">
         <h2>Bình Luận</h2>

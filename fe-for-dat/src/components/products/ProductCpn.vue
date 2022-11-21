@@ -146,7 +146,7 @@
           </div>
           <div
             class="flex mt-4 action_button border-dashed border-x-none border-top-none"
-            v-if="product.product_quantity_stock > 0"
+            v-if="product.product_quantity_stock > 0 && product.product_price > 0"
           >
             <div class="col-6">
               <my-button class="w-full justify-content-center action-buy"

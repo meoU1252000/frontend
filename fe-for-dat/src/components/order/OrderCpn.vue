@@ -459,23 +459,51 @@
                         <h3>Đánh giá sản phẩm</h3>
                       </div>
                     </div>
-                    <div class="flex justify-content-center">
-                      <div
-                        v-for="(order_detail, j) in order.order_details"
-                        :key="j"
-                        class="flex mb-2 w-11 order-rating-content"
-                      >
+
+                    <div
+                      v-for="(order_detail, j) in order.order_details"
+                      :key="j"
+                      class="mb-2 w-full order-comment"
+                    >
+                      <div class="flex justify-content-center w-full px-2">
                         <div
-                          class="col-1 mx-4 flex mb-2 w-full justify-content-between align-items-center"
+                          class="flex mb-2 w-full justify-content-between align-items-center"
                         >
                           <div
-                            class="col-1 order-image justify-content-center flex"
+                            class="ml-4 py-4 order-image justify-content-center flex"
                           >
                             <img
                               :src="order_detail.product.main_image_src"
                               alt=""
                               class="w-5rem h-5rem"
                             />
+                            <div class="ml-2 flex flex-column order-name">
+                              <router-link
+                                :to="{
+                                  name: 'showProductView',
+                                  params: {
+                                    id: order_detail.product.id,
+                                    kind: order_detail.product.kind,
+                                  },
+                                }"
+                                >{{
+                                  order_detail.product.product_name
+                                }}</router-link
+                              >
+
+                              <span
+                                >Số lượng:
+                                {{ order_detail.product_number }}</span
+                              >
+                              <h3>
+                                {{
+                                  formatter(
+                                    order_detail.product_price *
+                                      order_detail.product_number
+                                  )
+                                }}
+                              </h3>
+                            </div>
                           </div>
                           <div class="mr-4" v-if="order_detail.star_rating">
                             <star-rating
@@ -487,41 +515,65 @@
                               star-size="30"
                             ></star-rating>
                           </div>
+                        
                           <div class="mr-4" v-else>
                             <star-rating
-                              v-model:rating="rating"
+                              v-model:rating="rating[j]"
                               :show-rating="false"
                               star-size="30"
-                              @click="rateProduct(order_detail)"
                             ></star-rating>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mb-4" v-if="order_detail.star_rating">
+                        <div class="flex align-items-baseline px-4">
+                          <div class="ml-2 line-height-3 w-full">
+                            <h3>Đã Phản hồi</h3>
+                            <div class="block mt-3 w-full mb-3">
+                            
+                              <my-Textarea
+                                v-model="order_detail.star_rating.rating_comment"
+                                :autoResize="true"
+                                :readonly="true"
+                                rows="5"
+                                cols="30"
+                                class="w-full"
+                                placeholder="Tối đa 255 ký tự ...."
+                              />
+                            </div>
+                            <my-button
+                              class="flex button-primary justify-content-end w-2 ratingButton"
+                              label="Đánh Giá"
+                              disabled="true"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mb-4" v-else>
+                        <div class="flex align-items-baseline px-4">
+                          <div class="ml-2 line-height-3 w-full">
+                            <h3>Phản hồi</h3>
+                            <div class="block mt-3 w-full mb-3">
+                            
+                              <my-Textarea
+                                v-model="content[j]"
+                                :autoResize="true"
+                                rows="5"
+                                cols="30"
+                                class="w-full"
+                                placeholder="Tối đa 255 ký tự ...."
+                              />
+                            </div>
+                            <my-button
+                              class="flex button-primary justify-content-end w-2 ratingButton"
+                              label="Đánh Giá"
+                              @click="rateProduct(order_detail,content[j],rating[j])"
+                            />
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <!-- 
-                  <div class="order-comment mb-4">
-                    <div class="flex align-items-baseline p-4">
-                      <div class="ml-2 line-height-3 w-full">
-                        <h3>Phản hồi</h3>
-                        <div class="block mt-3 w-full mb-3">
-                          <my-Textarea
-                            v-model="content"
-                            :autoResize="true"
-                            rows="5"
-                            cols="30"
-                            class="w-full"
-                            placeholder="Tối đa 255 ký tự ...."
-                          />
-                        </div>
-                        <my-button
-                          class="flex button-primary justify-content-end w-2 ratingButton"
-                          label="Đánh Giá"
-                          @click="handleComment(content)"
-                        />
-                      </div>
-                    </div>
-                  </div> -->
                 </my-Fieldset>
               </div>
             </my-TabPanel>
@@ -647,7 +699,8 @@ export default defineComponent({
     const store = useStore();
     const route = useRouter();
     const maxStars = ref(5);
-    const rating = ref(0);
+    const rating = ref([]);
+    const content = ref([]);
     const hasCounter = true;
     const stars = ref(0);
     const grade = ref(0);
@@ -717,11 +770,12 @@ export default defineComponent({
         stars.value = stars.value === star ? star - 1 : star;
     };
 
-    const rateProduct = async (order_detail) => {
+    const rateProduct = async (order_detail,comment_content,rating_number) => {
       const data = {
         product_id: order_detail.product.id,
         order_id: order_detail.order_id,
-        star_rating_number: rating.value,
+        star_rating_number: rating_number,
+        rating_comment: comment_content,
         token: account.value.token,
       };
       const check = await store.dispatch("auth/rating", data);
@@ -785,6 +839,7 @@ export default defineComponent({
       rateProduct,
       rating,
       addDays,
+      content
     };
   },
 });

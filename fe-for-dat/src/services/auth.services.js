@@ -201,6 +201,57 @@ class AuthService {
       console.log("error");
     }
   }
+
+  async changeInfo(data) {
+    try {
+      const response = await http.post("client/changeInfo", data, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      if (response.data.data) {
+        return response.data.data;
+      } else {
+        throw new Error("Wrong credential");
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  }
+
+  async changePassword(data) {
+    try {
+      const response = await http.post("client/changePassword", data, {
+        headers: {
+          Authorization: `Bearer ${data.token}`,
+        },
+      });
+      if (response.data.data) {
+        return response.data.data;
+      } else {
+        throw new Error("Wrong credential");
+      }
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async createNewToken(data){
+    try {
+      const response = await http.post("client/createNewToken", data, {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+        },
+      });
+      if (response.data.data) {
+        return response.data.data;
+      } else {
+        throw new Error("Wrong credential");
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  }
 }
 
 export default new AuthService();

@@ -86,12 +86,37 @@
           </div>
         </div>
       </div>
+      <div class="w-full mb-4" v-if="rating_content != null">
+        <div
+          v-for="(content, i) in rating_content"
+          :key="i"
+          class="w-full rating-comment mb-4"
+        >
+          <div class="px-4 pt-4 ">
+            <h4>{{ content.customer.customer_name }}</h4>
+            <star-rating
+              v-model:rating="content.star_rating_number"
+              :show-rating="false"
+              read-only="true"
+              star-size="20"
+              class="pt-2"
+            ></star-rating>
+          </div>
+          <div class="px-4 pt-2">
+            <span>{{ content.rating_comment }}</span>
+            <span class="block text-sm pt-2"
+              >Đã đánh giá lúc {{ format_date(content.created_at) }}</span
+            >
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { defineComponent, computed } from "vue";
+import { format_date } from "@/function/common";
 
 export default defineComponent({
   props: {
@@ -102,6 +127,10 @@ export default defineComponent({
     // const star5 = computed(() =>{
     //     return props.product.product_star.star_5 || 0 ;
     // })
+
+    const rating_content = computed(() => {
+      return props.product.product_star_content || null;
+    });
 
     const star = computed(() => {
       return props.product.product_star || 0;
@@ -172,6 +201,8 @@ export default defineComponent({
       star2,
       star1,
       total,
+      rating_content,
+      format_date,
     };
   },
 });
@@ -204,15 +235,12 @@ export default defineComponent({
     }
   }
 
-  .comment-bottom {
-    a {
-      text-decoration: none;
-      color: rgb(207, 15, 15, 1) !important;
-      cursor: pointer;
-    }
-    .text-sm {
-      color: #90949c;
-    }
+  .text-sm {
+    color: #90949c;
+  }
+
+  .rating-comment {
+    border-top: 1px solid #eeee;
   }
 }
 :deep(.p-progressbar-value) {
