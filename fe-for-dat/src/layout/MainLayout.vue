@@ -37,6 +37,7 @@ export default defineComponent({
       await store.dispatch("product/getListProducts");
       await store.dispatch("category/getListCategories");
       await store.dispatch("brand/getListBrands");
+      await store.dispatch("eventCode/getListEvents");
       setStateCart(store);
       setStateLogin(store);
       setupTimers();

@@ -149,7 +149,7 @@
             v-if="product.product_quantity_stock > 0 && product.product_price > 0"
           >
             <div class="col-6">
-              <my-button class="w-full justify-content-center action-buy"
+              <my-button class="w-full justify-content-center action-buy" @click="goToCheckOutPage(product)"
                 >MUA NGAY</my-button
               >
               <!-- <my-button
@@ -463,6 +463,11 @@ export default defineComponent({
       );
     });
 
+    const goToCheckOutPage = (item) => {
+      addCart(item);
+      route.push(`/thanh-toan`);
+    };
+
     return {
       brand,
       images,
@@ -489,6 +494,7 @@ export default defineComponent({
       star1,
       total,
       rating,
+      goToCheckOutPage
     };
   },
 });

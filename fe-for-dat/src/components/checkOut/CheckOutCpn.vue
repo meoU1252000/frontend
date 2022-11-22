@@ -101,6 +101,102 @@
       </div>
 
       <div class="sidebar w-5 ml-3">
+        <div class="sidebar-event-content mb-4">
+          <div class="header text-xl">
+            <div
+              class="header-content w-full p-4 flex align-items-center justify-content-between"
+            >
+              <h6>Khuyến Mãi</h6>
+              <a @click="openEventModal"
+                ><i class="pi pi-tags"></i> Chọn Mã Khuyến Mãi</a
+              >
+              <my-dialog
+                header="Mã Giảm Giá"
+                v-model:visible="displayEventModal"
+                :breakpoints="{ '960px': '75vw', '640px': '90vw' }"
+                :style="{ width: '40vw' }"
+                :modal="true"
+                :dismissableMask="true"
+                :closeOnEscape="true"
+              >
+                <div class="col-12">
+                  <div class="p-inputgroup">
+                    <my-inputText placeholder="Nhập mã giảm giá" />
+                    <my-button label="Áp Dụng" />
+                  </div>
+                </div>
+                <div class="col-12 mt-2">
+                  <h4>Mã giảm giá</h4>
+                  <div v-if="eventCode.length > 0">
+                    <div v-for="(code, i) in eventCode" :key="i">
+                      <div
+                        class="event-code flex h-7rem border-1 mt-3"
+                        v-for="(code_discount, j) in code.code"
+                        :key="j"
+                      >
+                        <div class="col-3">
+                          <div class="image">
+                            <img
+                              src="https://shopfront-cdn.tekoapis.com/cart/discount.png"
+                              alt=""
+                            />
+                          </div>
+                        </div>
+                        <div class="col-9">
+                          <div class="flex flex-column">
+                            <div class="event-code-content">
+                              <h5>{{ code.event_name }}</h5>
+                            </div>
+                            <div class="event-code-content">
+                              <span class="text-sm">{{
+                                code_discount.code_name
+                              }}</span>
+                            </div>
+                            <div
+                              class="event-code-content"
+                              v-if="code_discount.discount_unit == 1"
+                            >
+                              <span class="text-sm"
+                                >Giảm
+                                {{ formatter(code_discount.discount_value) }}
+                                trên tổng giá trị đơn hàng.</span
+                              >
+                            </div>
+                            <div class="event-code-content" v-else>
+                              <span class="text-sm"
+                                >Giảm {{ code_discount.discount_value }}% trên
+                                tổng giá trị đơn hàng.</span
+                              >
+                            </div>
+                            <div
+                              class="flex justify-content-between text-sm align-items-center"
+                            >
+                              <span class="text-500">
+                                HSD: {{ format_date(code.event_end) }}
+                              </span>
+                              <my-button
+                                label="Áp Dụng"
+                                class="p-button-link p-button-sm"
+                                @click="handleAddCode(code_discount)"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <template #footer>
+                  <my-button
+                    label="Đóng"
+                    @click="closeEventModal"
+                    class="p-button-outlined p-button-secondary p-button-sm"
+                  />
+                </template>
+              </my-dialog>
+            </div>
+          </div>
+        </div>
         <ItemCpn :cartList="cartList" />
         <div class="sidebar-cart-content mt-3">
           <div class="header text-xl">
@@ -110,11 +206,30 @@
                 <span>Tổng tạm tính</span>
                 <span class="font-bold">{{ formatter(totalPrice) }}</span>
               </div>
+              <div
+                class="flex justify-content-between text-base mt-4"
+                v-if="discountValue != 0"
+              >
+                <span>Giảm Giá</span>
+                <span class="font-bold">{{ formatter(discountValue) }}</span>
+              </div>
               <div class="flex justify-content-between text-base mt-2">
                 <span>Phí vận chuyển</span>
                 <span class="font-bold">Miễn phí</span>
               </div>
-              <div class="flex justify-content-between text-base mt-2">
+              <div
+                class="flex justify-content-between text-base mt-2"
+               
+              >
+                <span>Thành tiền</span>
+                <div class="flex flex-column align-items-end total-price-end">
+                  <span>{{ formatter(totalOrderPrice) }}</span>
+                  <span class="text-sm text-600 font-medium"
+                    >(Đã bao gồm VAT)</span
+                  >
+                </div>
+              </div>
+              <!-- <div class="flex justify-content-between text-base mt-2" v-else>
                 <span>Thành tiền</span>
                 <div class="flex flex-column align-items-end total-price-end">
                   <span>{{ formatter(totalPrice) }}</span>
@@ -122,7 +237,7 @@
                     >(Đã bao gồm VAT)</span
                   >
                 </div>
-              </div>
+              </div> -->
               <div
                 class="flex justify-content-between text-base mt-4"
                 v-if="isActive === 1"
@@ -142,7 +257,7 @@
                 v-if="isActive === 0"
               >
                 <PayPalCpn
-                  :totalPrice="totalPrice"
+                  :totalPrice="totalOrderPrice"
                   @complete-paypal="orderPaypal"
                   v-if="state.address_id != '' && state.address_id != '-1'"
                 />
@@ -230,7 +345,9 @@ import { useStore } from "vuex";
 import useVuelidate from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
 import { formatter } from "@/function/common";
+import { format_date } from "@/function/common";
 import PayPalCpn from "./PayPal.vue";
+// import EventCpn from "@/components/cart/EventCpn.vue";
 
 export default defineComponent({
   components: { ItemCpn, PayPalCpn, AddressModalCpn },
@@ -241,6 +358,8 @@ export default defineComponent({
     const isActive = ref(0);
     const selectedAddress = ref();
     const displayModal = ref(false);
+    const codeDiscount = ref();
+    const discountValue = ref(0);
     const openModal = () => {
       displayModal.value = true;
     };
@@ -271,6 +390,24 @@ export default defineComponent({
       ]);
     });
 
+    const listProduct = computed(() => {
+      return store.getters["product/getListProduct"] || [];
+    });
+
+    const cartList = computed(() => {
+      const cartItem = store.getters["product/getCart"] || [];
+
+      return getCartList(listProduct.value, cartItem);
+    });
+
+    const totalPrice = computed(() => {
+      let total = 0;
+      cartList.value.forEach((product) => {
+        total += product.price * product.quantity;
+      });
+      return total;
+    });
+
     const checkAddress = (evt) => {
       if (evt.value !== -1) return;
       // open modal
@@ -278,6 +415,10 @@ export default defineComponent({
     };
     const account = computed(() => {
       return store.getters["auth/getUserInfo"] || [];
+    });
+
+    const eventCode = computed(() => {
+      return store.getters["eventCode/getListEvent"] || [];
     });
 
     const dataSelectedAddress = computed(() => {
@@ -291,6 +432,25 @@ export default defineComponent({
       }
       return [];
     });
+
+    const handleAddCode = async (code) => {
+      codeDiscount.value = code.id;
+     
+      if (code.discount_unit == 1) {
+        discountValue.value = code.discount_value;
+      } else {
+        discountValue.value = totalPrice.value * code.discount_value;
+      }
+      totalOrderPrice.value = totalPrice.value - discountValue.value;
+      closeEventModal();
+      window.Swal.fire({
+        icon: "success",
+        title: "Thành Công",
+        text: "Áp dụng mã giảm giá thành công",
+      });
+      // console.log(codeDiscount.value);
+    };
+    const totalOrderPrice = ref(totalPrice.value - discountValue.value);
 
     const createOrder = async (order) => {
       const check = await store.dispatch("auth/createOrder", order);
@@ -319,7 +479,8 @@ export default defineComponent({
     const orderPaypal = async () => {
       const order = {
         address_id: state.address_id,
-        total_price: totalPrice.value,
+        code_id: codeDiscount.value,
+        total_price: totalOrderPrice.value,
         cart_list: cartList.value,
         token: account.value.token,
         note: order_note.value,
@@ -333,7 +494,8 @@ export default defineComponent({
       if (isFormValid) {
         const order = {
           address_id: state.address_id,
-          total_price: totalPrice.value,
+          code_id: codeDiscount.value,
+          total_price: totalOrderPrice.value,
           cart_list: cartList.value,
           token: account.value.token,
           note: order_note.value,
@@ -357,23 +519,13 @@ export default defineComponent({
       isActive.value = 1;
     };
 
-    const listProduct = computed(() => {
-      return store.getters["product/getListProduct"] || [];
-    });
-
-    const cartList = computed(() => {
-      const cartItem = store.getters["product/getCart"] || [];
-
-      return getCartList(listProduct.value, cartItem);
-    });
-
-    const totalPrice = computed(() => {
-      let total = 0;
-      cartList.value.forEach((product) => {
-        total += product.price * product.quantity;
-      });
-      return total;
-    });
+    const displayEventModal = ref(false);
+    const openEventModal = () => {
+      displayEventModal.value = true;
+    };
+    const closeEventModal = () => {
+      displayEventModal.value = false;
+    };
     return {
       selectedAddress,
       listProduct,
@@ -398,6 +550,14 @@ export default defineComponent({
       displayModal,
       openModal,
       closeModal,
+      displayEventModal,
+      openEventModal,
+      closeEventModal,
+      eventCode,
+      format_date,
+      handleAddCode,
+      totalOrderPrice,
+      discountValue,
     };
   },
 });
@@ -528,6 +688,49 @@ export default defineComponent({
     }
   }
 }
+.sidebar-event-content {
+  min-height: 4rem;
+  background-color: white;
+  .header {
+    .header-content {
+      h6 {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+      a {
+        text-decoration: none;
+        color: rgb(207, 15, 15, 1);
+        font-size: 1rem;
+        cursor: pointer;
+      }
+    }
+  }
+}
+.event-code {
+  border-color: #ccc;
+  border-radius: 8px;
+  .col-3 {
+    .image {
+      border-style: none;
+      border-radius: 0.25rem;
+      border-width: 1px;
+      border-color: unset;
+      opacity: 1;
+      background-color: rgb(232, 235, 249);
+      width: 70%;
+      min-width: 76px;
+      height: 76px;
+      display: flex;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      justify-content: center;
+    }
+  }
+  .event-code-content {
+    height: 1.3rem;
+  }
+}
 @media only screen and (max-width: 1920px) {
   .w-6 {
     .card {
@@ -540,6 +743,18 @@ export default defineComponent({
   }
   :deep(.p-inputtext-sm .p-inputtext) {
     font-size: 0.75rem !important;
+  }
+  .sidebar-event-content {
+    .header {
+      .header-content {
+        h6 {
+          font-size: 0.8rem;
+        }
+        a {
+          font-size: 0.8rem;
+        }
+      }
+    }
   }
 }
 </style>

@@ -5,6 +5,7 @@ import product from "./modules/product";
 import category from "./modules/category";
 import brand from "./modules/brand";
 import search from "./modules/search";
+import eventCode from "./modules/eventCode";
 
 // import product from "./modules/product";
 export default createStore({
@@ -14,5 +15,6 @@ export default createStore({
     category,
     brand,
     search,
+    eventCode
   },
 });
