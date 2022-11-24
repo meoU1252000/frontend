@@ -27,9 +27,9 @@
         >
           <my-checkbox
             :inputId="param.param_value"
-            name="param"
             :value="param.param_value"
-            v-model="filterParams[j]"
+            v-model="filter"
+            @change="setActive(param.param_value)"
           />
 
           <label :for="param.param_value" class="text-xs">{{
@@ -63,9 +63,9 @@
       >
         <my-checkbox
           :inputId="param.param_value"
-          name="param"
           :value="param.param_value"
-          v-model="filterParams[j]"
+          v-model="filter"
+          @change="setActive(param.param_value)"
         />
 
         <label :for="param.param_value" class="text-xs">{{
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref } from "vue";
 // import { useStore } from "vuex";
 
 export default defineComponent({
@@ -85,51 +85,31 @@ export default defineComponent({
     attribute: { type: Object },
     listItem: { type: Object },
     category: { type: Object },
+    propertyFilter: {type: Array},
   },
-  setup(props) {
-    const drop = ref(true);
+  setup(props ,{emit}) {
+    const drop = ref(false);
     // const store = useStore();
-
+    const filter = ref([]);
     const handleDropdown = () => {
       drop.value = !drop.value;
-      console.log(drop.value);
+
     };
-    const filterParams = ref([]);
-    // const listItem = computed(() => {
-    //   return store.getters["category/getCategory"] || [];
-    // });
+   
     const setActive = (param) => {
-      if (filterParams.value.indexOf(param) > -1) {
-        filterParams.value.pop(param);
-      } else {
-        filterParams.value.push(param);
+      if(filter.value.includes(param)){
+        emit("filter-item", param);
+      }else{
+        console.log(param);
+        emit("remove-item", param);
       }
-      console.log(filterParams.value);
     };
-
-    const removeActive = (param) => {
-      return filterParams.value.indexOf(param) > -1;
-      // console.log(filterParams.value)
-    };
-
-    const filteredItems = computed(() => {
-      return props.listItem.filter((product) => {
-        return product.product_attribute.forEach((params) => {
-          console.log(params);
-          if (params.params.includes(filterParams)) {
-            return params.params.includes(filterParams);
-          }
-        });
-      });
-    });
 
     return {
       handleDropdown,
       setActive,
-      filterParams,
-      filteredItems,
       drop,
-      removeActive,
+      filter
     };
   },
 });

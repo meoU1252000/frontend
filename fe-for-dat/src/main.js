@@ -30,6 +30,7 @@ import Tag from "primevue/tag";
 import Fieldset from "primevue/fieldset";
 import StarRating from "vue-star-rating";
 import ProgressBar from 'primevue/progressbar';
+import RadioButton from 'primevue/radiobutton';
 
 import "primevue/resources/themes/lara-light-blue/theme.css";
 import "primevue/resources/primevue.min.css";
@@ -66,6 +67,7 @@ app.component("my-Tag", Tag);
 app.component("my-Fieldset", Fieldset);
 app.component("star-rating", StarRating);
 app.component("my-progress", ProgressBar);
+app.component("my-radio", RadioButton);
 
 app.use(VueGoogleMaps, {
   load: {

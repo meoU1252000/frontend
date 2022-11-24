@@ -32,7 +32,7 @@
     </div>
     <div class="grid mx-auto w-11 p-7" v-else>
       <div class="col-fixed font-bold mr-2 border-round filter-sidebar">
-        <div class="filter-content">
+        <div class="filter-content mb-2">
           <h5 class="mb-3 p-2">Khoảng Giá</h5>
           <div class="input-range-currency mb-3">
             <my-inputNumber
@@ -54,6 +54,7 @@
               readonly="true"
             />
           </div>
+
           <my-slider
             v-model="valueChange"
             :range="true"
@@ -66,6 +67,9 @@
           :attribute="attribute"
           :listItem="listItem"
           :category="category"
+          :propertyFilter="propertyFilter"
+          @filter-item="filteredItems"
+          @remove-item="removeFilter"
         />
       </div>
       <div class="col flex-grow-1 justify-content-center bg-white">
@@ -82,6 +86,7 @@
               label="Bán Chạy"
               class="p-button-outlined p-button-sm p-button-secondary p-button"
               :class="{ active: selected === 'b' }"
+              @click="sortBySold(listProduct)"
             ></my-button>
             <my-button
               label="Mới Về"
@@ -103,7 +108,17 @@
             ></my-button>
           </div>
         </div>
-        <div class="main-product">
+        <div class="main-product" v-if="result.length > 0">
+          <ProductsCpn
+            v-for="(product, i) in result"
+            :key="i"
+            :product="product"
+          />
+        </div>
+        <div class="main-product" v-else-if="result == -1">
+          <h4 class="mt-3">Không có sản phẩm phù hợp</h4>
+        </div>
+        <div class="main-product" v-else>
           <ProductsCpn
             v-for="(product, i) in listProduct"
             :key="i"
@@ -133,13 +148,14 @@ export default defineComponent({
     const goToCategoryPage = (name) => {
       route.push(`/danh-muc/${name}`);
     };
+    const propertyFilter = ref([]);
     const selected = ref("a");
     const valueMax = computed(() => {
       return props.category.highest_product_price * 2 || [];
     });
     const valueMin = ref(0);
     const valueChange = ref([0, 100000000]);
-
+    const result = ref([]);
     const drop = ref();
     const sortByLowPrice = (listProduct) => {
       selected.value = "d";
@@ -168,19 +184,76 @@ export default defineComponent({
       });
     };
 
+    const sortBySold = (listProduct) => {
+      selected.value = "b";
+      return listProduct.sort(function (a, b) {
+        return b.product_sold - a.product_sold;
+      });
+    };
+
     const listItem = computed(() => {
       return props.category.products || [];
     });
 
-    const filteredItems = computed(() => {
-      return props.category.products.filter((product) => {
-        product.product_attribute.forEach((params) => {
-          if (product.product_attribute.params.includes(params)) {
-            product.product_attribute.params.includes(params);
-          }
+    const filteredItems = async (property) => {
+      propertyFilter.value.push(property);
+      console.log(propertyFilter.value);
+      const productArray = [];
+      listItem.value.forEach((product) => {
+        const attributeArray = [];
+        
+        product.product_attribute.forEach((attribute) => {
+          attributeArray.push(attribute.params);
         });
+        // console.log(attributeArrayTest);
+        const check = propertyFilter.value.some((ele) => {
+          console.log(attributeArray);
+          return attributeArray.includes(ele);
+        });
+        if (check) {
+          productArray.push(product);
+        }
       });
-    });
+      if (productArray.length > 0) {
+        result.value = productArray;
+      } else {
+        result.value = -1;
+      }
+    };
+
+    const removeFilter = async (property) => {
+      propertyFilter.value = propertyFilter.value.filter((ele) => ele != property);
+      console.log(propertyFilter.value);
+      const productArray = [];
+      listItem.value.forEach((product) => {
+        // product.product_attribute.every((ele) => {
+        //   if (ele.params.includes(propertyFilter)) {
+        //     if (!result.value.includes(product)) {
+        //       console.log(product);
+        //       result.value.push(product);
+        //     }
+        //   }
+        // });
+        const attributeArray = [];
+
+        product.product_attribute.forEach((attribute) => {
+          attributeArray.push(attribute.params);
+        });
+        const check = propertyFilter.value.every((ele) => {
+          console.log(attributeArray);
+          return attributeArray.includes(ele);
+        });
+        if (check) {
+          productArray.push(product);
+        }
+      });
+
+      if (productArray.length > 0) {
+        result.value = productArray;
+      } else {
+        result.value = -1;
+      }
+    };
 
     return {
       goToCategoryPage,
@@ -195,6 +268,10 @@ export default defineComponent({
       listItem,
       selected,
       sortByDefault,
+      sortBySold,
+      propertyFilter,
+      result,
+      removeFilter,
     };
     // ])
   },
