@@ -39,15 +39,15 @@ export default defineComponent({
 
     onMounted(async () => {
       showLoading.value = true;
-      await store.dispatch("product/getListProducts");
-      await store.dispatch("category/getListCategories");
-      await store.dispatch("brand/getListBrands");
-      await store.dispatch("eventCode/getListEvents");
+      store.dispatch("product/getListProducts");
+      store.dispatch("category/getListCategories");
+      store.dispatch("brand/getListBrands");
+      store.dispatch("eventCode/getListEvents");
       setStateCart(store);
       setStateLogin(store);
+      showLoading.value = false;
       setupTimers();
       window.scrollTo(0, 0);
-      showLoading.value = false;
     });
 
     const cartList = computed(() => {
