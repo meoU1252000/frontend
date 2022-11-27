@@ -115,9 +115,7 @@
             :product="product"
           />
         </div>
-        <div class="main-product" v-else-if="result == -1">
-          <h4 class="mt-3">Không có sản phẩm phù hợp</h4>
-        </div>
+      
         <div class="main-product" v-else>
           <ProductsCpn
             v-for="(product, i) in listProduct"
@@ -214,11 +212,6 @@ export default defineComponent({
           productArray.push(product);
         }
       });
-      if (productArray.length > 0) {
-        result.value = productArray;
-      } else {
-        result.value = -1;
-      }
     };
 
     const removeFilter = async (property) => {
@@ -226,20 +219,12 @@ export default defineComponent({
       console.log(propertyFilter.value);
       const productArray = [];
       listItem.value.forEach((product) => {
-        // product.product_attribute.every((ele) => {
-        //   if (ele.params.includes(propertyFilter)) {
-        //     if (!result.value.includes(product)) {
-        //       console.log(product);
-        //       result.value.push(product);
-        //     }
-        //   }
-        // });
         const attributeArray = [];
 
         product.product_attribute.forEach((attribute) => {
           attributeArray.push(attribute.params);
         });
-        const check = propertyFilter.value.every((ele) => {
+        const check = propertyFilter.value.some((ele) => {
           console.log(attributeArray);
           return attributeArray.includes(ele);
         });
@@ -247,12 +232,6 @@ export default defineComponent({
           productArray.push(product);
         }
       });
-
-      if (productArray.length > 0) {
-        result.value = productArray;
-      } else {
-        result.value = -1;
-      }
     };
 
     return {

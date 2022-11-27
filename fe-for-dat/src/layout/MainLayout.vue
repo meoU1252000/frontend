@@ -1,5 +1,7 @@
 <template>
-  <div class="main-layout" @scroll="handleScroll">
+  <div class="main-layout" >
+    <TheLoadingCpn :isLoading="showLoading" />
+
     <HeaderCpn
       :propertyY="propertyY"
       :listModalBrand="listModalBrand"
@@ -20,20 +22,23 @@ import { setStateCart } from "@/function/handleLocalStorage";
 import { getCartList } from "@/function/getCartList";
 import { useStore } from "vuex";
 import { setStateLogin, setupTimers } from "@/function/handleLogin";
+import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
 
 export default defineComponent({
   created() {
     window.addEventListener("scroll", this.handleScroll);
   },
-  components: { HeaderCpn, FooterCpn },
+  components: { HeaderCpn, FooterCpn, TheLoadingCpn },
   setup() {
     const store = useStore();
     const propertyY = ref(0);
+    const showLoading = ref(false);
     const handleScroll = () => {
       propertyY.value = Math.round(window.pageYOffset);
     };
 
     onMounted(async () => {
+      showLoading.value = true;
       await store.dispatch("product/getListProducts");
       await store.dispatch("category/getListCategories");
       await store.dispatch("brand/getListBrands");
@@ -42,6 +47,7 @@ export default defineComponent({
       setStateLogin(store);
       setupTimers();
       window.scrollTo(0, 0);
+      showLoading.value = false;
     });
 
     const cartList = computed(() => {
@@ -71,6 +77,7 @@ export default defineComponent({
       listModalRootItem,
       listModalBrand,
       cartList,
+      showLoading,
     };
   },
 });

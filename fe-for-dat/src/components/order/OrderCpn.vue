@@ -1,4 +1,5 @@
 <template>
+  <TheLoadingCpn :isLoading="showLoading"/>
   <div class="p-7 mx-auto w-11 flex justify-content-between">
     <div class="user-content flex w-9 flex mx-auto">
       <div class="content-header p-2 w-full">
@@ -693,8 +694,10 @@ import { useStore } from "vuex";
 import { formatter } from "@/function/common";
 import { useRouter } from "vue-router";
 import { format_date, addDays } from "@/function/common";
+import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
 
 export default defineComponent({
+  components: {TheLoadingCpn },
   setup() {
     const store = useStore();
     const route = useRouter();
@@ -704,6 +707,8 @@ export default defineComponent({
     const hasCounter = true;
     const stars = ref(0);
     const grade = ref(0);
+    const showLoading = ref(false);
+
     onMounted(async () => {
       window.scrollTo(0, 0);
     });
@@ -805,11 +810,14 @@ export default defineComponent({
         confirmButtonText: "Xóa!",
       }).then(async (result) => {
         if (result.isConfirmed) {
+          showLoading.value = true;
           await store.dispatch("auth/cancelOrder", orderCancel);
           await store.dispatch("auth/getListOrder", orderCancel.token);
           await store.dispatch("product/getListProducts");
           await store.dispatch("category/getListCategories");
           await store.dispatch("brand/getListBrands");
+          showLoading.value = false;
+
           window.Swal.fire(
             "Hủy thành công!",
             "Đã hủy thành công đơn hàng.",
@@ -839,7 +847,8 @@ export default defineComponent({
       rateProduct,
       rating,
       addDays,
-      content
+      content,
+      showLoading
     };
   },
 });

@@ -90,6 +90,7 @@ export default defineComponent({
 .footer {
   background: #333333;
   height: 25rem;
+  z-index: 3;
   .footer_wrap {
     padding: 3rem 10rem 0 10rem;
     .store_link {

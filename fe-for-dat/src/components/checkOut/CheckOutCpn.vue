@@ -1,4 +1,5 @@
 <template>
+  <TheLoadingCpn :isLoading="showLoading" />
   <form @submit.prevent="handleSubmit(!v$.$invalid)">
     <div class="p-7 mx-auto w-9 flex justify-content-between">
       <div class="user-content w-9 mx-auto">
@@ -217,10 +218,7 @@
                 <span>Phí vận chuyển</span>
                 <span class="font-bold">Miễn phí</span>
               </div>
-              <div
-                class="flex justify-content-between text-base mt-2"
-               
-              >
+              <div class="flex justify-content-between text-base mt-2">
                 <span>Thành tiền</span>
                 <div class="flex flex-column align-items-end total-price-end">
                   <span>{{ formatter(totalOrderPrice) }}</span>
@@ -347,10 +345,11 @@ import { helpers, required } from "@vuelidate/validators";
 import { formatter } from "@/function/common";
 import { format_date } from "@/function/common";
 import PayPalCpn from "./PayPal.vue";
+import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
 // import EventCpn from "@/components/cart/EventCpn.vue";
 
 export default defineComponent({
-  components: { ItemCpn, PayPalCpn, AddressModalCpn },
+  components: { ItemCpn, PayPalCpn, AddressModalCpn, TheLoadingCpn },
 
   setup() {
     const store = useStore();
@@ -363,6 +362,7 @@ export default defineComponent({
     const openModal = () => {
       displayModal.value = true;
     };
+    const showLoading = ref(false);
     const closeModal = () => {
       displayModal.value = false;
     };
@@ -435,7 +435,7 @@ export default defineComponent({
 
     const handleAddCode = async (code) => {
       codeDiscount.value = code.id;
-     
+
       if (code.discount_unit == 1) {
         discountValue.value = code.discount_value;
       } else {
@@ -453,20 +453,24 @@ export default defineComponent({
     const totalOrderPrice = ref(totalPrice.value - discountValue.value);
 
     const createOrder = async (order) => {
+      showLoading.value = true;
       const check = await store.dispatch("auth/createOrder", order);
       if (check) {
-        window.Swal.fire({
-          icon: "success",
-          title: "Thành Công",
-          text: "Thanh toán thành công",
-        });
+        console.log(showLoading.value);
         removeItemLocal("cart");
         setStateCart(store);
         await store.dispatch("auth/getListOrder", account.value.token);
         await store.dispatch("product/getListProducts");
         await store.dispatch("category/getListCategories");
         await store.dispatch("brand/getListBrands");
-        route.push(`/don-hang`);
+        showLoading.value = false;
+        window.Swal.fire({
+          icon: "success",
+          title: "Thành Công",
+          text: "Thanh toán thành công",
+        }).then(function () {
+          route.push(`/don-hang`);
+        });
       } else {
         window.Swal.fire({
           icon: "error",
@@ -474,6 +478,7 @@ export default defineComponent({
           text: "Lỗi thanh toán. Vui lòng thử lại sau",
         });
       }
+      showLoading.value = true;
     };
 
     const orderPaypal = async () => {
@@ -558,6 +563,7 @@ export default defineComponent({
       handleAddCode,
       totalOrderPrice,
       discountValue,
+      showLoading,
     };
   },
 });
