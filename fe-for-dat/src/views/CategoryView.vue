@@ -1,6 +1,8 @@
 <template>
   <div class="home-view">
     <!-- <SliderCpn :listRootItem="listRootItem" :listBrand="listBrand" />? -->
+    <TheLoadingCpn :isLoading="showLoading" />
+
     <div class="product">
       <ListProductCpn
         v-for="(category, j) in listCategoryHaveProduct"
@@ -22,17 +24,22 @@ import { defineComponent, onMounted, ref, computed } from "vue";
 import ListProductCpn from "@/components/products/ListProductCpn.vue";
 import { useStore } from "vuex";
 // import { useRoute } from "vue-router";
+import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
 
 export default defineComponent({
-  components: { ListProductCpn },
+  components: { ListProductCpn,TheLoadingCpn },
   props: ["category_name"],
   setup(props) {
     const store = useStore();
+    const showLoading = ref(false);
 
     // const display = "none";
     onMounted(async () => {
-      await store.dispatch("category/getCategory", props.category_name);
       window.scrollTo(0, 0);
+      showLoading.value = true;
+      await store.dispatch("category/getCategory", props.category_name);
+      showLoading.value = false;
+
     });
     const listItem = computed(() => {
       return store.getters["category/getCategory"] || [];
@@ -64,6 +71,7 @@ export default defineComponent({
       listProduct,
       listCategoryHaveAttribute,
       listCategoryHaveProduct,
+      showLoading
     };
   },
 });

@@ -39,13 +39,13 @@ export default defineComponent({
 
     onMounted(async () => {
       showLoading.value = true;
+      await store.dispatch("category/getListCategories");
       store.dispatch("product/getListProducts");
-      store.dispatch("category/getListCategories");
       store.dispatch("brand/getListBrands");
       store.dispatch("eventCode/getListEvents");
+      showLoading.value = false;
       setStateCart(store);
       setStateLogin(store);
-      showLoading.value = false;
       setupTimers();
       window.scrollTo(0, 0);
     });

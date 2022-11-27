@@ -459,10 +459,10 @@ export default defineComponent({
         console.log(showLoading.value);
         removeItemLocal("cart");
         setStateCart(store);
-        await store.dispatch("auth/getListOrder", account.value.token);
-        await store.dispatch("product/getListProducts");
-        await store.dispatch("category/getListCategories");
-        await store.dispatch("brand/getListBrands");
+        store.dispatch("auth/getListOrder", account.value.token);
+        store.dispatch("product/getListProducts");
+        store.dispatch("category/getListCategories");
+        store.dispatch("brand/getListBrands");
         showLoading.value = false;
         window.Swal.fire({
           icon: "success",

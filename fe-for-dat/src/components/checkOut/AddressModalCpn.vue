@@ -275,6 +275,7 @@ export default defineComponent({
           receiver_phone: state.phone,
           receiver_address: address,
           token: props.account.token,
+           ward_id: wards[0].code
         };
 
         const check = await store.dispatch("auth/createAddress", customer_address);

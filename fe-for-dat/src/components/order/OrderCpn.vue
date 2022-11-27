@@ -812,10 +812,10 @@ export default defineComponent({
         if (result.isConfirmed) {
           showLoading.value = true;
           await store.dispatch("auth/cancelOrder", orderCancel);
-          await store.dispatch("auth/getListOrder", orderCancel.token);
-          await store.dispatch("product/getListProducts");
-          await store.dispatch("category/getListCategories");
-          await store.dispatch("brand/getListBrands");
+          store.dispatch("auth/getListOrder", orderCancel.token);
+          store.dispatch("product/getListProducts");
+          store.dispatch("category/getListCategories");
+          store.dispatch("brand/getListBrands");
           showLoading.value = false;
 
           window.Swal.fire(

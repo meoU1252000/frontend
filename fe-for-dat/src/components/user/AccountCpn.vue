@@ -1,4 +1,6 @@
 <template>
+    <TheLoadingCpn :isLoading="showLoading" />
+
   <div class="p-7 mx-auto w-11 flex justify-content-between">
     <div class="user-content flex w-9 flex mx-auto">
       <div class="content-header p-2 w-full">
@@ -175,11 +177,14 @@ import {
   removeUserLocal,
 } from "@/function/handleLogin";
 import { useRouter } from "vue-router";
+import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
 
 export default defineComponent({
+  components: { TheLoadingCpn },
   setup() {
     const route = useRouter();
     const store = useStore();
+    const showLoading = ref(false);
     const account = computed(() => {
       const user = store.getters["auth/getUserInfo"];
 
@@ -282,7 +287,9 @@ export default defineComponent({
         token: account.value.token,
       };
       if (isFormValid) {
+        showLoading.value = true;
         const check = await store.dispatch("auth/changeInfo", user);
+        showLoading.value = false;
         // console.log(check);
         if (check) {
           window.Swal.fire({
@@ -314,7 +321,10 @@ export default defineComponent({
         token: account.value.token,
       };
       if (isFormValid) {
+        showLoading.value = true;
         const check = await store.dispatch("auth/changePassword", user);
+        showLoading.value = false;
+
         console.log(check);
         if (check.message != "Request failed with status code 400") {
           window.Swal.fire({
@@ -346,6 +356,7 @@ export default defineComponent({
       handleChangePassword,
       rulesPassword,
       v$Password,
+      showLoading
     };
   },
 });

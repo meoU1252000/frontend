@@ -1,4 +1,5 @@
 <template>
+  <TheLoadingCpn :isLoading="showLoading" />
   <div class="p-7 mx-auto w-11 flex justify-content-between">
     <div class="user-content flex w-9 flex mx-auto">
       <div class="content-header p-2 w-full">
@@ -297,6 +298,8 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import { helpers, maxLength, minLength, required } from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
+import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
+
 export default defineComponent({
   created() {
     window.addEventListener("scroll", this.handleScroll);
@@ -304,6 +307,7 @@ export default defineComponent({
   components: {
     DataTable,
     Column,
+    TheLoadingCpn,
   },
   props: {
     account: { type: Object },
@@ -318,6 +322,7 @@ export default defineComponent({
       ward: "",
       address: "",
     });
+    const showLoading = ref(false);
 
     const selectedAddress = ref();
 
@@ -446,10 +451,11 @@ export default defineComponent({
           receiver_phone: state.phone,
           receiver_address: address,
           token: props.account.token,
-          ward_id: wards[0].code
+          ward_id: wards[0].code,
         };
-
+        showLoading.value = true;
         await store.dispatch("auth/createAddress", customer_address);
+        showLoading.value = false;
         window.Swal.fire({
           icon: "success",
           title: "Thành Công",
@@ -488,9 +494,15 @@ export default defineComponent({
           receiver_phone: state.phone,
           receiver_address: address,
           token: props.account.token,
+          ward_id: wards[0].code,
         };
+        showLoading.value = true;
+        const check = await store.dispatch(
+          "auth/updateAddress",
+          customer_address
+        );
+        showLoading.value = false;
 
-        const check = store.dispatch("auth/updateAddress", customer_address);
         if (check) {
           window.Swal.fire({
             icon: "success",
@@ -512,7 +524,7 @@ export default defineComponent({
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Xóa!",
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
           window.Swal.fire(
             "Xóa thành công!",
@@ -523,7 +535,9 @@ export default defineComponent({
             token: props.account.token,
             address_id: address.id,
           };
-          store.dispatch("auth/deleteAddress", customer_address);
+          showLoading.value = true;
+          await store.dispatch("auth/deleteAddress", customer_address);
+          showLoading.value = false;
           store.dispatch("auth/getListAddress", props.account.token);
         }
       });
@@ -543,6 +557,7 @@ export default defineComponent({
       handleSubmit,
       handleDeleteAddress,
       handleUpdate,
+      showLoading,
     };
   },
 });
@@ -577,7 +592,7 @@ export default defineComponent({
                   .text-center {
                     text-align: left !important;
                     button {
-                      i{
+                      i {
                         width: 2rem !important;
                       }
                     }
@@ -590,6 +605,5 @@ export default defineComponent({
       }
     }
   }
-
 }
 </style>
