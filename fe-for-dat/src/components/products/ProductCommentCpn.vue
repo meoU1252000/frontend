@@ -1,4 +1,6 @@
 <template>
+    <TheLoadingCpn :isLoading="showLoading" />
+
   <div class="comment-content w-9">
     <div class="content-header p-2 w-full">
       <div class="w-full px-3 py-2">
@@ -52,12 +54,29 @@
             <div v-if="comment.is_active">
               <div v-if="comment.children.length > 0">
                 <div v-for="(reply, j) in comment.children" :key="j">
-                  <div class="w-full mt-2 flex">
+                  <div class="w-full mt-2 flex" v-if="reply.customer != null">
                     <div class="col-1">
                       <img src="@/img/user11.png" alt="" class="w-11 h-11" />
                     </div>
                     <div class="col-13 pt-1 w-11">
+        
                       <h4>{{ reply.customer.customer_name }}</h4>
+                      <span>{{ reply.comment_content }}</span>
+                      <div class="flex align-items-center comment-bottom pt-2">
+                        <a @click="showReply">Reply</a>
+                        <span class="ml-2 text-sm">{{
+                          format_date(reply.created_at)
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="w-full mt-2 flex" v-else>
+                    <div class="col-1">
+                      <img src="@/img/logo-sm.png" alt="" class="w-11 h-11" />
+                    </div>
+                    <div class="col-13 pt-1 w-11">
+        
+                      <h4>{{ reply.staff.name }}</h4>
                       <span>{{ reply.comment_content }}</span>
                       <div class="flex align-items-center comment-bottom pt-2">
                         <a @click="showReply">Reply</a>
@@ -118,8 +137,11 @@
 import { defineComponent, computed, ref } from "vue";
 import { useStore } from "vuex";
 import { format_date } from "@/function/common";
+import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
 
 export default defineComponent({
+  components: { TheLoadingCpn },
+
   props: {
     product: { type: Object },
   },
@@ -130,6 +152,7 @@ export default defineComponent({
     const account = computed(() => {
       return store.getters["auth/getUserInfo"] || [];
     });
+    const showLoading = ref(false);
    
     const showReply = () => {
       displayReply.value = true;
@@ -144,16 +167,18 @@ export default defineComponent({
         token: account.value.token,
         comment_content: content,
       };
+      showLoading.value = true;
       const check = await store.dispatch("auth/comment", data);
       if (check) {
         await store.dispatch("product/getListProducts");
-
+        showLoading.value = false;
         window.Swal.fire({
           icon: "success",
           title: "Thành Công",
           text: "Bình luận thành công",
         });
       }
+      showLoading.value = false;
     };
     const handleCommentReply = async (content, parent) => {
       const data = {
@@ -162,17 +187,20 @@ export default defineComponent({
         token: account.value.token,
         comment_content: content,
       };
+      showLoading.value = true;
       const check = await store.dispatch("auth/comment", data);
       if (check) {
         await store.dispatch("product/getListProducts");
-
         closeReply();
+        showLoading.value = false;
         window.Swal.fire({
           icon: "success",
           title: "Thành Công",
           text: "Bình luận thành công",
         });
       }
+      showLoading.value = false;
+
     };
     return {
       handleComment,
@@ -181,6 +209,7 @@ export default defineComponent({
       showReply,
       closeReply,
       displayReply,
+      showLoading
     };
   },
 });

@@ -217,7 +217,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, onMounted } from "vue";
 // import { inject } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
@@ -256,6 +256,10 @@ export default defineComponent({
         numScroll: 3,
       },
     ]);
+    onMounted(async () => {
+      
+      window.scrollTo(0, 0);
+    });
     const filterParam = ref({
       color: "",
       rom: "",
