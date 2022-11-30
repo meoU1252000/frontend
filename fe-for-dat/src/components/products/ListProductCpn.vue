@@ -205,18 +205,19 @@ export default defineComponent({
         });
         // console.log(attributeArrayTest);
         const check = propertyFilter.value.some((ele) => {
-          console.log(attributeArray);
+          // console.log(attributeArray);
           return attributeArray.includes(ele);
         });
         if (check) {
           productArray.push(product);
         }
       });
+      result.value = productArray;
     };
 
     const removeFilter = async (property) => {
       propertyFilter.value = propertyFilter.value.filter((ele) => ele != property);
-      console.log(propertyFilter.value);
+      // console.log(propertyFilter.value);
       const productArray = [];
       listItem.value.forEach((product) => {
         const attributeArray = [];
@@ -232,6 +233,8 @@ export default defineComponent({
           productArray.push(product);
         }
       });
+      result.value = productArray;
+
     };
 
     return {
