@@ -1,5 +1,5 @@
 <template>
-  <div class="main-layout" >
+  <div class="main-layout">
     <TheLoadingCpn :isLoading="showLoading" />
 
     <HeaderCpn
@@ -39,10 +39,12 @@ export default defineComponent({
 
     onMounted(async () => {
       showLoading.value = true;
-      await store.dispatch("category/getListCategories");
-      store.dispatch("product/getListProducts");
-      store.dispatch("brand/getListBrands");
-      store.dispatch("eventCode/getListEvents");
+      await Promise.all([
+        store.dispatch("category/getListCategories"),
+        store.dispatch("product/getListProducts"),
+        store.dispatch("brand/getListBrands"),
+        store.dispatch("eventCode/getListEvents"),
+      ]);
       showLoading.value = false;
       setStateCart(store);
       setStateLogin(store);

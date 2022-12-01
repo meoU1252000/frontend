@@ -1,4 +1,6 @@
 <template>
+    <TheLoadingCpn :isLoading="showLoading" />
+
   <div class="user-modal" @mouseleave="handleUserInfoLeave">
     <h3>
       Hello
@@ -25,12 +27,15 @@
   </div>
 </template>
 <script>
-import { defineComponent } from "vue";
+import { defineComponent,ref } from "vue";
 import { useStore } from "vuex";
 import { setStateLogin, removeUserLocal } from "@/function/handleLogin";
 import { useRouter } from "vue-router";
+import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
 
 export default defineComponent({
+  components: {TheLoadingCpn },
+
   props: {
     showUserInfoModal: { type: Boolean },
     login: { type: Object },
@@ -41,10 +46,13 @@ export default defineComponent({
       emit("handle-user-info-leave");
     };
     const route = useRouter();
+    const showLoading = ref(false);
 
     const handleLogOut = async (login) => {
       const credential = login.token;
+      showLoading.value = true;
       await store.dispatch("auth/logout", credential);
+      showLoading.value = false;
       window.Swal.fire({
         icon: "success",
         title: "Thành Công",
@@ -58,6 +66,7 @@ export default defineComponent({
     return {
       handleUserInfoLeave,
       handleLogOut,
+      showLoading
     };
   },
 });

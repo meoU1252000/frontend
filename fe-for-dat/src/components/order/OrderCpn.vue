@@ -1,5 +1,5 @@
 <template>
-  <TheLoadingCpn :isLoading="showLoading"/>
+  <TheLoadingCpn :isLoading="showLoading" />
   <div class="p-7 mx-auto w-11 flex justify-content-between">
     <div class="user-content flex w-9 flex mx-auto">
       <div class="content-header p-2 w-full">
@@ -516,7 +516,7 @@
                               star-size="30"
                             ></star-rating>
                           </div>
-                        
+
                           <div class="mr-4" v-else>
                             <star-rating
                               v-model:rating="rating[j]"
@@ -531,9 +531,10 @@
                           <div class="ml-2 line-height-3 w-full">
                             <h3>Đã Phản hồi</h3>
                             <div class="block mt-3 w-full mb-3">
-                            
                               <my-Textarea
-                                v-model="order_detail.star_rating.rating_comment"
+                                v-model="
+                                  order_detail.star_rating.rating_comment
+                                "
                                 :autoResize="true"
                                 :readonly="true"
                                 rows="5"
@@ -555,7 +556,6 @@
                           <div class="ml-2 line-height-3 w-full">
                             <h3>Phản hồi</h3>
                             <div class="block mt-3 w-full mb-3">
-                            
                               <my-Textarea
                                 v-model="content[j]"
                                 :autoResize="true"
@@ -568,7 +568,9 @@
                             <my-button
                               class="flex button-primary justify-content-end w-2 ratingButton"
                               label="Đánh Giá"
-                              @click="rateProduct(order_detail,content[j],rating[j])"
+                              @click="
+                                rateProduct(order_detail, content[j], rating[j])
+                              "
                             />
                           </div>
                         </div>
@@ -697,7 +699,7 @@ import { format_date, addDays } from "@/function/common";
 import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
 
 export default defineComponent({
-  components: {TheLoadingCpn },
+  components: { TheLoadingCpn },
   setup() {
     const store = useStore();
     const route = useRouter();
@@ -775,7 +777,11 @@ export default defineComponent({
         stars.value = stars.value === star ? star - 1 : star;
     };
 
-    const rateProduct = async (order_detail,comment_content,rating_number) => {
+    const rateProduct = async (
+      order_detail,
+      comment_content,
+      rating_number
+    ) => {
       const data = {
         product_id: order_detail.product.id,
         order_id: order_detail.order_id,
@@ -783,13 +789,22 @@ export default defineComponent({
         rating_comment: comment_content,
         token: account.value.token,
       };
+      showLoading.value = true;
       const check = await store.dispatch("auth/rating", data);
       if (check) {
         await store.dispatch("auth/getListOrder", account.value.token);
+        showLoading.value = false;
         window.Swal.fire({
           icon: "success",
           title: "Thành Công",
           text: "Đánh giá sản phẩm thành công",
+        });
+      }else{
+        showLoading.value = false;
+        window.Swal.fire({
+          icon: "error",
+          title: "Thất Bại",
+          text: "Lỗi! Vui lòng thử lại sau",
         });
       }
     };
@@ -811,11 +826,13 @@ export default defineComponent({
       }).then(async (result) => {
         if (result.isConfirmed) {
           showLoading.value = true;
-          await store.dispatch("auth/cancelOrder", orderCancel);
-          store.dispatch("auth/getListOrder", orderCancel.token);
-          store.dispatch("product/getListProducts");
-          store.dispatch("category/getListCategories");
-          store.dispatch("brand/getListBrands");
+          await Promise.all([
+            store.dispatch("auth/cancelOrder", orderCancel),
+            store.dispatch("auth/getListOrder", orderCancel.token),
+            store.dispatch("product/getListProducts"),
+            store.dispatch("category/getListCategories"),
+            store.dispatch("brand/getListBrands"),
+          ]);
           showLoading.value = false;
 
           window.Swal.fire(
@@ -848,7 +865,7 @@ export default defineComponent({
       rating,
       addDays,
       content,
-      showLoading
+      showLoading,
     };
   },
 });

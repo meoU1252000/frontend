@@ -459,10 +459,12 @@ export default defineComponent({
         console.log(showLoading.value);
         removeItemLocal("cart");
         setStateCart(store);
-        store.dispatch("auth/getListOrder", account.value.token);
-        store.dispatch("product/getListProducts");
-        store.dispatch("category/getListCategories");
-        store.dispatch("brand/getListBrands");
+        await Promise.all([
+          store.dispatch("auth/getListOrder", account.value.token),
+          store.dispatch("product/getListProducts"),
+          store.dispatch("category/getListCategories"),
+          store.dispatch("brand/getListBrands"),
+        ]);
         showLoading.value = false;
         window.Swal.fire({
           icon: "success",
@@ -472,13 +474,13 @@ export default defineComponent({
           route.push(`/don-hang`);
         });
       } else {
+        showLoading.value = false;
         window.Swal.fire({
           icon: "error",
           title: "Thất Bại",
           text: "Lỗi thanh toán. Vui lòng thử lại sau",
         });
       }
-      showLoading.value = true;
     };
 
     const orderPaypal = async () => {
