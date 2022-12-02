@@ -37,7 +37,7 @@
           <div class="input-range-currency mb-3">
             <my-inputNumber
               inputId="currency-vn-min"
-              v-model="valueMin"
+              v-model="valueStart"
               class="mx-1"
               mode="currency"
               currency="VND"
@@ -46,7 +46,7 @@
             />
             <my-inputNumber
               inputId="currency-vn-max"
-              v-model="valueMax"
+              v-model="valueEnd"
               class="mx-1"
               mode="currency"
               currency="VND"
@@ -54,12 +54,20 @@
               readonly="true"
             />
           </div>
-
           <my-slider
             v-model="valueChange"
             :range="true"
+            :step="100000"
+            :min="0"
+            :max="valueMax"
             class="mx-auto w-10 mb-4"
+            @slideend="changeSliderPrice()"
           ></my-slider>
+          <my-button
+            label="Lọc Giá"
+            class="p-button-sm p-button flex mx-auto w-9"
+            @click="filterPrice"
+          ></my-button>
         </div>
         <ListAttributeCpn
           v-for="(attribute, k) in listCategoryHaveAttribute"
@@ -115,7 +123,11 @@
             :product="product"
           />
         </div>
-      
+
+        <div class="main-product" v-else-if="result == -1">
+         <h4>Không tìm thấy sản phẩm phù hợp.</h4>
+        </div>
+
         <div class="main-product" v-else>
           <ProductsCpn
             v-for="(product, i) in listProduct"
@@ -148,11 +160,12 @@ export default defineComponent({
     };
     const propertyFilter = ref([]);
     const selected = ref("a");
-    const valueMax = computed(() => {
+    const valueMax = computed(() =>{
       return props.category.highest_product_price * 2 || [];
-    });
-    const valueMin = ref(0);
-    const valueChange = ref([0, 100000000]);
+    })
+    const valueStart = ref(0);
+    const valueEnd = ref(props.category.highest_product_price * 2);
+    const valueChange = ref([0, valueMax.value]);
     const result = ref([]);
     const drop = ref();
     const sortByLowPrice = (listProduct) => {
@@ -195,11 +208,11 @@ export default defineComponent({
 
     const filteredItems = async (property) => {
       propertyFilter.value.push(property);
-      console.log(propertyFilter.value);
+      // console.log(propertyFilter.value);
       const productArray = [];
       listItem.value.forEach((product) => {
         const attributeArray = [];
-        
+
         product.product_attribute.forEach((attribute) => {
           attributeArray.push(attribute.params);
         });
@@ -213,6 +226,7 @@ export default defineComponent({
         }
       });
       result.value = productArray;
+      filterPrice();
     };
 
     const removeFilter = async (property) => {
@@ -226,7 +240,6 @@ export default defineComponent({
           attributeArray.push(attribute.params);
         });
         const check = propertyFilter.value.some((ele) => {
-          console.log(attributeArray);
           return attributeArray.includes(ele);
         });
         if (check) {
@@ -234,8 +247,35 @@ export default defineComponent({
         }
       });
       result.value = productArray;
-
+      filterPrice();
     };
+
+    const filterPrice = () => {
+      const productArray = [];
+      if(result.value.length != []){
+         result.value.filter((product) => {
+          if(product.product_price >= valueStart.value && product.product_price <= valueEnd.value){
+            productArray.push(product);
+          }
+        })
+      }else{
+        listItem.value.filter((product) => {
+         if(product.product_price >= valueStart.value && product.product_price <= valueEnd.value){
+            productArray.push(product);
+         }
+       })
+       
+      }
+      if(productArray.length >0){
+        result.value = productArray;
+      }else{
+        result.value = -1 ;
+      }
+    }
+    const changeSliderPrice = () =>{
+      valueStart.value = valueChange.value[0];
+      valueEnd.value = valueChange.value[1];
+    }
 
     return {
       goToCategoryPage,
@@ -243,8 +283,8 @@ export default defineComponent({
       sortByHigherPrice,
       sortByNewProduct,
       filteredItems,
-      valueMax,
-      valueMin,
+      valueStart,
+      valueEnd,
       drop,
       valueChange,
       listItem,
@@ -254,6 +294,9 @@ export default defineComponent({
       propertyFilter,
       result,
       removeFilter,
+      filterPrice,
+      changeSliderPrice,
+      valueMax
     };
     // ])
   },
