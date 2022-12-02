@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar-content mt-3">
+  <div class="sidebar-content">
     <div class="header text-xl">
       <div class="header-content w-full p-4">
         <h6 class="font-medium">Thanh toán</h6>
