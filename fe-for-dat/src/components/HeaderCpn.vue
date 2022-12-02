@@ -82,7 +82,7 @@
         v-badge="2"
       ></i>
     </div>
-    <div class="cart" @mouseover="handleCartHover">
+    <div class="cart" @mouseover="handleCartHover" @click="goToCartPage">
       <i class="pi pi-shopping-cart" style="font-size: 1.8rem"></i>
       <span>Giỏ hàng của bạn có ({{ cartList.length }}) sản phẩm</span>
       <CartModalCpn
@@ -225,6 +225,10 @@ export default defineComponent({
       recognition.start();
     };
 
+    const goToCartPage = () =>{
+      route.push(`/gio-hang`);
+    }
+
     return {
       search,
       showLoginModal,
@@ -246,6 +250,7 @@ export default defineComponent({
       handleUserInfoHover,
       handleSearch,
       handleSearchByVoice,
+      goToCartPage
     };
   },
 });
