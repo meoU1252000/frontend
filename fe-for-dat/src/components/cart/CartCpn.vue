@@ -85,7 +85,7 @@
       </div>
     </div>
     <div class="sidebar w-3 ml-3">
-      <EventCpn />
+      
       <CartSideBar :totalPrice="totalPrice" />
     </div>
   </div>
@@ -101,12 +101,10 @@ import {
   setStateCart,
   updateQuantity,
 } from "@/function/handleLocalStorage";
-import EventCpn from "./EventCpn.vue";
 import CartSideBar from "./CartSideBar.vue";
 
 export default defineComponent({
   components: {
-    EventCpn,
     CartSideBar,
   },
   setup() {

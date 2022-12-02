@@ -1,4 +1,6 @@
 <template>
+    <TheLoadingCpn :isLoading="showLoading" />
+
   <my-dialog
     header="Đăng Nhập"
     :visible="displayModal"
@@ -121,10 +123,12 @@ import { defineComponent, ref, reactive } from "vue";
 import useVuelidate from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
 import { useStore } from "vuex";
+import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
 
 // import RegisterView from "@/components/RegisterCpn.vue";
 export default defineComponent({
-  components: {},
+  components: {TheLoadingCpn },
+
   props: {
     displayModal: { type: Boolean },
   },
@@ -134,6 +138,7 @@ export default defineComponent({
       email: "",
       password: "",
     });
+    const showLoading = ref(false);
 
     const closeModal = () => {
       emit("close-modal-login");
@@ -163,24 +168,30 @@ export default defineComponent({
         password: state.password,
       };
       if (isFormValid) {
+        showLoading.value = true;
         const check = await store.dispatch("auth/login", user);
         console.log(check);
         if (check) {
+          closeModal();
+          await Promise.all([ 
+            store.dispatch("auth/getListAddress", check.access_token),
+            store.dispatch("auth/getListOrder", check.access_token)
+          ])
+          showLoading.value = false;
           window.Swal.fire({
             icon: "success",
             title: "Thành Công",
             text: "Đăng nhập thành công",
           });
-          closeModal();
-          await store.dispatch("auth/getListAddress", check.access_token);
-          await store.dispatch("auth/getListOrder", check.access_token);
         } else {
+          showLoading.value = false;
           window.Swal.fire({
             icon: "error",
             title: "Thất Bại",
             text: "Tài khoản không tồn tại. Vui lòng thử lại",
           });
           closeModal();
+
         }
       }
     };
@@ -192,6 +203,7 @@ export default defineComponent({
       submitted,
       state,
       v$,
+      showLoading
     };
   },
 });

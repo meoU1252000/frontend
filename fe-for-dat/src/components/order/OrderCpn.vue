@@ -792,14 +792,20 @@ export default defineComponent({
       showLoading.value = true;
       const check = await store.dispatch("auth/rating", data);
       if (check) {
-        await store.dispatch("auth/getListOrder", account.value.token);
+        await Promise.all([
+          store.dispatch("category/getListCategories"),
+          store.dispatch("product/getListProducts"),
+          store.dispatch("brand/getListBrands"),
+          store.dispatch("eventCode/getListEvents"),
+          store.dispatch("auth/getListOrder", account.value.token),
+        ]);
         showLoading.value = false;
         window.Swal.fire({
           icon: "success",
           title: "Thành Công",
           text: "Đánh giá sản phẩm thành công",
         });
-      }else{
+      } else {
         showLoading.value = false;
         window.Swal.fire({
           icon: "error",
