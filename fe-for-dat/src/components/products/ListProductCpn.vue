@@ -421,7 +421,7 @@ export default defineComponent({
   border-radius: 10px;
   width: 16%;
   min-height: 32rem;
-  .border-top-1 {
+  :deep(.border-top-1) {
     border-color: #ddd;
   }
 }
