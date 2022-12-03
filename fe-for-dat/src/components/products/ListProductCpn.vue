@@ -61,7 +61,7 @@
             :min="0"
             :max="valueMax"
             class="mx-auto w-10 mb-4"
-            @slideend="changeSliderPrice()"
+            @change="changeSliderPrice()"
           ></my-slider>
           <my-button
             label="Lọc Giá"
@@ -116,6 +116,44 @@
             ></my-button>
           </div>
         </div>
+        <div
+          class="head-categoryView"
+          v-else-if="resultPrice.length > 0 || resultPrice == -1"
+        >
+          <h4 class="title">Sắp xếp theo</h4>
+          <div class="filter">
+            <my-button
+              label="Mặc Định"
+              class="p-button-outlined p-button-sm p-button-secondary p-button"
+              :class="{ active: selected === 'a' }"
+              @click="sortByDefault(resultPrice)"
+            ></my-button>
+            <my-button
+              label="Bán Chạy"
+              class="p-button-outlined p-button-sm p-button-secondary p-button"
+              :class="{ active: selected === 'b' }"
+              @click="sortBySold(resultPrice)"
+            ></my-button>
+            <my-button
+              label="Mới Về"
+              class="p-button-outlined p-button-sm p-button-secondary"
+              :class="{ active: selected === 'c' }"
+              @click="sortByNewProduct(resultPrice)"
+            ></my-button>
+            <my-button
+              label="Giá Giảm Dần"
+              class="p-button-outlined p-button-sm p-button-secondary"
+              :class="{ active: selected === 'd' }"
+              @click="sortByLowPrice(resultPrice)"
+            ></my-button>
+            <my-button
+              label="Giá Tăng Dần"
+              class="p-button-outlined p-button-sm p-button-secondary"
+              :class="{ active: selected === 'e' }"
+              @click="sortByHigherPrice(resultPrice)"
+            ></my-button>
+          </div>
+        </div>
         <div class="head-categoryView" v-else>
           <h4 class="title">Sắp xếp theo</h4>
           <div class="filter">
@@ -159,7 +197,15 @@
           />
         </div>
 
-        <div class="main-product" v-else-if="result == -1">
+        <div class="main-product" v-else-if="resultPrice.length > 0">
+          <ProductsCpn
+            v-for="(product, i) in resultPrice"
+            :key="i"
+            :product="product"
+          />
+        </div>
+
+        <div class="main-product" v-else-if="result == -1 || resultPrice == -1">
           <h4>Không tìm thấy sản phẩm phù hợp.</h4>
         </div>
 
@@ -202,6 +248,7 @@ export default defineComponent({
     const valueEnd = ref(props.category.highest_product_price * 2);
     const valueChange = ref([0, valueMax.value]);
     const result = ref([]);
+    const resultPrice = ref([]);
     const drop = ref();
     const sortByLowPrice = (listProduct) => {
       selected.value = "d";
@@ -305,8 +352,8 @@ export default defineComponent({
           productArray.push(product);
         }
       });
+      result.value = productArray;
       if (productArray.length > 0) {
-        result.value = productArray;
         switch (selected.value) {
           case "a":
             sortByDefault(result.value);
@@ -332,48 +379,90 @@ export default defineComponent({
 
     const filterPrice = () => {
       const productArray = [];
-      if (result.value.length > 0 || result.value > 0) {
-        result.value.filter((product) => {
-          console.log(product);
-          if (
-            product.product_price >= valueStart.value &&
-            product.product_price <= valueEnd.value
-          ) {
-            productArray.push(product);
+      if (propertyFilter.value.length > 0) {
+        // filteredItems();
+        if (result.value.length > 0) {
+          result.value.filter((product) => {
+            console.log(product);
+            if (
+              product.product_price >= valueStart.value &&
+              product.product_price <= valueEnd.value
+            ) {
+              productArray.push(product);
+            }
+          });
+        } else {
+          listItem.value.forEach((product) => {
+            const attributeArray = [];
+
+            product.product_attribute.forEach((attribute) => {
+              attributeArray.push(attribute.params);
+            });
+            // console.log(attributeArrayTest);
+            const check = propertyFilter.value.some((ele) => {
+              // console.log(attributeArray);
+              return attributeArray.includes(ele);
+            });
+            if (check) {
+              productArray.push(product);
+            }
+          });
+        }
+        console.log(productArray.value);
+
+        if (productArray.length > 0) {
+          result.value = productArray;
+          switch (selected.value) {
+            case "a":
+              sortByDefault(result.value);
+              break;
+            case "b":
+              sortBySold(result.value);
+              break;
+            case "c":
+              sortByNewProduct(result.value);
+              break;
+            case "d":
+              sortByLowPrice(result.value);
+              break;
+            case "e":
+              sortByHigherPrice(result.value);
+              break;
           }
-        });
-      } else {
-        listItem.value.filter((product) => {
-          console.log(product);
-          if (
-            product.product_price >= valueStart.value &&
-            product.product_price <= valueEnd.value
-          ) {
-            productArray.push(product);
-          }
-        });
-      }
-      if (productArray.length > 0) {
-        result.value = productArray;
-        switch (selected.value) {
-          case "a":
-            sortByDefault(result.value);
-            break;
-          case "b":
-            sortBySold(result.value);
-            break;
-          case "c":
-            sortByNewProduct(result.value);
-            break;
-          case "d":
-            sortByLowPrice(result.value);
-            break;
-          case "e":
-            sortByHigherPrice(result.value);
-            break;
+        } else {
+          result.value = -1;
         }
       } else {
-        result.value = -1;
+        props.listProduct.filter((product) => {
+          if (
+            product.product_price >= valueStart.value &&
+            product.product_price <= valueEnd.value
+          ) {
+            productArray.push(product);
+          }
+        });
+        resultPrice.value = productArray;
+        if (productArray.length > 0) {
+          switch (selected.value) {
+            case "a":
+              sortByDefault(resultPrice.value);
+              break;
+            case "b":
+              sortBySold(resultPrice.value);
+              break;
+            case "c":
+              sortByNewProduct(resultPrice.value);
+              break;
+            case "d":
+              sortByLowPrice(resultPrice.value);
+              break;
+            case "e":
+              sortByHigherPrice(resultPrice.value);
+              break;
+          }
+        } else {
+          resultPrice.value = -1;
+        }
       }
     };
     const changeSliderPrice = () => {
@@ -401,6 +490,7 @@ export default defineComponent({
       filterPrice,
       changeSliderPrice,
       valueMax,
+      resultPrice,
     };
     // ])
   },
