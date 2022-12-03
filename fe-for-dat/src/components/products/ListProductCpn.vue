@@ -225,7 +225,11 @@ export default defineComponent({
           productArray.push(product);
         }
       });
-      result.value = productArray;
+      if(productArray.length >0){
+        result.value = productArray;
+      }else{
+        result.value = -1 ;
+      }
       filterPrice();
     };
 
@@ -246,20 +250,26 @@ export default defineComponent({
           productArray.push(product);
         }
       });
-      result.value = productArray;
+      if(productArray.length >0){
+        result.value = productArray;
+      }else{
+        result.value = -1 ;
+      }
       filterPrice();
     };
 
     const filterPrice = () => {
       const productArray = [];
-      if(result.value.length != []){
-         result.value.filter((product) => {
+      if(result.value.length > 0 || result.value >0){
+        result.value.filter((product) => {
+           console.log(product);
           if(product.product_price >= valueStart.value && product.product_price <= valueEnd.value){
             productArray.push(product);
           }
         })
       }else{
         listItem.value.filter((product) => {
+          console.log(product);
          if(product.product_price >= valueStart.value && product.product_price <= valueEnd.value){
             productArray.push(product);
          }
