@@ -81,7 +81,7 @@
         />
       </div>
       <div class="col flex-grow-1 justify-content-center bg-white">
-        <div class="head-categoryView" v-if="(result.length > 0 || result == -1)">
+        <div class="head-categoryView" v-if="result.length > 0 || result == -1">
           <h4 class="title">Sắp xếp theo</h4>
           <div class="filter">
             <my-button
@@ -160,7 +160,7 @@
         </div>
 
         <div class="main-product" v-else-if="result == -1">
-         <h4>Không tìm thấy sản phẩm phù hợp.</h4>
+          <h4>Không tìm thấy sản phẩm phù hợp.</h4>
         </div>
 
         <div class="main-product" v-else>
@@ -195,9 +195,9 @@ export default defineComponent({
     };
     const propertyFilter = ref([]);
     const selected = ref("a");
-    const valueMax = computed(() =>{
+    const valueMax = computed(() => {
       return props.category.highest_product_price * 2 || [];
-    })
+    });
     const valueStart = ref(0);
     const valueEnd = ref(props.category.highest_product_price * 2);
     const valueChange = ref([0, valueMax.value]);
@@ -260,16 +260,36 @@ export default defineComponent({
           productArray.push(product);
         }
       });
-      if(productArray.length >0){
+      if (productArray.length > 0) {
         result.value = productArray;
-      }else{
-        result.value = -1 ;
+        switch (selected.value) {
+          case "a":
+            sortByDefault(result.value);
+            break;
+          case "b":
+            sortBySold(result.value);
+            break;
+          case "c":
+            sortByNewProduct(result.value);
+            break;
+          case "d":
+            sortByLowPrice(result.value);
+            break;
+          case "e":
+            sortByHigherPrice(result.value);
+            break;
+        }
+      } else {
+        result.value = -1;
       }
+
       filterPrice();
     };
 
     const removeFilter = async (property) => {
-      propertyFilter.value = propertyFilter.value.filter((ele) => ele != property);
+      propertyFilter.value = propertyFilter.value.filter(
+        (ele) => ele != property
+      );
       // console.log(propertyFilter.value);
       const productArray = [];
       listItem.value.forEach((product) => {
@@ -285,42 +305,81 @@ export default defineComponent({
           productArray.push(product);
         }
       });
-      if(productArray.length >0){
+      if (productArray.length > 0) {
         result.value = productArray;
-      }else{
-        result.value = -1 ;
+        switch (selected.value) {
+          case "a":
+            sortByDefault(result.value);
+            break;
+          case "b":
+            sortBySold(result.value);
+            break;
+          case "c":
+            sortByNewProduct(result.value);
+            break;
+          case "d":
+            sortByLowPrice(result.value);
+            break;
+          case "e":
+            sortByHigherPrice(result.value);
+            break;
+        }
+      } else {
+        result.value = -1;
       }
       filterPrice();
     };
 
     const filterPrice = () => {
       const productArray = [];
-      if(result.value.length > 0 || result.value >0){
+      if (result.value.length > 0 || result.value > 0) {
         result.value.filter((product) => {
-           console.log(product);
-          if(product.product_price >= valueStart.value && product.product_price <= valueEnd.value){
+          console.log(product);
+          if (
+            product.product_price >= valueStart.value &&
+            product.product_price <= valueEnd.value
+          ) {
             productArray.push(product);
           }
-        })
-      }else{
+        });
+      } else {
         listItem.value.filter((product) => {
           console.log(product);
-         if(product.product_price >= valueStart.value && product.product_price <= valueEnd.value){
+          if (
+            product.product_price >= valueStart.value &&
+            product.product_price <= valueEnd.value
+          ) {
             productArray.push(product);
-         }
-       })
-       
+          }
+        });
       }
-      if(productArray.length >0){
+      if (productArray.length > 0) {
         result.value = productArray;
-      }else{
-        result.value = -1 ;
+        switch (selected.value) {
+          case "a":
+            sortByDefault(result.value);
+            break;
+          case "b":
+            sortBySold(result.value);
+            break;
+          case "c":
+            sortByNewProduct(result.value);
+            break;
+          case "d":
+            sortByLowPrice(result.value);
+            break;
+          case "e":
+            sortByHigherPrice(result.value);
+            break;
+        }
+      } else {
+        result.value = -1;
       }
-    }
-    const changeSliderPrice = () =>{
+    };
+    const changeSliderPrice = () => {
       valueStart.value = valueChange.value[0];
       valueEnd.value = valueChange.value[1];
-    }
+    };
 
     return {
       goToCategoryPage,
@@ -341,7 +400,7 @@ export default defineComponent({
       removeFilter,
       filterPrice,
       changeSliderPrice,
-      valueMax
+      valueMax,
     };
     // ])
   },
