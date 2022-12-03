@@ -81,7 +81,42 @@
         />
       </div>
       <div class="col flex-grow-1 justify-content-center bg-white">
-        <div class="head-categoryView">
+        <div class="head-categoryView" v-if="(result.length > 0 || result == -1)">
+          <h4 class="title">Sắp xếp theo</h4>
+          <div class="filter">
+            <my-button
+              label="Mặc Định"
+              class="p-button-outlined p-button-sm p-button-secondary p-button"
+              :class="{ active: selected === 'a' }"
+              @click="sortByDefault(result)"
+            ></my-button>
+            <my-button
+              label="Bán Chạy"
+              class="p-button-outlined p-button-sm p-button-secondary p-button"
+              :class="{ active: selected === 'b' }"
+              @click="sortBySold(result)"
+            ></my-button>
+            <my-button
+              label="Mới Về"
+              class="p-button-outlined p-button-sm p-button-secondary"
+              :class="{ active: selected === 'c' }"
+              @click="sortByNewProduct(result)"
+            ></my-button>
+            <my-button
+              label="Giá Giảm Dần"
+              class="p-button-outlined p-button-sm p-button-secondary"
+              :class="{ active: selected === 'd' }"
+              @click="sortByLowPrice(result)"
+            ></my-button>
+            <my-button
+              label="Giá Tăng Dần"
+              class="p-button-outlined p-button-sm p-button-secondary"
+              :class="{ active: selected === 'e' }"
+              @click="sortByHigherPrice(result)"
+            ></my-button>
+          </div>
+        </div>
+        <div class="head-categoryView" v-else>
           <h4 class="title">Sắp xếp theo</h4>
           <div class="filter">
             <my-button
