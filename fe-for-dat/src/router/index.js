@@ -39,6 +39,7 @@ const routes = [
       {
         path: "/thuong-hieu/:brand_name",
         name: "showBrandView",
+        props: true,
         component: BrandView,
       },
       {

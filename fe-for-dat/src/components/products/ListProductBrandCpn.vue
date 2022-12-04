@@ -4,7 +4,7 @@
       <div class="head">
         <h3 class="title">{{ brand.brand_name }}</h3>
         <my-button
-          @click="goToCategoryPage(category.category_name)"
+          @click="goToBrandPage(brand.brand_name)"
           class="p-button-text"
         >
           Xem tất cả >
@@ -46,11 +46,11 @@ export default defineComponent({
   components: { ProductsCpn },
   setup() {
     const route = useRouter();
-    const goToCategoryPage = (name) => {
-      route.push(`/danh-muc/${name}`);
+    const goToBrandPage = (name) => {
+      route.push(`/thuong-hieu/${name}`);
     };
     return {
-      goToCategoryPage,
+      goToBrandPage,
     };
     // ])
   },

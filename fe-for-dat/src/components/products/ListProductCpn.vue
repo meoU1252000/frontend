@@ -75,6 +75,7 @@
           :attribute="attribute"
           :listItem="listItem"
           :category="category"
+          :brand="brand"
           :propertyFilter="propertyFilter"
           @filter-item="filteredItems"
           @remove-item="removeFilter"
@@ -231,6 +232,7 @@ export default defineComponent({
     listCategoryHaveAttribute: { type: Object },
     listProduct: { type: Object },
     category: { type: Object },
+    brand: { type: Object },
     categoryView: { type: Boolean },
   },
   components: { ProductsCpn, ListAttributeCpn },
@@ -242,10 +244,24 @@ export default defineComponent({
     const propertyFilter = ref([]);
     const selected = ref("a");
     const valueMax = computed(() => {
-      return props.category.highest_product_price * 2 || [];
+      if (props.brand) {
+        return props.brand.highest_product_price * 2;
+      } else if (props.category) {
+        return props.category.highest_product_price * 2;
+      } else {
+        return [];
+      }
     });
     const valueStart = ref(0);
-    const valueEnd = ref(props.category.highest_product_price * 2);
+    const valueEnd = computed(() => {
+      if (props.brand) {
+        return props.brand.highest_product_price * 2;
+      } else if (props.category) {
+        return props.category.highest_product_price * 2;
+      } else {
+        return [];
+      }
+    });
     const valueChange = ref([0, valueMax.value]);
     const result = ref([]);
     const resultPrice = ref([]);
@@ -285,7 +301,13 @@ export default defineComponent({
     };
 
     const listItem = computed(() => {
-      return props.category.products || [];
+      if (props.brand) {
+        return props.brand.products ;
+      } else if (props.category) {
+        return props.category.products;
+      }else{
+        return [];
+      }
     });
 
     const filteredItems = async (property) => {
