@@ -270,6 +270,11 @@ export default defineComponent({
           color: currentItem[2].params,
           rom: currentItem[3].params,
         });
+      }else if(props.urlKind.includes("macbook")){
+        Object.assign(filterParam.value, {
+          color: currentItem[5].params,
+          rom: currentItem[3].params,
+        });
       }
       return currentItem;
     });
@@ -288,7 +293,7 @@ export default defineComponent({
 
     const goToProductFilterPage = (value, name) => {
       const tempFilter = filterParam;
-      if (props.urlKind.includes("iphone")) {
+      if (props.urlKind.includes("iphone") || props.urlKind.includes("macbook")) {
         switch (name) {
           case "Màu Sắc":
             filterParam.value.color = value;
@@ -302,6 +307,8 @@ export default defineComponent({
             if (ele.kind !== props.urlKind) return;
             if (
               ele.product_attribute[2].params == filterParam.value.color &&
+              ele.product_attribute[3].params == filterParam.value.rom ||   
+              ele.product_attribute[5].params == filterParam.value.color &&
               ele.product_attribute[3].params == filterParam.value.rom
             ) {
               route.push(`/san-pham/${props.urlKind}/${ele.id}`);
@@ -325,7 +332,7 @@ export default defineComponent({
         try {
           listProduct.value.forEach((ele) => {
             if (ele.kind !== props.urlKind) return;
-            if (ele.product_attribute[2].params == filterParam.value.color) {
+            if (ele.product_attribute[2].params == filterParam.value.color || ele.product_attribute[3].params == filterParam.value.rom) {
               route.push(`/san-pham/${props.urlKind}/${ele.id}`);
               changeSource(null);
               throw "Nothing";
