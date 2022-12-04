@@ -79,12 +79,12 @@
               v-for="(attribute, i) in attributes"
               :key="i"
             >
-              <div class="filter-color" v-if="attribute.param.length > 1">
+              <div class="filter-color" v-if="(attribute.param.length > 1) && (product.category_root == 'Laptop' || product.category_root == 'Điện Thoại')" >
                 <label
                   >{{ attribute.attribute_name }}:
                   {{ product_current_attribute[i]["params"] }}
                 </label>
-                <div class="flex mt-2">
+                <div class="flex mt-2" >
                   <div
                     class="product-color pr-2 custom-button"
                     v-for="(param, j) in attribute.param"
@@ -101,26 +101,7 @@
                           product_current_attribute[i]['params'] !=
                           param.param_value,
                       }"
-                      v-if="attribute.attribute_name == 'ROM'"
-                      @click="
-                        goToProductFilterPage(
-                          param.param_value,
-                          attribute.attribute_name
-                        )
-                      "
-                    ></my-button>
-                    <my-button
-                      :label="param.param_value"
-                      class="p-button-outlined p-button-sm"
-                      :class="{
-                        'button-2':
-                          product_current_attribute[i]['params'] ==
-                          param.param_value,
-                        'p-button-secondary':
-                          product_current_attribute[i]['params'] !=
-                          param.param_value,
-                      }"
-                      v-else
+                     
                       @click="
                         goToProductFilterPage(
                           param.param_value,
