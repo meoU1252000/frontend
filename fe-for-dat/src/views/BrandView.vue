@@ -27,7 +27,7 @@ import { useStore } from "vuex";
 import TheLoadingCpn from "@/components/TheLoadingCpn.vue";
 
 export default defineComponent({
-  components: { ListProductCpn,TheLoadingCpn },
+  components: { ListProductCpn, TheLoadingCpn },
   props: ["brand_name"],
   setup(props) {
     const store = useStore();
@@ -35,7 +35,10 @@ export default defineComponent({
 
     // const display = "none";
     onMounted(async () => {
+       showLoading.value = true;
       await store.dispatch("brand/getBrand", props.brand_name);
+      showLoading.value = false;
+
       window.scrollTo(0, 0);
     });
     const listItem = computed(() => {
@@ -68,7 +71,7 @@ export default defineComponent({
       listProduct,
       listCategoryHaveAttribute,
       listBrandHaveProduct,
-      showLoading
+      showLoading,
     };
   },
 });
