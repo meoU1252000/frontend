@@ -242,10 +242,10 @@ export default defineComponent({
       window.scrollTo(0, 0);
     });
     const filterParam = ref({
-      color: "",
+      chip: "",
       rom: "",
       ram: "",
-      chip: "",
+      color: "",
     });
     const image = computed(() => {
       return props.product.main_image_src || [];
@@ -265,10 +265,12 @@ export default defineComponent({
       const currentItem = productAttribute.value.filter((attribute) => {
         return attribute.params;
       });
-      if (props.urlKind.includes("iphone")) {
+      if (props.urlKind.includes("iphone") || props.urlKind.includes("macbook")) {
+        console.log(currentItem[3].params);
+        console.log(currentItem[5].params);
         Object.assign(filterParam.value, {
-          color: currentItem[5].params,
           rom: currentItem[3].params,
+          color: currentItem[5].params,
         });
       }
       return currentItem;
@@ -287,21 +289,23 @@ export default defineComponent({
     });
 
     const goToProductFilterPage = (value, name) => {
+      console.log(value);
+      console.log(name);
       const tempFilter = filterParam;
       if (props.urlKind.includes("iphone") || props.urlKind.includes("macbook")) {
         switch (name) {
-          case "Màu Sắc":
+          case "Màu sắc":
             filterParam.value.color = value;
             break;
           case "ROM":
           default:
             filterParam.value.rom = value;
         }
+        console.log(filterParam.value.rom);
         try {
           listProduct.value.forEach((ele) => {
             if (ele.kind !== props.urlKind) return;
             if(props.urlKind.includes("iphone")){
-             
               if (
                 ele.product_attribute[5].params == filterParam.value.color &&
                 ele.product_attribute[3].params == filterParam.value.rom
@@ -325,10 +329,12 @@ export default defineComponent({
         });
       } else {
         filterParam.value.color = value;
+        filterParam.value.rom = value;
         try {
           listProduct.value.forEach((ele) => {
             if (ele.kind !== props.urlKind) return;
-            if (ele.product_attribute[5].params == filterParam.value.color || ele.product_attribute[3].params == filterParam.value.rom) {
+            if ( ele.product_attribute[5].params == filterParam.value.color &&
+                ele.product_attribute[3].params == filterParam.value.rom) {
               route.push(`/san-pham/${props.urlKind}/${ele.id}`);
               changeSource(null);
               throw "Nothing";
