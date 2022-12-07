@@ -439,7 +439,7 @@ export default defineComponent({
       if (code.discount_unit == 1) {
         discountValue.value = code.discount_value;
       } else {
-        discountValue.value = totalPrice.value * code.discount_value;
+        discountValue.value = (totalPrice.value * code.discount_value)/100;
       }
       totalOrderPrice.value = totalPrice.value - discountValue.value;
       closeEventModal();
