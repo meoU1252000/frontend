@@ -267,11 +267,6 @@ export default defineComponent({
       });
       if (props.urlKind.includes("iphone")) {
         Object.assign(filterParam.value, {
-          color: currentItem[2].params,
-          rom: currentItem[3].params,
-        });
-      }else if(props.urlKind.includes("macbook")){
-        Object.assign(filterParam.value, {
           color: currentItem[5].params,
           rom: currentItem[3].params,
         });
@@ -306,15 +301,7 @@ export default defineComponent({
           listProduct.value.forEach((ele) => {
             if (ele.kind !== props.urlKind) return;
             if(props.urlKind.includes("iphone")){
-              if (
-                ele.product_attribute[2].params == filterParam.value.color &&
-                ele.product_attribute[3].params == filterParam.value.rom 
-              ) {
-                route.push(`/san-pham/${props.urlKind}/${ele.id}`);
-                changeSource(null);
-                throw "Nothing";
-              }
-            }else if (props.urlKind.includes("macbook")){
+             
               if (
                 ele.product_attribute[5].params == filterParam.value.color &&
                 ele.product_attribute[3].params == filterParam.value.rom
@@ -341,7 +328,7 @@ export default defineComponent({
         try {
           listProduct.value.forEach((ele) => {
             if (ele.kind !== props.urlKind) return;
-            if (ele.product_attribute[2].params == filterParam.value.color || ele.product_attribute[3].params == filterParam.value.rom) {
+            if (ele.product_attribute[5].params == filterParam.value.color || ele.product_attribute[3].params == filterParam.value.rom) {
               route.push(`/san-pham/${props.urlKind}/${ele.id}`);
               changeSource(null);
               throw "Nothing";
