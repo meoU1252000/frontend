@@ -18,13 +18,13 @@
             <div v-if="item.children !== null" class="category_item">
               <!-- {{item.products.length > 0}} -->
               <router-link
-                v-if="(item.products.length > 0 || item.products !== null)"
+                v-if="(item.products.length > 0)"
                 to="/"
                 class="category_link"
                 >{{ item.category_name }}</router-link
               >
               <h4 v-else>{{ item.category_name }}</h4>
-              <div>
+              <div v-if="(item.children.length > 0)">
                 <NavbarChildrenCpn
                   :listChildrenItem="item.children"
                   :showCategoryModal="showCategoryModal"
