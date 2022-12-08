@@ -1,6 +1,6 @@
 <template>
   <div class="home-view">
-    <SliderCpn :listRootItem="listRootItem" :listBrand="listBrand" />
+    <SliderCpn :listRootItem="listRootItem" :listBrand="listBrand" :listItem="listItem" />
     <div class="product">
       <ListProductBrandCpn
         v-for="(brand, i) in listBrandHaveProduct.slice(0,2)"

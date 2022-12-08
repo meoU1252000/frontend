@@ -6,7 +6,7 @@
         class="item"
         v-for="(category, i) in listRootItem"
         :key="i"
-        @mouseover="handleHover(category.children)"
+        @mouseover="handleHover(category.id)"
       >
         <span class="text-sm p-2">{{ category.category_name }}</span>
       </div>
@@ -43,9 +43,9 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from "vue";
+import {defineComponent, ref } from "vue";
 import NavbarChildrenCpn from "@/components/NavbarChildrenCpn.vue";
-import { useStore } from "vuex";
+// import { useStore } from "vuex";
 
 export default defineComponent({
   components: { NavbarChildrenCpn },
@@ -53,14 +53,21 @@ export default defineComponent({
     listRootItem: { type: Object },
     listBrand: { type: Object },
     showCategoryModal: { type: Boolean },
+    listItem:  { type: Object },
   },
   setup(props, { emit }) {
     const display = ref("none");
     const items = ref(0);
-    const store = useStore();
+    // const store = useStore();
     const handleHover = (key) => {
       display.value = "block";
-      items.value = key;
+      // items.value = key;
+      const children = props.listItem.filter((item) => {
+        if(item.category_parent == key ){
+          return item;
+        }
+      });
+      items.value = children;
     };
     const handleLeave = () => {
       items.value = 0;
@@ -71,16 +78,11 @@ export default defineComponent({
       emit("close-modal-category");
     };
 
-    const listItem = computed(() => {
-      return store.getters["category/getListCategory"] || [];
-    });
-
     return {
       display,
       items,
       handleHover,
       handleLeave,
-      listItem,
       closeModal,
     };
   },

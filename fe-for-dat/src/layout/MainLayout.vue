@@ -7,6 +7,7 @@
       :listModalBrand="listModalBrand"
       :listModalRootItem="listModalRootItem"
       :cartList="cartList"
+      :listModalItem="listModalItem"
     />
     <router-view />
     <!-- <div class="footer"></div> -->
@@ -62,6 +63,7 @@ export default defineComponent({
     const listModalItem = computed(() => {
       return store.getters["category/getListCategory"] || [];
     });
+    
     const listModalRootItem = computed(() => {
       return listModalItem.value.filter(
         (item) => item.category_parent === 0 && item.category_status === 1

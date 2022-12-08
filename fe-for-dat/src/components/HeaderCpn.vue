@@ -29,6 +29,7 @@
         <NavbarCpn
           :listRootItem="listModalRootItem"
           :listBrand="listModalBrand"
+          :listItem="listModalItem"
           :showCategoryModal="showCategoryModal"
           @close-modal-category="closeModalCategory"
         />
@@ -119,6 +120,7 @@ export default defineComponent({
   props: {
     propertyY: { type: Number },
     listModalRootItem: { type: Object },
+    listModalItem: { type: Object },
     listModalBrand: { type: Object },
     cartList: { type: Object },
   },
