@@ -2,7 +2,7 @@
   <div v-for="(category, i) in listChildrenItem" :key="i">
     <a
       @click="goToCategoryPage(category.category_name)"
-      v-if="(category.children !== null && category.products !== null)"
+      v-if="(category.children !== null || category.children.length > 0) && (category.products !== null  || category.products.length > 0)"
       class="router-link-category"
       >{{ category.category_name }}</a
     >

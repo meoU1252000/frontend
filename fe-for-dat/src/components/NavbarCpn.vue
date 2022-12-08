@@ -18,7 +18,7 @@
             <div v-if="item.children !== null" class="category_item">
               <!-- {{item.products.length > 0}} -->
               <router-link
-                v-if="(item.products !== null)"
+                v-if="(item.products.length > 0 || item.products !== null)"
                 to="/"
                 class="category_link"
                 >{{ item.category_name }}</router-link
