@@ -61,7 +61,7 @@
             :min="0"
             :max="valueMax"
             class="mx-auto w-10 mb-4"
-            @change="changeSliderPrice()"
+            @change="changeSliderPrice"
           ></my-slider>
           <my-button
             label="Lọc Giá"
@@ -253,15 +253,7 @@ export default defineComponent({
       }
     });
     const valueStart = ref(0);
-    const valueEnd = computed(() => {
-      if (props.brand) {
-        return props.brand.highest_product_price * 2;
-      } else if (props.category) {
-        return props.category.highest_product_price * 2;
-      } else {
-        return [];
-      }
-    });
+    const valueEnd =ref(valueMax.value);
     const valueChange = ref([0, valueMax.value]);
     const result = ref([]);
     const resultPrice = ref([]);
@@ -490,6 +482,8 @@ export default defineComponent({
     const changeSliderPrice = () => {
       valueStart.value = valueChange.value[0];
       valueEnd.value = valueChange.value[1];
+      console.log(valueEnd.value);
+      console.log(valueChange.value[1]);
     };
 
     return {
