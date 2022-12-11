@@ -7,7 +7,7 @@
       <div class="flex w-full justify-content-center h-10rem">
         <div class="col-12 flex align-items-center">
           <div class="col-3 border-right-2">
-            <h1 class="text-center text-rating">{{ rating }}</h1>
+            <h1 class="text-center text-rating">{{ rating.toFixed(2) }}</h1>
             <star-rating
               v-model:rating="rating"
               :show-rating="false"
@@ -29,7 +29,7 @@
                 style="height: 0.5em"
                 class="w-10 mr-2 rating-color"
               />
-              <h5>{{ ratingPercentStar5 }}%</h5>
+              <h5>{{ ratingPercentStar5.toFixed(2) }}%</h5>
             </div>
             <div class="flex w-full mb-2 align-items-center">
               <div class="flex mr-2">
@@ -42,7 +42,7 @@
                 style="height: 0.5em"
                 class="w-10 mr-2 rating-color"
               />
-              <h5>{{ ratingPercentStar4 }}%</h5>
+              <h5>{{ ratingPercentStar4.toFixed(2) }}%</h5>
             </div>
             <div class="flex w-full mb-2 align-items-center">
               <div class="flex mr-2">
@@ -55,7 +55,7 @@
                 style="height: 0.5em"
                 class="w-10 mr-2 rating-color"
               />
-              <h5>{{ ratingPercentStar3 }}%</h5>
+              <h5>{{ ratingPercentStar3.toFixed(2) }}%</h5>
             </div>
             <div class="flex w-full mb-2 align-items-center">
               <div class="flex mr-2">
@@ -68,7 +68,7 @@
                 style="height: 0.5em"
                 class="w-10 mr-2 rating-color"
               />
-              <h5>{{ ratingPercentStar2 }}%</h5>
+              <h5>{{ ratingPercentStar2.toFixed(2) }}%</h5>
             </div>
             <div class="flex w-full mb-2 align-items-center">
               <div class="flex mr-2">
@@ -81,7 +81,7 @@
                 style="height: 0.5em"
                 class="w-10 mr-2 rating-color"
               />
-              <h5>{{ ratingPercentStar1 }}%</h5>
+              <h5>{{ ratingPercentStar1.toFixed(2) }}%</h5>
             </div>
           </div>
         </div>
