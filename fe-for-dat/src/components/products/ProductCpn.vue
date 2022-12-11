@@ -75,7 +75,7 @@
               <h5 class="ml-2">{{total}} đánh giá</h5>
             </div>
             <div
-              class="filter mt-3 brand"
+              class="filter mt-2 brand"
               v-for="(attribute, i) in attributes"
               :key="i"
             >
@@ -84,7 +84,7 @@
                   >{{ attribute.attribute_name }}:
                   {{ product_current_attribute[i]["params"] }}
                 </label>
-                <div class="flex mt-2" >
+                <div class="flex mt-2 attributes" >
                   <div
                     class="product-color pr-2 custom-button"
                     v-for="(param, j) in attribute.param"
@@ -525,6 +525,13 @@ export default defineComponent({
       content: "";
       border-right: 1px solid;
       text-align: end;
+    }
+  }
+
+  .attributes{
+    flex-flow: wrap;
+    .product-color{
+      margin: 0rem 0.5rem 0.5rem 0rem;
     }
   }
   .quantity {
