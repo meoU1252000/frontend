@@ -2,7 +2,7 @@
   <div class="product-content flex w-full flex">
     <div class="content-header flex p-2 w-full">
       <div class="col-9">
-        <div class="px-2 mb-3">
+        <div class="px-2">
           <h2>Mô tả sản phẩm</h2>
         </div>
         <div v-if="!readMoreActive">
