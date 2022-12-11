@@ -351,6 +351,9 @@ export default defineComponent({
       propertyFilter.value = propertyFilter.value.filter(
         (ele) => ele != property
       );
+      if(propertyFilter.value.length ==0){
+        return result.value = 0;
+      }
       // console.log(propertyFilter.value);
       const productArray = [];
       listItem.value.forEach((product) => {
